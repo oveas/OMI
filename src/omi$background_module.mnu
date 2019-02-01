@@ -1,0 +1,23 @@
+!******************************************************************************
+!*                                                                            *
+!*    MENU NAME:                                                              *
+!*    ==========                                                              *
+!*      Omi$Background_Module                                                 *
+!*                                                                            *
+!*    DESCRIPTION:                                                            *
+!*    ============                                                            *
+!*      This module is called internally by OMI to execute an OMI module      *
+!*      in the background (BATCH or DETACHED).                                *
+!*      It is invoked when OMI is called with the /BACKGROUND qualifier.      *
+!*                                                                            *
+!*    HISTORY:                                                                *
+!*    ========                                                                *
+!*      v1  10-06-99 Oscar van Eijk        Created                            *
+!*                                                                            *
+!******************************************************************************
+!
+[MENU_MENU]
+   on_init = omi$background_module
+   comment = This menu is used internally by OMI
+   name    = main
+   item1   = ##

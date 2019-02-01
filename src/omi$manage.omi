@@ -1,0 +1,136 @@
+$	gosub 'p1'$
+$	exit $status
+
+
+$ message$:
+$!
+$	if p2 .eqs. "REPAIR" then $ goto msg$_repair
+$	if p2 .eqs. "CREATE" then $ goto msg$_create
+$!
+$	omi$check msg_facil "%OMI-W-NOFACIL, facility not specified"
+$	if $status .eq. omi$_warning then $ return omi$_warning
+$!
+$	omi$check msg_sever "%OMI-W-NOSEVER, severity not specified"
+$	if $status .eq. omi$_warning then $ return omi$_warning
+$!
+$	omi$check msg_ident "%OMI-W-NOIDENT, identification not specified"
+$	if $status .eq. omi$_warning then $ return omi$_warning
+$!
+$	omi$check msg_text  "%OMI-W-NOTEXT, text not specified"
+$	if $status .eq. omi$_warning then $ return omi$_warning
+$!
+$	msg_sever = f$extract(0, 1, msg_sever)
+$	msg_ident = f$fao("!15<!AS!>", msg_ident)
+$!
+$	open /read /write /share=read omi$msg Omi$:'msg_facil'$messages.dat -
+	   /error=msg$error_file
+$	write /error=msg$error_key omi$msg "''msg_ident'''msg_sever' ''msg_text'"
+$	close omi$msg
+$	omi$signal omi addmsg
+$	return
+$!
+$ msg$error_file:
+$!
+$	omi$signal omi nomsgfile,msg_facil
+$	return omi$_warning
+$!
+$ msg$error_key:
+$!
+$	close omi$msg
+$	omi$signal omi duplident,'f$edit(msg_ident,"collapse")
+$	return omi$_warning
+$!
+$!
+$!==>	If the file organisation of the Message data- file is corrupted,
+$!	this routine can be called from the Omi Management menu to
+$!	repair it.
+$!
+$ msg$_repair:
+$!
+$	omi$check msg_facil "%OMI-W-NOFACIL, facility not specified"
+$	if $status .eq. omi$_warning then $ return omi$_warning
+$!
+$	if f$search("Omi$:''msg_facil'$messages.dat") .eqs. ""
+$	   then
+$		omi$signal omi nomsgfile,msg_facil
+$		return omi$_warning
+$	endif
+$!
+$	msg$_command = "convert Omi$:''msg_facil'$messages.dat Omi$:''msg_facil'$messages.dat"
+$	gosub msg$_fdl
+$	purge /nolog /noconfirm /keep=1 Omi$:'msg_facil'$messages.dat
+$	omi$signal omi msgrep,msg_facil
+$	return
+$!
+$ msg$_create:
+$!
+$	omi$check msg_facil "%OMI-W-NOFACIL, facility not specified"
+$	if $status .eq. omi$_warning then $ return omi$_warning
+$!
+$	if f$search("Omi$:''msg_facil'$messages.dat") .nes. ""
+$	   then
+$		omi$signal omi exmsgfile,msg_facil
+$		return omi$_warning
+$	endif
+$!
+$	msg$_command = "create Omi$:''msg_facil'$messages.dat"
+$	gosub msg$_fdl
+$	purge /nolog /noconfirm /keep=1 Omi$:'msg_facil'$messages.dat
+$	omi$signal omi cremsgfil,msg_facil
+$	return
+
+
+
+
+
+
+
+$ msg$_fdl:
+$!
+$	'msg$_command' /fdl=sys$input
+TITLE	"Omi$Messages"
+
+IDENT	" 4-JUL-1997 14:09:56  OpenVMS FDL Editor"
+
+SYSTEM
+	SOURCE			"OpenVMS"
+
+FILE
+	NAME			"OMI Message File Definition"
+	ORGANIZATION		indexed
+
+RECORD
+	CARRIAGE_CONTROL	carriage_return
+	FORMAT			variable
+	SIZE			132
+
+AREA 0
+	ALLOCATION		321
+	BEST_TRY_CONTIGUOUS	yes
+	BUCKET_SIZE		6
+	EXTENSION		84
+
+AREA 1
+	ALLOCATION		18
+	BEST_TRY_CONTIGUOUS	yes
+	BUCKET_SIZE		6
+	EXTENSION		6
+
+KEY 0
+	CHANGES			no
+	DATA_AREA		0
+	DATA_FILL		100
+	DATA_KEY_COMPRESSION	yes
+	DATA_RECORD_COMPRESSION	yes
+	DUPLICATES		no
+	INDEX_AREA		1
+	INDEX_COMPRESSION	no
+	INDEX_FILL		100
+	LEVEL1_INDEX_AREA	1
+	NAME			"Identification"
+	PROLOG			3
+	SEG0_LENGTH		15
+	SEG0_POSITION		0
+	TYPE			string
+$!
+$	return

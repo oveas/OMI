@@ -1,0 +1,49 @@
+$	goto start$
+$!
+$!******************************************************************************
+$!*                                                                            *
+$!*    MODULE NAME:                                                            *
+$!*    ============                                                            *
+$!*      Mgt$Check_Facil.Omi                                                   *
+$!*                                                                            *
+$!*    CALLED BY:                                                              *
+$!*    ==========                                                              *
+$!*      Omi$Manage.Mnu       - The OMI Management Menu                        *
+$!*      Mgt$Check_Ident.Omi  - OMI module to check a message identifier       *
+$!*      Msg$Message.Omi      - OMI module that performs all actions           *
+$!*                                                                            *
+$!*    DESCRIPTION:                                                            *
+$!*    ============                                                            *
+$!*      This module is called by the Message Submenu. It checkes if the       *
+$!*      user entered a facility name, and looks for the file. It returns      *
+$!*      OMI$_WARNING when the facility was not entered, or does not exist     *
+$!*                                                                            *
+$!*    HISTORY:                                                                *
+$!*    ========                                                                *
+$!*      v1  12-09-97 Oscar van Eijk        Created                            *
+$!*                                                                            *
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$ start$:
+$!
+$	omi$check msg_facil "%OMI-W-NOFACIL, facility not specified"
+$	if $status .ge. omi$_warning
+$	   then
+$		if omi$option_type .eqs. "SUBMENU" -
+		   then $ omi$wait  ! Give the user the change to read the msg
+$		exit omi$_warning
+$	endif
+$!
+$	if f$search("Omi$Menu_Directory:''msg_facil'$messages.dat") .eqs. ""
+$	   then
+$		omi$signal omimgt nomsgfile,'msg_facil
+$		if omi$option_type .eqs. "SUBMENU" -
+		   then $ omi$wait  ! Give the user the change to read the msg
+$		exit omi$_warning
+$	endif
+$!
+$	exit omi$_ok
+$!
+$!******************************************************************************

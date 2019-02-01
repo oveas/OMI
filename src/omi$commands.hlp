@@ -1,0 +1,525 @@
+1 ALL
+ Format: ALL
+
+In a window where you can specify input fields, this command enables
+you to enter all values, without the need to select all options
+separately.
+
+In those windows, the last option will always perform this command.
+The way you are prompted for it, can be modified in the OMI confi-
+guration file by changing the value of 'all_options' in the section
+[questions]
+
+1 BACK
+ Format: BACK [NOEXIT_MODULE]
+
+With this command, you can go up one level. When you are at the top
+level, this will leave the menu.
+
+This command performs the same function as the keystroke <Ctrl/Z>.
+
+2 Parameter
+
+The option NOEXIT_MODULE can optionally be specified, which causes
+the ON_EXIT module not to be executed.
+By default, if an ON_EXIT module is specified, it will always be executed
+if the current (sub)menu exits.
+
+1 CALC
+ Format: CALC calculation
+
+This command calls the internal OMI calculator. This calculator is
+very simple, but it can work with floating points and with simple
+functions, and supports parentheses.
+
+
+2 Parameter
+
+The calculation is entered as one up to eigth parameters (integers,
+operators and parentheses can be entered as one parameter, or with
+blanks between them).
+Integers can have a floating point. Dots (.) and commas (,) are
+recognised as floating points.
+
+Operations currently supported are add (e.g. -12.4 + 8.53), subtract
+(e.g. 14 - 68.032), multiply (e.g. 1.4 * 7) and divide (e.g. 156 / -2.56).
+
+When using more complex functions, like: (2+5)*((8-3)*4/2)/2, OMI will
+just display the result: 35. To view all steps as they are calculated
+by OMI, simply put a question mark (?) somewhere in the formula
+ e.g.: (2+5)*((8-3)*4/2)/2?
+This will cause OMI to show all separate calculations as they are
+performed and substituted.
+The question mark itself will be removed before calculation starts.
+
+* NOTE: The maximum size of the numbers (without the floating point)
+        is 9 digits. This is a limitation in DCL (the maximum value of
+        an integer is 2,147,483,647. To make checking possible, the
+        maximum value is reduced to 999,999,999 in OMI).
+
+1 CLS
+ Format: CLS
+
+This command removes all text from the window, leaving the layout
+intact.
+
+1 DCL
+ Format: DCL dcl_command
+     or: $dcl_command
+
+Enter any DCL command. The output of the DCL command will be displayed
+your terminal, and you'll have to press <Return> when execution is
+completed.
+
+If you don't want the output on your screen, you can use the command
+SILENT_DCL.
+
+If the current user is not authorized for interactive DCL, a warning
+message will be displayed.
+
+In stead of the command DCL, the dollar-sign ($) can also be used.
+
+2 Parameter
+
+Enter any valid DCL command. If you omit a parameter, you will be
+prompted for the command.
+
+When the command DCL is used in a MENU file, OMI can prompt for
+additional input for the command, if the string '~?' is used in
+the parameter.
+
+1 DELETE
+
+This command deletes values from the current menu environment.
+
+2 TEXTAREA
+ Format: DELETE TEXTAREA sequence-number
+
+Delete the value of a text area from the current menu and the file
+in which the value is stored. If the current menu has more than 1
+text area, a sequence number is required, indicating which text
+area should be displayed.
+This sequence number is not the same as the option number; if
+internal variable INPUT2 is a textarea, and INPUT1 is not,
+INPUT2 has sequence number 1
+
+A text area can only be deleted if the format section of the input
+element has the option KEEP set to TRUE.
+
+By default, this command will ask for a confirmation. This can be
+changed with the CONFIRM element in the configuration file.
+
+This command requires WRITE privilege to the current menu.
+
+1 EDIT
+
+This command modifies menu elements. All EDIT commands require
+write privilege to the menu in which it is invoked.
+
+
+2 ELEMENT
+ Format: EDIT ELEMENT option_nr
+
+Use this command to edit one of the elements in the current menu.
+It starts an on-the-fly menu, in which modifications to the selected
+element can be made. When the menu file is updated, changes are in
+effect immediatle.
+
+
+3 Parameter
+
+The parameter should be the option number as displayed on the screen,
+so it's the same number users should enter to select the element.
+
+2 MENU_FILE
+ Format: EDIT MENU_FILE
+
+This command starts an interactive edit session with the editor
+specified in the users configuration file, in which the current
+menu file can be modified.
+This command is only available in the top level menu.
+
+2 VALUE_FILE
+ Format: EDIT VALUE_FILE option_nr
+
+If one of the options in the current menu has an input element with a
+tag- or select list that reads the values from a file that file can be
+modified with this command.
+When this command is entered, the editor, specified in the users
+configuration file, is started to edit the file.
+
+3 Parameter
+
+The parameter should be the option number as displayed on the screen, so
+it's the same number users should enter to select the input element.
+
+1 ENCRYPT
+ Format: ENCRYPT section-name item-name key-name
+
+Encrypt the specified item in the menu file. The encrypted new
+value is written to the menu file. Therefore, write privilege
+to the current menu is required.
+
+This command also changes the value of the selected item in the
+current OMI, so the value can only be used again if the OMI
+module in which the value is requires, calls OMI$DECRYPT (refer
+to the subtopic 'Calling_Modules OMI_Commands OMI$DECRYPT' for
+more information).
+
+2 Parameters
+
+This command requires three parameters. If they are omitted, OMI will
+prompt for them.
+
+The first parameter specifies the section which holds the item
+that should be encrypted. Square brackets can be omitted.
+The second parameter is the item name.
+
+The third parameter should be the name of the key with which the
+string has to be encrypted. It has to exist at the keyring of the
+users configuration file. If it s not there, it can be imported
+with the OMI command IMPORT KEY, or created with the SET KEY command.
+
+Please not that encrypting an item that was already encrypted can
+cause unpredictable behaviour!
+
+1 EXIT
+ Format: EXIT
+
+Use this command to leave OMI. This will return control to your
+previous interface (e.g. the DCL prompt), from any menu.
+
+If you started a new many using the MENU command, control will
+NOT return to the previous menu.
+EXIT and QUIT are synonymous.
+
+1 EXPORT_KEY
+ Format: EXPORT KEY key-name
+
+Copy a key from the user specific keyring to the global keyring.
+This requires write privilege to the OMI$ directory.
+
+2 Parameter
+
+Specify the name of the key as a parameter. This has to be an
+existing key at the user specific keyring.
+
+1 HELP
+This displays the online help file of OMI, Oscar's Menu Interpreter, a DCL
+procedure that provides a standard menu user interface, that can be used
+to build menus with MNU files.
+For menu specific help, type INFO.
+
+For support, please use the OMI forum at
+http://freeware.oveas.com/omi/forum.html.
+
+This is version 2.4, Released: October 4, 2018
+The latest version can always be obtained from
+    http://freeware.oveas.com/omi
+
+Full documentation can be downloaded from this site as well. This online
+help might contain some documentation errors, but the printable docu-
+mentation is completely reviewed since version 2.1.
+
+1 IMPORT_KEY
+ Format: IMPORT KEY key-name
+
+Copy a key from the global keyring to the user specific keyring.
+
+2 Parameter
+
+Specify the name of the key as a parameter. This file must be
+made available at the global keyring. Keys with the same name
+at the user specific keyring are not allowed to exist.
+
+
+1 INCREASE
+ Format: INCREASE [REFRESH]
+
+Increase the counter for the current menu with 1. If the current menu
+has no counter, a message will be displayed.
+
+The counter is automatically increased, every time the menu is
+accessed.
+
+2 REFRESH
+
+If this option is specified, the menu screen will be refreshed after
+the increase. This option can be used if input fields with the previous
+counter value have to be cleared.
+
+1 INFO
+ Format: INFO
+
+If the current menu has an info section in the menu specific help- file
+(OMI$MENU_DIRECTORY:<menu-file-name>.OMH), the INFO command can be used
+to display the information.
+This way it is possible to add (sub)menu specific help.
+
+For information on creating OMH files. refer to the printed documentation.
+
+1 JUMP
+ Format: JUMP menu-name
+
+Jump immediatly to the submenu with the name that's specified as a
+parameter of this command.
+
+The name of submenus can be displayed using the SHOW NAME command,
+or automatically by setting the option 'display_names' in the 'screen'
+section of the configuration file to 'true'.
+ 
+
+1 MAIN
+ Format: MAIN
+
+This command will always return to the top- level menu, from anywhere
+in the structure.
+
+1 MANAGE
+ Format: MANAGE [BACK]
+
+This command starts the OMI$MANAGE menu. It erases the current
+menu from memory.
+* NOTE: All values that have been entered during the current OMI
+        session will be lost.
+
+2 BACK
+
+When in the OMI$MANAGE menu, the option BACK lets you return to
+the menu from where you started the management menu.
+
+1 MENU
+ Format: MENU menu_name
+
+Select another menu to work with. This command cleans up the current
+environment completely, causing the menu, that you are working with,
+to be erased from memory.
+* NOTE: All values that have been entered during the current OMI
+        session will be lost.
+
+2 Parameter
+
+Enter a valid MENU file. If the parameter is omitted, you will be
+prompted to enter one. The new menu will be loaded in memory,
+overwriting the current menu.
+To retrieve a listing of all available menu files in OMI$ and
+OMI$MENU_DIRECTORY, enter a question mark (?).
+
+1 QUIT
+ Format: QUIT
+
+Use this command to leave OMI. This will return control to your
+previous interface (e.g. the DCL prompt), from any menu.
+
+If you started a new many using the MENU command, control will
+NOT return to the previous menu.
+QUIT and EXIT are synonymous.
+
+1 REFRESH
+ Format: REFRESH
+
+Refresh the screen.
+
+1 RESET
+ Format: RESET keyword
+
+Reset the value of the variable, specified by a keyword.
+
+
+2 AUTO_REFRESH
+ Format: RESET AUTO_REFRESH
+
+Use this command to disable the automatic screen refresh is disabled.
+
+2 COUNTER
+
+Set the counter of the current menu to 0 (zero). If the current menu
+has no counter, a message will be displayed.
+
+2 NAME
+
+Remove the name of the current menu. A name can be used to jump between
+menus, or to startup in a submenu when the name is specified on the
+DCL prompt.
+
+2 ORDER
+
+If the current menu has a required order (refer to subtopic 'Menu_File
+Menu_Section Required_order'), a list is maintained in the background,
+which remembers the input elements that have already been selected. The
+list changes every time one of the required inputs is selected for
+the first time. If all required inputs have been selected, the list
+is empty, and will remain empty during the current OMI session, unless
+the command RESET ORDER is issued in the menu having the list.
+
+2 PASSWORD
+
+This command removes the password for the current menu, if one was set.
+This command requires WRITE privilege to the current menu.
+
+2 VARIABLES
+
+Use this command to reset all variables in the current menu to
+their default values as specified in the menu file.
+
+1 SET
+
+Change the value of an internet OMI variable.
+
+2 AUTO_REFRESH
+ Format: SET AUTO_INCREASE value
+
+Use this command to set or change the interval in seconds with which
+the menu screen is automatically refreshed. The value should be
+between 0 and 255. When set to 0, the automatic refresh is disabled.
+
+
+2 COUNTER
+ Format: SET COUNTER value
+
+Use this command to set the counter for the current menu to another value.
+If the current menu has no counter, a message will be displayed.
+
+2 WIDTH
+ Format: SET WIDTH value
+
+Use this command to modify the screen width. The value can be 80 or 132.
+
+2 KEY
+ Format: SET KEY value
+
+This command defines a personal key. This key will be used for the
+ENCRYPT command in OMI, and for the OMI$ENCRYPT and OMI$DECRYPT 
+command in OMI modules.
+
+When menu items are encrypted using any of these commands, they
+can only be decrypted by the same user, or by users who have the
+same key defined.
+
+Keys cannot be shared between users. Every user can define only
+one key.
+
+3 Parameter
+
+The parameter must be an integer value between 1 and 1,000,000
+
+2 NAME
+ Format: SET NAME menu-name
+
+Modify the name of the current menu, or define one if the current menu
+has no name. A name can be used to jump between menus, or to startup
+in a submenu when the name is specified on the DCL prompt.
+
+*** NOTE: If you want a menu to have the name RESET, you need to set
+          this name using the editor, this won't work with the SET
+          command, since this name conflicts with OMI internal
+          names.
+
+3 Parameter
+
+The new menu name can optionally be specified as a parameter. If omitted,
+OMI will prompt for a new menu name.
+
+The menu name cannot be 'RESET'.
+
+2 PASSWORD
+ Format: SET PASSWORD
+
+Change the password for the current menu. If the current menu has no
+password, it will be defined using this command.
+
+For this command, you need to have write access to the current menu.
+The password must be at least five character long.
+
+*** NOTE: The password can not have the value 'RESET'
+
+1 SHOW
+ Format: SHOW keyword
+
+Display the value of an internal OMI variable.
+
+2 COUNTER
+
+Show the current value of the counter for this menu.
+
+2 NAME
+
+Display the name of the current menu, if one has been set. These names
+can be used to jump to the menu immediatle from anywhere in the menu
+structure, or by specifying the menu name as the second parameter on the
+DCL command line when OMI is started.
+
+2 ORDER
+
+If the current menu has a required order, this command can be used to
+display the list which is maintained in the background, to see which
+input elements still have to be selected, and in which order.
+
+2 TEXTAREA
+ Format: SHOW TEXTAREA sequence-number
+
+Display the value of a text area from the current menu. If the current
+menu has more than 1 text area, a sequence number is required, indicating
+which text area should be displayed. This sequence number is not the same
+as the option number; if internal variable INPUT2 is a textarea, and INPUT1
+is not, INPUT2 has sequence number 1
+
+If the option LARGE in the format section of the variable is set to TRUE,
+it is possible that this command does not display anything without warning.
+
+2 VERSION
+
+Show the current version of OMI.
+
+2 VMS_MESSAGE
+ Format: SHOW VMS_MESSAGE status-code
+
+This command translates a VMS status code to a message and displays
+it on the OMI message line.
+
+3 Parameter
+
+A valid status code (integer value) is required. If omitted, OMI
+will prompt for a status code.
+
+1 SILENT_DCL
+ Format: DCL dcl_command
+
+Enter any DCL command. The output of the command will not be
+displayed on the screen, leaving your layout intact.
+The destination of the output, including errors, is defined in the
+OMI configuration file, item 'silent_output' in section [main].
+By default, this will be NLA0:
+
+If the current user is not authorized for interactive DCL, a warning
+message will be displayed.
+
+1 SPAWN
+ Format: SPAWN dcl_command
+
+Spawn an interactive subprocess without leaving OMI. Any VMS
+command can optionally  be given as a parameter. If the command
+is entered, control is returned to the calling process when the
+execution of the command is completed.
+
+If the current user is not authorized for interactive DCL, a warning
+message will be displayed.
+
+1 SUBMIT
+ Format: SUBMIT omi_module
+
+With this command, an OMI module can be started in the background.
+It works the same as using the qualifier /BACKGROUND=BATCH from the
+DCL prompt.
+When starting a background process from the OMI prompt,a module
+can only be started as a batch job; not as a detached process.
+
+All defaults for the Submit command (batch queue, logfile) are
+taken from the [BGRPROCESS] section in the user's configuration file.
+
+2 Parameter
+
+The parameter is the name of the OMI module to start (name.OMI). It
+has to be located in the OMI$MENU_DIRECTORY: searchpath.
+This module should be created to run unattended (e.g. using
+Mailboxes for communication).

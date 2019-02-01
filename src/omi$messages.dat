@@ -1,0 +1,141 @@
+ABCMD          W ambiguous OMI command entered \~S\
+ABORT          F abort with VMS status \~S\
+BADMNU         E top menu not defined or empty - invalid menu file
+BADOPT         E bad option - check the menu file
+BGERR          E VMS error ~S occured while starting background process
+BGSTART        S module ~S started
+BUG            ? you must provide some input... that's a bug...
+CALCRES        I the result of your calculation is ~S
+CHECKTOOLBOX   I check the toolbox command file
+CMDNOTAV       W command or option not available in on-the-fly menus
+COUNTER        I counter for this menu is now ~S
+CREMBX         I please wait - creating mailbox
+CREMBXERR      F error in OMI$CREATE_MBX - cannot create mailbox
+CURORDER       I options ~S still have to be selected
+DECERR         E cannot decrypt - no OMI encryption or invalid key
+DIVZERO        E cannot devide by zero
+ENCRYPT        S successfully encrypted the menu element
+ERASEMNU       I erasing the menu from memory
+ERASMNU        I erasing previous menu from memory
+EXKEY          W key ~S already exists
+EXPKEY         S successfully exported key ~S
+FIRST          W this is the first page of this list
+FNF            W file \~S\ does not exist
+GLKEYEX        W key ~S already exists at the global keyring
+GLKEYNF        W global key ~S not found
+HIVAL          W value can't be more than ~S
+IMPKEY         S successfully imported key ~S
+INCLFNF        E cannot find file ~S for including
+INFO           I Oscar's Menu Interpreter, ©1997-2018, O. van Eijk - OVEAS
+INIT           I initializing...
+INPREQ         I input is required here - and that's no bug
+INSARG         E invalid call of ~S - insufficient arguments
+INTONLY        W specify integers only
+INVOPT         W option is out of range
+IVANS          W invalid answer - enter ~S or ~S
+IVCHAR         W invalid character encoutered - \~S\ not allowed
+IVCHOICE       W please specify a valid choice
+IVCMD          W invalid OMI command entered \~S\
+IVDIGIT        W invalid digit found in the calculation
+IVENCR         E invalid call of OMI$DECRYPT - invalid string encryption
+IVFNAM         W invalid file or device name \~S\
+IVFRM          W invalid format, specify ~S type
+IVKEY          E key ~S not found at the keyring
+IVKEYTYP       W invalid key - specify an integer value
+IVKEYVAL       W invalid key value - value should be between 1 and 1,000,000
+IVMODCALL      E module ~S called with insufficient arguments
+IVOPRAT        W invalid operator found in the calculation
+IVOPT          W invalid ~S option
+IVORDER        W invalid order -  select option(s) ~S first
+IVPASSW        W invalid password
+IVPWD          W invalid password - access denied
+IVSEL          W selection is out of range
+IVSWVAL        W invalid value for SET WIDTH - specify 80 or 132
+IVVALFIL       W option is no select list or has no value file
+LAST           W this is the last page of this list
+LDIGIT         E operands cannot have more than 9 digits
+LOWVAL         W value can't be less than ~S
+MANAGE         I you already are in the Management Menu
+MBXALREX       W invalid call of OMI$CREATE_MBX - mailbox ~s already created
+MNUNOTFOUND    W menu file ~S not found
+MODNOTFOUND    E module ~S not found
+NAME           I the name of this menu is \~S\       
+NESTINCL       W nested includes are not allowed
+NOCFG          E no personal configuration file found - key not set
+NOCNTINC       W this menu has no counter to increase
+NOCOUNT        W no counter available for this menu
+NOCOUNTER      I no counter available for this menu
+NODCLPRV       W you are not authorized for interactive DCL
+NODEF          W input is required here - there's no default answer
+NODELIM        E error in menu file - no delimiter for this taglist
+NOEXPRV        W you don't have export privilege
+NOFRMTYPE      E no format type specified for ~S - check menu file
+NOHLP          W no help found for menu ~S
+NOHLPFIL       W no helpfile found for this menu
+NOIMPRV        W you don't have import privilege
+NOINPUT        W this menu contains no input fields
+NOKEY          E invalid call of OMI$~S - no encryption key specified
+NOMATCH        W no matches for search string ~S
+NOMENU         W no menu specified
+NOMESSAGE      E no message found with identifier ~S
+NOMNUAUTH      W you are not authorized for this menu - exiting
+NOMNUNAME      W no name set on this menu
+NOMSGFILE      E no message file found for facility ~S
+NONAME         I this menu has no name
+NOORDER        W no required order set for this menu
+NOPRIV         W you are not authorized for this menu or function
+NOPWD          W no password set on this menu
+NOROUTINE      W no routine found for the command ~S
+NOSUCHITM      W cannot find item \~S\ or section \[~S]\
+NOSUCHNAME     W no submenu found with name ~S
+NOSUCHTA       W invalid parameter - no such text area
+NOTAUTH        W not authorized - use <Ctrl/Z> to go back
+NOTEXTAREA     W no text areas found in this menu
+NOTMPFILE      W file name required for fixed areas
+NOTYET         I format ~S not yet implemented
+NOT_YET        W this command is not yet implemented
+NOUNIQTA       W no unique text area found - specify an integer
+NOVALFILE      E value file ~S not found
+NOVARS         W no variables found for this menu
+NOVMSMSG       I no VMS message found for status ~S
+NOWILDCARD     W wildcards are not allowed in this option
+NO_OTF         E no on-the-fly menu specified
+NO_OTFINP      E missing on-the-fly menu inputs
+NO_OTFITM      E missing on-the-fly menu items
+OTFSUB         E submenus not allowed in on-the-fly menus
+OUTOFRA        E intermediate value ~S is out of range
+OVERFLOW       E screen overflow
+PARNOTMATCH    W parentheses do not match
+PROOUTRA       W product ~S might be out of range
+PWDVERFAIL     W password verification failed
+READERR        E error reading from file ~S
+READMNU        I reading menu file - ~S% done
+REMNAME        S succesfully removed the menu name
+REMPWD         S succesfully removed the password
+REQSELECTED    I all required options have been selected
+RESETVAR       S variables reset to default
+RESTMNU        I restoring previous menu
+SCROVERFL      E screen overflow - too many menu items or window too small
+SETKEY         S succesfully set the personal key
+SETNAME        S succesfully changed the menu name
+SETPWD         S succesfully changed the password
+SHORTPWD       W password can not be shorter than 5 characters
+SUSPINTR       F suspected intruder - access denied
+TAEMPTY        I text area is currently empty
+TAFNF          W text area file not found
+TALOCK         W temporary file is in use - cannot create text area
+TATEMP         W text area file is temporary - cannot be deleted
+TATRUNC        W text area is longer than ~S characters - truncated
+TOOLERR        E no toolbox defined in \OMI$:OMI$TOOLBOX.INI\
+TOOLONG        W string length is not allowed to be more than ~S
+TOOSHORT       W string length is not allowed to be less than ~S
+TOPLEVEL       I you already are at the toplevel
+TOPONLY        W this option can only be used at the top level menu
+TRANERR        E cannot translate input - invalid variable
+VALLOGERR      F error opening logfile ~S
+VALOK          S no errors or warnings found
+VALOPENERR     W value file ~S is probably locked
+VALRESULT      I found ~S error(s) and ~S warning(s)
+VERSION        I current OMI version is ~S
+VMSERR         E VMS error occured - status was ~S
+WRITING        I please wait - writing ~S

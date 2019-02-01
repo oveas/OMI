@@ -1,0 +1,114 @@
+$	goto start$
+$!
+$!******************************************************************************
+$!*                                                                            *
+$!*    MODULE NAME:                                                            *
+$!*    ============                                                            *
+$!*      List_Files.Omi                                                        *
+$!*                                                                            *
+$!*    USAGE:                                                                  *
+$!*    ======                                                                  *
+$!*      OMI$CALL LIST_FILES file(s)-to-list display-what                      *
+$!*                                                                            *
+$!*    DESCRIPTION:                                                            *
+$!*    ============                                                            *
+$!*      This standard module is called to create a listing of specified files *
+$!*      and calls TYPE_FILE to display them.                                  *
+$!*      The file specification(s) should be passed as one parameter. If more  *
+$!*      file types should be listed, or files from more directory, they       *
+$!*      have to be separated by commas.                                       *
+$!*      The second parameter tells this module what to display. By default,   *
+$!*      the full specification will be displayed. This can be overridden      *
+$!*      by specifying one or more fields in P2                                *
+$!*      (eg. OMI$CALL LIST_FILES SYS$LOGIN:*.* name,type)                     *
+$!*                                                                            *
+$!*    HISTORY:                                                                *
+$!*    ========                                                                *
+$!*      v1  15-09-97 Oscar van Eijk        Created                            *
+$!*      v2  21-08-02 Oscar van Eijk        Added error handling to ensure     *
+$!*                                         temporary file cleanup.            *
+$!*                                                                            *
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$ start$:
+$!
+$	on warning then $ continue
+$	on error then $ goto 98$
+$	on severe_error then $ goto 98$
+$	_status = omi$_ok
+$	if p1 .eqs. "" then $ goto 91$
+$	if p2 .eqs. ""
+$	   then $ _full_list = 1
+$	   else
+$		_full_list = 0
+$		p2 = "," + f$edit(p2,"upcase")
+$	endif
+$	open /write file_list sys$scratch:omi$file_listing._tmp$
+$	_spec_counter = 0
+$!
+$ 1$:
+$!
+$	_filespec = f$element(_spec_counter, ",", P1)
+$	if _filespec .eqs. "" .or. _filespec .eqs. "," then $ goto 10$
+$	gosub 50$
+$	_spec_counter = _spec_counter + 1
+$	goto 1$
+$!
+$ 10$:
+$!
+$	close file_list
+$	omi$call type_file sys$scratch:omi$file_listing._tmp$ norefresh
+$	delete /nolog /noconfirm sys$scratch:omi$file_listing._tmp$;
+$	goto 99$
+$!
+$!******************************************************************************
+$!
+$ 50$:
+$!
+$	_filename = f$search(_filespec)
+$	if _filename .eqs. "" then $ return
+$	_filename = f$edit( f$getsyi("scsnode"), "collapse") + "::" + _filename
+$	if _full_list
+$	   then
+$		write file_list _filename
+$		goto 50$
+$	endif
+$	_file_name = ""
+$!
+$	if f$locate(",NOD", p2) .lt. f$length(p2) then -
+	   $ _file_name = _file_name + f$parse(_filename,,,"node")
+$	if f$locate(",DEV", p2) .lt. f$length(p2) then -
+	   $ _file_name = _file_name + f$parse(_filename,,,"device")
+$	if f$locate(",DIR", p2) .lt. f$length(p2) then -
+	   $ _file_name = _file_name + f$parse(_filename,,,"directory")
+$	if f$locate(",NAM", p2) .lt. f$length(p2) then -
+	   $ _file_name = _file_name + f$parse(_filename,,,"name")
+$	if f$locate(",TYP", p2) .lt. f$length(p2) then -
+	   $ _file_name = _file_name + f$parse(_filename,,,"type")
+$	if f$locate(",VER", p2) .lt. f$length(p2) then -
+	   $ _file_name = _file_name + f$parse(_filename,,,"version")
+$!
+$	write file_list _file_name
+$	goto 50$
+$!
+$ 91$:
+$!
+$	omi$signal omi ivmodcall,list_files
+$	_status = omi$_error
+$	goto 99$
+$!
+$ 98$:
+$!
+$	omi$signal omi abort,'$status'
+$	_status = $status
+$	if f$trnlnm("file_list") .nes. "" then $ close file_list
+$	if f$search("sys$scratch:omi$file_listing._tmp$") .nes. "" then -
+	   $ deletee nolog /noconfirm sys$scratch:omi$file_listing._tmp$;
+$!
+$ 99$:
+$!
+$	exit _status
+$!
+$!******************************************************************************

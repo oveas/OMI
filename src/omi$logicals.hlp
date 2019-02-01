@@ -1,0 +1,45 @@
+1 Logical_Names
+
+Several logical names can be defined to change the behaviour of
+OMI. None of them are required; the only one that is required
+by OMI (OMI$) will be defined dynamically if absent.
+
+2 OMI$
+
+This logical points to the directory where all OMI related files
+are located. If this logical is not set, it will be defined when
+OMI starts, and deassigned when OMI ends.
+
+2 OMI$MAILBOX
+
+This is a logical pointing to a mailbox that's available for
+communication between processes in OMI modules.
+The logical is available when the OMI command OMI$CREATE_MBX
+is called from an OMI module.
+
+For mor information about the use of mailboxes in OMI, refer
+to the subtopic 'Calling_Modules OMI_Commands OMI$CREATE_MBX'.
+
+2 OMI$MENU_DIRECTORY
+
+When this logical exists, OMI looks in the directories where it points
+to for all menu files. If a file is not found here, OMI looks in the
+default directory, pointed to by OMI$. This is also the directory where
+menu files should be stored if the logical does not exist.
+
+Menu files should be located in one of those directories. If they
+can't be found there, an error message will be displayed. 
+This logical can be defined as a search list.
+
+2 OMI$STARTMENU
+                                        
+If this logical is set, is points to the menu file with which OMI
+starts every session. This logical can be user specific or system
+wide.
+
+2 OMI$CONFIG
+
+This logical points to the user specific configuration file. It should
+represent the full path and filename.
+If not set, the default configuration file OMI$:OMI$MENU.CFG is used.
+

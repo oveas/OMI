@@ -1,0 +1,537 @@
+!******************************************************************************
+!*                                                                            *
+!*    MENU NAME:                                                              *
+!*    ==========                                                              *
+!*      Omi$Manage                                                            *
+!*                                                                            *
+!*    DESCRIPTION:                                                            *
+!*    ============                                                            *
+!*      This module manages some parts of OMI internally.                     *
+!*                                                                            *
+!*    HISTORY:                                                                *
+!*    ========                                                                *
+!*      v1  02-07-97 Oscar van Eijk        Created                            *
+!*                                                                            *
+!******************************************************************************
+!
+[constants]
+!
+! Start with some configurable constant values
+!
+   facil_list  = sys$scratch:omi$message_facilities._tmp$
+
+!*******************************************************************************
+!
+!==>	Define the Menus
+!
+!*******************************************************************************
+
+[menu_menu]
+!
+! The Main Menu
+!
+   prompt     = OMIMGT>
+   title      = Omi Management - Main Menu
+   name       = mainmenu
+   all_inputs = false
+!   comment    = This menu is being developed - there's only one submenu available
+   item1      = OMI Messages Menu#submenu#messages
+   item2      = Help on this menu#command#info
+!   item2      = Create a new (sub)menu#submenu#createmnu
+!   input1     = Select a Menu file#mnu_file##frm_menufile
+
+
+
+!*******************************************************************************
+!*******************************************************************************
+!==>	Message Menu and Attributes
+!*******************************************************************************
+!*******************************************************************************
+
+!*******************************************************************************
+!
+!==>	Define the Menus
+!
+!*******************************************************************************
+
+[menu_messages]
+!
+! This menu can be used to create a new message file, repair an existing
+! message file, or to add a message to a message file
+!
+   title      = Omi Management - Messages Menu
+   name       = messages           ! The name is used by OMI$INSTALL.COM
+   on_init    = Omi$:Mgt$List_Facil
+   on_exit    = Omi$:Mgt$List_Facil rem_file
+   all_inputs = false
+   item1      = Create this facility#call#Omi$:Mgt$Message create
+   item2      = Add a new message#submenu#add_message
+   item3      = Edit this message#submenu#edt_message
+   item4      = Delete this message#call#Omi$:Mgt$Message delete
+   item5      = Display this message#call#Omi$:Mgt$Message display
+   item6      = Search for a message#call# -
+		Omi$:Mgt$Message search ~?{Search string:} 
+   item7      = Repair the message file#call#Omi$:Mgt$Message repair
+   item8      = Back to the Main Menu#command#main
+   input1     = Select a facility to work with#{sel|facil_list}msg_facil
+   input2     = Select a message identifier#msg_ident##frm_facident
+
+[menu_add_message]
+   title   = Omi Management - Add Messages
+   prompt  = ADDMSG>
+   on_init = Omi$:Mgt$Check_Facil
+   on_exit = Omi$:Mgt$Message check
+   item1   = Add this message#call#Omi$:Mgt$Message add
+   item2   = Back to the Message Menu#command#back
+   item3   = Back to the Main Menu#command#main
+   input1  = Identification#msg_ident##frm_facident
+   input2  = Severity#{sel|severity_levels}msg_sever
+   input3  = Message text#msg_text
+
+[menu_edt_message]
+   title   = Omi Management - Edit Messages
+   comment = Edit message with identifier {msg_ident}
+   prompt  = EDTMSG>
+   on_init = Omi$:Mgt$Check_Ident
+ !  on_exit = Omi$:Mgt$Check_Written
+   item1   = Update this message#call#Omi$:Mgt$Message edit
+   item2   = Back to the Message Menu#command#back
+   item3   = Back to the Main Menu#command#main
+   input1  = Severity#{sel|severity_levels}msg_sever
+   input2  = Message text#msg_text
+
+!*******************************************************************************
+!
+!==>	Define all format blocks
+!
+!*******************************************************************************
+
+[frm_facident]
+!
+! Format for Message Facilities and Identtifiers
+!
+   type      = string
+   collapse  = true
+   upcase    = true
+   minlength = 3
+   maxlength = 14
+   ivchars   = @#%^&*()+{}[]|\:;',./<>?`~
+
+!*******************************************************************************
+!
+!==>	Define all tag- and select lists
+!
+!*******************************************************************************
+
+[severity_levels]
+!
+! The possible severity levels for messages
+!
+   value1 = Informational
+   value2 = Success
+   value3 = Warning
+   value4 = Error
+   value5 = Fatal
+
+[facil_list]
+!
+! The list of available facilities is dumped to a file when selecting the
+! menu.
+!
+   filename = ''constants$facil_list'
+
+!*******************************************************************************
+!*******************************************************************************
+!==>	Menu Menu and Attributes
+!*******************************************************************************
+!*******************************************************************************
+
+! Since this menu is not available yet, the file ends here...
+<EOF>
+
+!*******************************************************************************
+!
+!==>	Define the Menus
+!
+!*******************************************************************************
+
+[menu_createmnu]
+!
+! This menu is used to create new submenus in the selected menu file.
+!
+   title   = Omi Management - Create a new SubMenu
+   name    = createmenu
+   on_init = mgt$new_menu_file
+   on_exit = mgt$write_menu_file
+   item1   = Create this menu#call#Omi$:Mgt$CreateMenu menu
+   item2   = Add an Item element#submenu#additem
+   item3   = Add an Input element#submenu#{Straight Input|addinp_straight} -
+		{Select List|addinp_select}{Tag List|addinp_tag}Input Type:
+   item4   = Add a security section#submenu#addsecurity
+   input1  = Section name#msection##frm_intnames
+   input2  = Menu Title#mtitle
+   input3  = Menu Owner (NONE for no owner)#mowner#''omi$current_user'-
+		#frm_username
+   input4  = Set a password#{sel|yes_or_no}mpassword#value2
+   input5  = Menu Name#mname##frm_intnames
+   input6  = Counter Name#mcounter##frm_intnames
+
+[menu_addinp_straight]
+!
+! Collect all information for Straight Input elements. If a format block
+! needs to be added to the input, dynamic submenus will be called, 
+! depending on the input type
+!
+   title   = Omi Management - Add an Input Element
+   comment = Adding Input Element #{counter$input_counter}
+   counter = input_counter
+   item1   = Back to the previous menu#command#back
+   item2   = Add a format block to this element#submenu#       -
+		{String|addfrm_string}{Integer|addfrm_integer} -
+		{Date|addfrm_date}{FileSpec|addfrm_filespec}Format Type: 
+   item3   = Next Input#command#increase refresh
+   input1  = Input type#{sel|straight_input_type} -
+		inptype'counter$input_counter'#value1
+   input2  = Text on display#displtext'counter$input_counter'
+   input3  = Variable Name#varname'counter$input_counter'##frm_intnames
+   input4  = Default value#defvalue'counter$input_counter'
+
+[menu_addfrm_string]
+!
+! Collect all information for the String- type format block
+!
+   title   = OMI Management - Add a Format Block
+   counter = input_counter
+   auto_increase = false
+   item1   = Back to the previous menu#menu#back
+    ! The 1st input item is a dummy select to force existance of the variable
+   input1  = Format type#{sel|string_format_type} -
+		frm_type'counter$input_counter'#value1
+   input2  = Section name#frm_sname'counter$input_counter'##frm_intnames
+   input3  = Force to Upcase#{sel|true_or_false} -
+		strfrm_upcase'counter$input_counter'#value2
+   input4  = Force to Lowercase#{sel|true_or_false} -
+		strfrm_lowercase'counter$input_counter'#value2
+   input5  = Collapse string#{sel|true_or_false} -
+		strfrm_collapse'counter$input_counter'#value2
+   input6  = Minimum length#strfrm_minlength'counter$input_counter'# -
+		#frm_positive_int
+   input7  = Maximum length#strfrm_maxlength'counter$input_counter'# -
+		#frm_positive_int
+   input8  = List of invalid characters#strfrm_ivchars'counter$input_counter'
+
+[menu_addfrm_integer]
+!
+! Collect all information for the Integer- type format block
+!
+   title   = OMI Management - Add a Format Block
+   counter = input_counter
+   auto_increase = false
+   item1   = Back to the previous menu#menu#back
+    ! The 1st input item is a dummy select to force existance of the variable
+   input1  = Format type#{sel|integer_format_type} -
+		frm_type'counter$input_counter'#value1
+   input2  = Section name#frm_sname'counter$input_counter'##frm_intnames
+   input3  = Minimum Value#intfrm_minimum'counter$input_counter'##frm_integer
+   input4  = Maximum Value#intfrm_maximum'counter$input_counter'##frm_integer
+
+[menu_addfrm_date]
+!
+! Collect all information for the Date- type format block
+!
+   title   = OMI Management - Add a Format Block
+   counter = input_counter
+   auto_increase = false
+   all_inputs = false
+   item1   = Back to the previous menu#menu#back
+    ! The 1st input item is a dummy select to force existance of the variable
+   input1  = Format type#{sel|date_format_type} -
+		frm_type'counter$input_counter'#value1
+   input2  = Section name#frm_sname'counter$input_counter'##frm_intnames
+   input3  = Date Format#{sel|date_formats} -
+		datfrm_type'counter$input_counter'#value1
+
+[menu_addfrm_filespec]
+!
+! Collect all information for the FileSpec- type format block
+!
+   title   = OMI Management - Add a Format Block
+   counter = input_counter
+   auto_increase = false
+   item1   = Back to the previous menu#menu#back
+    ! The 1st input item is a dummy select to force existance of the variable
+   input1  = Format type#{sel|filespec_format_type} -
+		frm_type'counter$input_counter'#value1
+   input2  = Section name#frm_sname'counter$input_counter'##frm_intnames
+   input3  = Existance required#{sel|true_or_false} -
+		filfrm_required'counter$input_counter'#value2
+   input4  = Wildcards allowed#{sel|true_or_false} -
+		filfrm_wildcards'counter$input_counter'#value2
+   input5  = Default device#filfrm_fdevice'counter$input_counter' -
+		##frm_defdevname
+   input6  = Default directory#filfrm_fdirectory'counter$input_counter' -
+		##frm_defdirname
+   input7  = Default filetype#filfrm_ftype'counter$input_counter' -
+		##frm_deftypename
+
+[menu_addinp_select]
+!
+! Collect all required information for a Select List input Element
+!
+   title   = Omi Management - Add a Select Input Element
+   comment = Adding Input Element #{counter$input_counter}
+   counter = input_counter
+   item1   = Back to the previous menu#command#back
+   item2   = Create a list of values#submenu#sellist_values
+   item3   = Next Input#command#increase refresh
+   input1  = Input type#{sel|select_input_type} -
+		inptype'counter$input_counter'#value1
+   input2  = Text on display#displtext'counter$input_counter'
+   input3  = Variable Name#varname'counter$input_counter'##frm_intnames
+   input4  = Default value (VALUEn)#defvalue'counter$input_counter' -
+		##frm_positive_int
+   input5  = Name of the Select List#sellist_name'counter$input_counter' -
+		##frm_intnames
+
+[menu_sellist_values]
+!
+! Collect all values to create a select list
+!
+   title   = Omi Management - Create a Select List
+   comment = Adding VALUE{counter$sellst_value_counter} for Sel -
+		 ect List {sellist_name'counter$input_counter'}
+   counter = sellst_value_counter
+   all_inputs = false
+   item1   = Back to the previous menu#command#back
+   item2   = Reset to VALUE0#command#reset counter
+   item3   = Increase 'n' in VALUEn#command#increase refresh
+   input1  = Value#selvalue'counter$sellst_value_counter'
+   
+[menu_addinp_tag]
+!
+! Collect all required information for a Tag List input Element
+!
+   title  = Omi Management - Add a Tag Input Element
+   comment = Adding Input Element #{counter$input_counter}
+   counter = input_counter
+   item1   = Back to the previous menu#command#back
+   item2   = Create a list of values#submenu#taglist_values
+   item3   = Next Input#command#increase refresh
+   input1  = Input type#{sel|tag_input_type} -
+		inptype'counter$input_counter'#value1
+   input2  = Text on display#displtext'counter$input_counter'
+   input3  = Variable Name#varname'counter$input_counter'##frm_intnames
+   input4  = Name of the Tag List#taglist_name'counter$input_counter' -
+		##frm_intnames
+   input5  = Comment line#taglist_comment'counter$input_counter'
+   input6  = Delimiter#taglist_delimiter'counter$input_counter' -
+		##frm_taglst_delimiter
+
+[menu_taglist_values]
+!
+! Collect all values to create a tag list
+!
+   title   = Omi Management - Create a Tag List
+   comment = Adding VALUE{counter$sellst_value_counter} for Tag L -
+		 ist {sellist_name'counter$input_counter'}
+   counter = taglst_value_counter
+   all_inputs = false
+   item1   = Back to the previous menu#command#back
+   item2   = Reset to VALUE0#command#reset counter
+   item3   = Increase 'n' in VALUEn#command#increase refresh
+   input1  = Value#selvalue'counter$sellst_value_counter'
+
+[menu_additem]
+!
+! Add an Item element to the new menu
+!
+   title   = Omi Management - Add an Item Element
+   comment = Adding Item Element #{counter$item_counter}
+   counter = item_counter
+   item1   = Back to the previous menu#command#back
+   item2   = Next item#command#increase refresh
+   input1  = Text on display#itemtext'counter$item_counter'
+   input2  = Item Type#{sel|item_types}itemtype'counter$item_counter'
+   input3  = Submenu/Omi job/Command#itemp3'counter$item_counter'
+   
+[menu_addsecurity]
+!
+! Add a security block to the new menu
+!
+   title   = Omi Management - Add a Security Section
+   counter = secuser_counter
+   comment = Adding User #{counter$secuser_counter} to Security
+   all_inputs = false
+   item1   = Back to the previous menu#command#back
+   item2   = Next user#command#increase refresh
+   input1  = Section name#ssection##frm_intnames
+   input2  = Username#suser'counter$secuser_counter'#ALL_USERS#frm_username
+   input3  = Privilege#{sel|security_levels}slevel'counter$secuser_counter' -
+	     #value3
+   
+!*******************************************************************************
+!
+!==>	Define all format blocks
+!
+!*******************************************************************************
+
+[frm_menufile]
+!
+! Format for the menu- file
+!
+   type      = filespec
+   required  = false
+   wildcards = false
+   ftype     = .mnu
+   fdevice   = Omi$Menu_Directory:
+
+[frm_username]
+!
+! Username format
+!
+   type      = string
+   collapse  = true
+   upcase    = true
+   minlength = 4
+   maxlength = 12
+   ivchars   = @#%^&*()+{}[]=|\:;',./<>?`~
+
+[frm_intnames]
+!
+! Internal names, like, section-, variable- and menu names, will be formatted
+! using this block
+!
+   type      = string
+   upcase    = true
+   collapse  = true
+   minlength = 3
+   maxlength = 12
+   ivchars   = @#%^&*()+{}[]=|\:;',./<>?`~
+
+[frm_positive_int]
+!
+! Format for all inputs where a positive integer is required
+!
+   type = integer
+   min  = 0
+
+[frm_integer]
+!
+! Format for all inputs where an integer is required
+!
+   type = integer
+
+[frm_defdevname]
+!
+! Format for the Default Device in the FileDev format type
+!
+   type      = string
+   collapse  = true
+   upcase    = true
+   ivchars   = @#%^&*()+{}[]=|\;',./<>?`~
+
+[frm_defdirname]
+!
+! Format for the Default Directory in the FileDev format type
+!
+   type      = string
+   collapse  = true
+   upcase    = true
+   ivchars   = @#%^&*()+{}=|\;',:/?`~
+
+[frm_deftypename]
+!
+! Format for the Default File type in the FileDev format type
+!
+   type      = string
+   collapse  = true
+   upcase    = true
+   ivchars   = @#%^&*()+{}=[]|\;',:/<>?`~
+
+[frm_taglst_delimiter]
+!
+! Format for the Default File type in the FileDev format type
+!
+   type      = string
+   collapse  = true
+   lowercase = true	! Make sure the IVCHARS has to contain only lowercase
+   minlength = 1
+   maxlength = 1
+   ivchars   = abcdefghijklmnopqrstuvwxyz0123456789
+
+!*******************************************************************************
+!
+!==>	Define all tag- and select lists
+!
+!*******************************************************************************
+
+[security_levels]
+!
+! Select list for the Security Levels
+!
+   value1 = None
+   value2 = Read
+   value3 = Read,Exec
+   value4 = Read,Write,Exec
+
+[yes_or_no]
+!
+! General Yes/No boolean
+!
+   value1 = Yes
+   value2 = No
+
+[true_or_false]
+!
+! General True/False boolean
+!
+   value1 = True
+   value2 = False
+
+!
+! Below are some dummy select blocks, used in several dynamic menus to
+! force the existance of the variable that's set using 'value1' as defaults
+!
+[straight_input_type]
+   value1 = Straight Input
+[select_input_type]
+   value1 = Select Input
+[tag_input_type]
+   value1 = Tag Input
+[string_format_type]
+   value1 = String
+[integer_format_type]
+   value1 = Integer
+[date_format_type]
+   value1 = Date
+[filespec_format_type]
+   value1 = FileSpec
+
+[date_formats]
+!
+! Possible values for date formatting
+!
+   value1 = absolute
+   value2 = comparison
+   value3 = delta
+
+[item_types]
+!
+! Select list with the possible Item Types
+!
+   value1 = Submenu
+   value2 = Command
+   value3 = Call
+
+!*******************************************************************************
+!
+!==>	Define the counters for this menu
+!
+!*******************************************************************************
+
+[counter]
+   input_counter        = 0
+   item_counter         = 0
+   secuser_counter      = 0
+   sellst_value_counter = 0
+   taglst_value_counter = 0

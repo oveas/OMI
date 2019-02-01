@@ -1,0 +1,384 @@
+$	if p1 .eqs. "REPAIR"  then $ gosub msg$_repair
+$	if p1 .eqs. "CREATE"  then $ gosub msg$_create
+$	if p1 .eqs. "LIST"    then $ gosub msg$_list
+$	if p1 .eqs. "SEARCH"  then $ gosub msg$_search
+$	if p1 .eqs. "EDIT"    then $ gosub msg$_edit
+$	if p1 .eqs. "DISPLAY" then $ gosub msg$_display
+$	if p1 .eqs. "DELETE"  then $ gosub msg$_delete
+$	if p1 .eqs. "ADD"     then $ gosub msg$_add
+$	if p1 .eqs. "CHECK"   then $ gosub msg$_checkwritten
+$	exit $status
+$!
+$!******************************************************************************
+$!*                                                                            *
+$!*    MODULE NAME:                                                            *
+$!*    ============                                                            *
+$!*      Mgt$Message.Omi                                                       *
+$!*                                                                            *
+$!*    CALLED BY:                                                              *
+$!*    ==========                                                              *
+$!*      Omi$Manage.Mnu  - The OMI Management Menu                             *
+$!*                                                                            *
+$!*    DESCRIPTION:                                                            *
+$!*    ============                                                            *
+$!*      This module is called by the Message Submenu. It is used for          *
+$!*      the following purposes:                                               *
+$!*        - Create a new message file,                                        *
+$!*        - Repair the indexed file organisation of the message file          *
+$!*          if it got corrupted,                                              *
+$!*        - Add a message to a message file.                                  *
+$!*                                                                            *
+$!*    HISTORY:                                                                *
+$!*    ========                                                                *
+$!*      v1  07-07-97 Oscar van Eijk        Created                            *
+$!*      v2  12-09-97 Oscar van Eijk        Added the Search, Edit, Delete     *
+$!*                                         and List commands.                 *
+$!*                                         Moved some checks to ON_INIT       *
+$!*                                         modules (MGT$CHECK_FACIL and       *
+$!*                                         MGT$CHECK_IDENT).                  *
+$!*      v3  12-08-02 Oscar van Eijk        Added the CheckWritten function    *
+$!*      v4  21-08-02 Oscar van Eijk        Bugfix; message repair wrote in    *
+$!*                                         the wrong (current) directory.     *
+$!*                                                                            *
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Add a new message to a message datafile.
+$!
+$ msg$_add:
+$!
+$	gosub msg$check_input
+$	if $status .ne. omi$_ok then $ return $status
+$!
+$	msg_sever = f$extract(0, 1, msg_sever)
+$	msg_ident = f$fao("!15<!AS!>", msg_ident)
+$!
+$	open /read /write /share=read omi$msg /error=msg$flock -
+	   Omi$Menu_Directory:'msg_facil'$messages.dat
+$	write /error=msg$error_key omi$msg "''msg_ident'''msg_sever' ''msg_text'"
+$	close omi$msg
+$	omi$signal omimgt addmsg
+$	return
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Edit an existing message.
+$!
+$ msg$_edit:
+$!
+$	msg_sever = f$extract(0, 1, msg_sever)
+$	msg_ident = f$fao("!15<!AS!>", msg_ident)
+$!
+$	open /read /write /share=read omi$msg /error=msg$flock -
+	   Omi$Menu_Directory:'msg_facil'$messages.dat
+$	read /key="''msg_ident'" omi$msg msg$_message
+$	write /update omi$msg "''msg_ident'''msg_sever' ''msg_text'"
+$	close omi$msg
+$	omi$signal omimgt edtmsg
+$	return
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Delete a message
+$!
+$ msg$_delete:
+$!
+$	omi$call mgt$check_facil
+$	if $status .ne. omi$_ok then $ return $status
+$!
+$	gosub msg$read_show
+$	omi$confirm "Delete this message ? " 'questions$answer_yes
+$	omi$refresh
+$	if .not. omi$confirmed
+$	   then
+$		omi$signal omimgt delcan
+$		return
+$	endif
+$!
+$	open /read /write /share=read omi$msg /error=msg$flock -
+	   Omi$Menu_Directory:'msg_facil'$messages.dat
+$	read /delete /key="''msg_ident'" omi$msg msg$_message
+$	close omi$msg
+$	omi$signal omimgt deleted
+$	return
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Display a message
+$!
+$ msg$_display:
+$!
+$	omi$call mgt$check_facil
+$	if $status .ne. omi$_ok then $ return $status
+$!
+$	gosub msg$read_show
+$	omi$wait
+$	omi$refresh
+$	return
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Search for messages
+$!
+$ msg$_search:
+$!
+$	omi$call mgt$check_facil
+$	if $status .ne. omi$_ok then $ return $status
+$!
+$	if p2 .eqs. ""
+$	   then $ copy Omi$Menu_Directory:'msg_facil'$messages.dat -
+		sys$scratch:omi_messages._tmp$
+$	   else
+$		search Omi$Menu_Directory:'msg_facil'$messages.dat 'p2 -
+		   /output=sys$scratch:omi_messages._tmp$
+$		if $status .eq. omi$_nomatch
+$		   then
+$			omi$signal omi nomatch,'p2
+$			delete /nolog /noconfirm sys$scratch:omi_messages._tmp$;
+$			return
+$		endif
+$	endif
+$	open /read omi_msg sys$scratch:omi_messages._tmp$
+$	open /write listing sys$scratch:list_messages._tmp$
+$!
+$ search$_scan:
+$!
+$	read /end_of_file=search$end_scan omi_msg _message
+$	write listing -
+	   "%''msg_facil'-''f$extract(15, 1, _message)'-''f$edit(f$extract(0, 15, _message),"collapse")', ''f$extract(17, - f$length(_message) - 17, _message)'"
+$	goto search$_scan
+$!
+$ search$end_scan:
+$!
+$	close omi_msg
+$	delete /nolog /noconfirm sys$scratch:omi_messages._tmp$;
+$	close listing
+$	omi$call type_file sys$scratch:list_messages._tmp$
+$	delete /nolog /noconfirm sys$scratch:list_messages._tmp$;
+$!
+$	return
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	If the file organisation of the Message data- file is corrupted,
+$!	this routine can be called from the Omi Management menu to
+$!	repair it.
+$!
+$ msg$_repair:
+$!
+$	omi$call mgt$check_facil
+$	if $status .ge. omi$_warning then $ return $status
+$!
+$	_msg_file_name = f$search ("Omi$Menu_Directory:''msg_facil'$messages.dat")
+$	msg$file_name = "''f$parse (_msg_file_name,,,,"no_conceal")'" - -
+	   "''f$parse (_msg_file_name,,,"version")'" - "]["
+$	msg$_command = "convert ''msg$file_name' ''msg$file_name';0"
+$	gosub msg$_fdl
+$	purge /nolog /noconfirm /keep=1 'msg$file_name'
+$	omi$signal omimgt msgrep,msg_facil
+$	return
+$!
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	This routine creates a new message file, using the correct FDL
+$!	definition.
+$!
+$ msg$_create:
+$!
+$	if $status .ge. omi$_warning then $ return omi$_warning
+$!
+$	if f$search("Omi$Menu_Directory:''msg_facil'$messages.dat") .nes. ""
+$	   then
+$		omi$signal omimgt exmsgfile,msg_facil
+$		return omi$_warning
+$	endif
+$!
+$	msg$_command = "create Omi$:''msg_facil'$messages.dat"
+$	gosub msg$_fdl
+$	purge /nolog /noconfirm /keep=1 Omi$:'msg_facil'$messages.dat
+$	omi$signal omimgt cremsgfil,msg_facil
+$	return
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Called by Add Message mnu->ON_EXIT;
+$!	Check if the current message facility has been written to file.
+$!
+$ msg$_checkwritten:
+$!
+$	omi$check msg_ident ""  ! No error; just nothing to check for
+$	if $status .ge. omi$_warning then $ return omi$_ok
+$!
+$	open /read /write /share=read omi$msg /error=msg$flock -
+	   Omi$Menu_Directory:'msg_facil'$messages.dat
+$	read /error=msg$notwritten /key="''msg_ident'" omi$msg msg$_message
+$	close omi$msg
+$	return omi$_ok
+$!
+$ msg$notwritten:
+$!
+$	close omi$msg
+$	omi$confirm "The message is not yet written. Exit anyway?" -
+	   'questions$answer_no
+$	if omi$confirmed then $ return omi$_ok
+$	return omi$_warning
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!*              Shared Sub Routines and Error Handling                        *
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Check to see if all required variables were filled in.
+$!
+$ msg$check_input:
+$!
+$	omi$check msg_sever "%OMI-W-NOSEVER, severity not specified"
+$	if $status .ge. omi$_warning then $ return omi$_warning
+$!
+$	omi$check msg_ident "%OMI-W-NOIDENT, identification not specified"
+$	if $status .ge. omi$_warning then $ return omi$_warning
+$!
+$	omi$check msg_text  "%OMI-W-NOTEXT, text not specified"
+$	if $status .ge. omi$_warning then $ return omi$_warning
+$!
+$	return omi$_ok
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Read and display a message
+$!
+$ msg$read_show:
+$!
+$	open /read /write /share=read omi$msg /error=msg$flock -
+	   Omi$Menu_Directory:'msg_facil'$messages.dat
+$	read /error=msg$notfound /key="''msg_ident'" omi$msg msg$_message
+$	close omi$msg
+$!
+$	omi$record1 = "[1mFacility :[0m"
+$	omi$record2 = f$fao("!''screen$tab'* ") + msg_facil
+$	omi$record3 = "[1mSeverity :[0m"
+$	omi$record4 = f$fao("!''screen$tab'* ") + -
+	   f$element( f$locate( f$extract(15, 1, msg$_message), -
+	   "ISWEF"),",", "Informational,Success,Warning,Error,Fatal")
+$	omi$record5 = "[1mIdentification :[0m"
+$	omi$record6 = f$fao("!''screen$tab'* ") + msg_ident
+$	omi$record7 = "[1mText :[0m"
+$	omi$record8 = f$fao("!''screen$tab'* ") + -
+	   f$extract(17, f$length(msg$_message) - 17, msg$_message)
+$	omi$display_info
+$	return omi$_ok
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	The FDL definition of message files is specified below. This routine
+$!	is called both by 'msg$_repair' and 'msg$_create'. Those routines
+$!	define the symbol 'msg$_command', which can be 
+$!	   $ CONVERT <input-file> <output-file>
+$!	or
+$!	   $ CREATE <output-file>
+$!
+$ msg$_fdl:
+$!
+$	'msg$_command' /fdl=sys$input
+TITLE	"Omi$Messages"
+
+IDENT	" 4-JUL-1997 14:09:56  OpenVMS FDL Editor"
+
+SYSTEM
+	SOURCE			"OpenVMS"
+
+FILE
+	NAME			"OMI Message File Definition"
+	ORGANIZATION		indexed
+
+RECORD
+	CARRIAGE_CONTROL	carriage_return
+	FORMAT			variable
+	SIZE			132
+
+AREA 0
+	ALLOCATION		321
+	BEST_TRY_CONTIGUOUS	yes
+	BUCKET_SIZE		6
+	EXTENSION		84
+
+AREA 1
+	ALLOCATION		18
+	BEST_TRY_CONTIGUOUS	yes
+	BUCKET_SIZE		6
+	EXTENSION		6
+
+KEY 0
+	CHANGES			no
+	DATA_AREA		0
+	DATA_FILL		100
+	DATA_KEY_COMPRESSION	yes
+	DATA_RECORD_COMPRESSION	yes
+	DUPLICATES		no
+	INDEX_AREA		1
+	INDEX_COMPRESSION	no
+	INDEX_FILL		100
+	LEVEL1_INDEX_AREA	1
+	NAME			"Identification"
+	PROLOG			3
+	SEG0_LENGTH		15
+	SEG0_POSITION		0
+	TYPE			string
+$!
+$	return
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!	These are the error handlings.
+$!	Existance of the message file was already checked by
+$!	MGT$CHECK_FACIL.OMI
+$!
+$ msg$flock:
+$!
+$! Message file is locked
+$!
+$	omi$signal omimgt msgflock,msg_facil
+$	return omi$_warning
+$!
+$ msg$error_key:
+$!
+$! Message already exists
+$!
+$	close omi$msg
+$	omi$signal omimgt duplident,'f$edit(msg_ident,"collapse")
+$	return omi$_warning
+$!
+$ msg$notfound:
+$!
+$! Message does not exist
+$!
+$	close omi$msg
+$	omi$signal omimgt nomsg,msg_ident
+$	return omi$_warning
+$!
+$!******************************************************************************

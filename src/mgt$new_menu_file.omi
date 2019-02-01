@@ -1,0 +1,18 @@
+$!******************************************************************************
+$!*                                                                            *
+$!*	This module is called when the submenu 'Create a new Submenu'          *
+$!*	is called from the management menu. It checkes to see if the menu      *
+$!*	filename was entered, and creates it.                                  *
+$!*                                                                            *
+$!******************************************************************************
+$!
+$	omi$check mnu_file
+$	if $status .ge. omi$_warning
+$	   then
+$		omi$signal omimgt specfile
+$		omi$wait
+$		exit omi$_warning
+$	endif
+$!
+$	if f$search(mnu_file) .eqs. "" then $ create 'mnu_file'
+$	exit omi$_ok

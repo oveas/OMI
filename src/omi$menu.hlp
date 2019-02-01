@@ -1,0 +1,327 @@
+1 Known_Bugs
+
+* When OMI$DISPLAY_INFO needs to display a blank line between two
+  records, the OMI$RECORDn needs to contain at least one blank.
+  E.g. when the next three lines need to be displayed:
+
+    OMI$RECORD1 = "The first line"
+    OMI$RECORD2 = ""                  ! A blank line to separate
+    OMI$RECORD3 = "The last line"
+
+  the command OMI$DISPLAY will display only the first line.
+  This can be solved by specifying OMI$RECORD2 as " " (a blank).
+
+* When a TEXTAREA input element is defined with the option LARGE
+  set to TRUE, the command SHOW TEXTAREA shows nothing in certain
+  circumstances without warning.
+
+* When a library file is included with #INCLUDE, and duplicate values
+  are encountered, a leading value can be specified with the #LEADING
+  attribute.
+  However, when the menu file is validated with the /VALIDATE qualifier,
+  a warning will be displayed if the first item of two duplicate item
+  names was specified as leading.
+  During run-time this is handled properly.
+  
+1 Description
+
+Oscar's Menu Interpreter is a DCL procedure that reads menu files and
+represents the menu structure on a ChUI based window.
+
+OMI does not perform any actions on its own. Additional procedures are
+required to handle upon the users input. OMI is strictly created to
+create a standard user interface for all kinds of actions, with a
+clear structure, support for different security levels and password
+protection.
+
+The additional procedures that are required for any actions are
+referred to as OMI modules. A section in this help file describes
+how several commands, defined in OMI, can be used to create such
+procedures.
+
+1 Getting_started
+
+Oscar's Menu Interpreter can be used to walk through pre- defined menu
+structures. Such structures are created in .MNU files, which should be
+located in the same directory where OMI resides (referred to with the
+logical OMI$) or a special directory pointed to with the logical
+OMI$MENU_FILES.
+
+To start OMI, just type the command OMI at the DCL prompt.
+OMI will start a menu if:
+  - the logical OMI$START_MENU points to a valid menu file OMI$:
+    or OMI$MENU_DIRECTORY:
+  - the file OMI$MENU_DIRECTORY:OMI$MENU.MNU
+  - the file OMI$:OMI$MENU.MNU
+
+If none of these are found, OMI prompts to specify a menu file.
+
+To walk through the menu screens and enter input, just type the
+highlighted number of your choice.
+
+Ctrl/Z can always be used to go up one level, or to cancel an
+input prompt.
+
+The commands, that are described in this HELP file, can be entered
+at the command line.
+
+To see some examples, start the OMI$EXAMPLE.MNU file, with the
+command OMI OMI$EXAMPLE from the DCL command line, or
+MENU OMI$EXAMPLE from the OMI command line.
+
+1 Usage
+
+OMI Menu's display a list of options and/or values that can be filled in,
+further called 'elements'.
+To select an element, just type the number on the command line.
+
+OMI commands can also be entered at the command line. All OMI commands
+can be found in the toplevel of this help.
+
+When input values need to be entered, the option with which all inputs
+can be entered at once, will always be visible. The name of the options
+depends on the setting in the configuration file. By default, this
+is 'All inputs'.
+
+To go back one level in the menu structure, you can use the BACK command,
+the <Ctrl/Z> keystoke, or type a '0' (zero), followed by <Return>.
+
+2 Starting_OMI
+
+When OMI has been set up properly, OMI can be started from the DCL prompt
+with the command OMI. If the logical OMI$STARTMENU is not defined, this
+will display a list of all available menus in the directories OMI$ and
+OMI$MENU_DIRECTORY.
+
+Since version 1.4, OMI also reads command line qualifiers.
+*NOTE: When qualifiers are used, the first parameter, which refers
+       to the menu file, is always required, even if the logical
+       OMI$STARTMENU is defined and points to the menu file that
+       should be started!
+
+3 Parameters
+
+OMI supports three parameters, of which the second and third are
+obsolete since version 1.4 However, for backwards compatibility, they
+are still supported. For description of those parameters, refer to the
+topic auto_mode.
+
+The first parameter is the name of the menu file that should be started.
+This menu file has to be located in the OMI$ or OMI$MENU_DIRECTORY. If
+the parameter is omitted, and the logical OMI$STARTMENU, a list with
+available menus is presented, from which a selection can be made.
+
+3 Qualifiers
+
+Qualifiers can be specified after the first parameter on the DCL
+command line.
+
+/BACKGROUND[=mode]
+ /BACKGROUND=BATCH (default)
+ /BACKGROUND=DETACH
+
+Start an OMI module in the background. The first parameter is
+now an OMI module name (filename.OMI) in stead of a menu name.
+This module should be created to run unattended (e.g. using
+Mailboxes for communication)
+
+An OMI module can run as a detached process (requires VMS DETACH
+privilege), or in a batch queue.
+
+/BATCH
+ /BATCH
+ /NOBATCH (default)
+
+Start OMI in Batch mode. In this mode, all output, written to
+SYS$OUTPUT, is suppressed. This also means the menus are not
+displayed at all. This option is usefull when used together
+with /SUBMENU and /JUMPS.
+
+/DEBUG
+ /DEBUG
+ /NODEBUG (default)
+
+By default, all error messages from DCL are suppressed in OMI.
+If an error occures in OMI, its handled by OMI itself. This should
+also be the case in all OMI modules, but while these modules are
+being developed, it is usefull to see all messages that are generated
+by VMS.
+With the /DEBUG qualifier, all messages will be displayed. If the user
+entered $ SET VERIFY before starting OMI, all verify output is displayed
+as well.
+
+This qualifier replaces the symbol OMI$_DEBUG, that was used untill
+version 1.3 (however this symbol is still supported; if it's set to 1,
+the default for this qualifier is /DEBUG!).
+
+/IGNORE
+ /NOIGNORE (default)
+ /IGNORE=(keyword[,...])
+
+ Ignore specified warnings or errors during the OMI session.
+ If you specify only one keyword, you can omit the parentheses.
+ Possible keywords are:
+
+ DUPLICATES      When starting OMI, %OMI-W-DUPL warnings are
+                 displayed when OMI tries to set a symbol that's
+                 already defined. This happens after a crash of
+                 the previous OMI session, when the menu file is
+                 invalid, or when a new OMI session is started in
+                 a subprocess from within OMI (for OTF menus, this
+                 is the only way to open a new menu without leaving
+                 the OFT context).
+
+                 The /IGNORE=DUPLICATES qualifier overwrites all
+                 existing symbols without a warning.
+
+ DCLERRORS       When a DCL command is given in the menu file, or
+                 entered at the OMI prompt (commands DCL ($) or
+                 SILENT_DCL), or when a subprocess is spawned from
+                 the menu file (as an option) or using the OMI SPAWN
+                 command, OMI will catch its exit status and act
+                 accordingly. It the exit code was an error (severity
+                 2), OMI crashes.
+
+                 The /IGNORE=DCLERRORS qualifier ignores errors
+                 generated in such circumstances.
+ 
+                 NOTE: This does not apply to DCL or SPAWN action
+                       from within OMI modules !
+
+ DCLFATALS       This keyword has the same effect as the
+                 DCLERRORS keyword, but for fatal exit codes
+                 (severity 4).
+                 Both keywords can be given together as
+                 /IGNORE=(DCLERRORS,DCLFATALS). 
+
+/JUMPS
+ /JUMPS=option-list
+
+With the /JUMPS qualifier, all options that are normally entered one
+by one at the OMI prompt, can now be specified at the DCL prompt as
+a list of options separated by commas. If this list with option
+contains OMI commands with parameters, blanks are required to separate
+the parameters if they should be specified. The option has to be
+enclosed by double quotes.
+
+/PROGRESS
+ /PROGRESS
+ /NOPROGRESS
+
+This qualifier can be used to overwrite the SHOW_PROGRESS element
+from the configuration file. This element declares the default for
+this qualifier.
+
+/SUBMENU
+ /SUBMENU=submenu-name
+
+With the /SUBMENU qualifier, it is possible to start the OMI session
+with the submenu that has the specified name. By default, OMI starts
+a menu file with the main menu, but when one ore more submenus have
+names, OMI can start in one of those menus.
+
+/VALIDATE
+ /VALIDATE[=log-file]
+ /NOVALIDATE (default)
+
+This qualifier reads the menu file and validates the syntax line by
+line. It signals errors and warnings when errors or possible errors
+are found, like calling non- existing submenus, commands or modules,
+missing elements (e.g. ITEM1, ITEM2, ITEM4.), duplicate elements etc.
+If no errors are warnings are found, this does not guarantee a valid
+menu, since not everything can be checked especially when variables
+are used, or logicals defined by an ON_INIT module), but it finds the
+most common errors.
+
+A filename to write all messages to can optionally be specified. If
+omitted, all messages are written to SYS$ERROR.
+This qualifier requires WRITE privilege to the menu.
+
+2 Auto_mode
+
+When all options are known to the user, a menu can also be called
+in Auto Mode. This means, the menu file is specified as the first
+parameter for OMI, followed by the name of a submenu (refer to the
+subtopic 'Menu_File Menu_Section Name').
+If the menu file that needs to be called is specified by the
+logical OMI$START_MENU, the first parameter can be empty ("").
+
+The third parameter can be a list of inputs that needs to be specified,
+separated by commas. If this list contains OMI commands with blanks in
+it (e.g. RESET PASSWORD), that option has to be enclosed by double quotes,
+  e.q.
+  $ OMI MY-MENU SUB3 "RESET PASSWORD",EXIT
+or 
+  $ OMI MY-MENU /SUBMENU=SUB3 /JUMPS="RESET PASSWORD",EXIT
+
+The example above would remove the password of the menu with the name
+SUB3, and exit the menu. However, OMI will prompt for the current
+password when entering the menu before executing any command.
+
+If when of the options selects a TAG list, the Ctrl/Z keystroke can
+be emulated with the string '^Z' (= 'shift-6' 'Z' on VT keyboards).
+
+To have a look at the possibilities with this Auto Mode, try starting
+the example menu OMI$EXAMPLE with the following command:
+
+  $ OMI OMI$EXAMPLE INPUT 4,5,5,3,10,^Z,3,EXIT
+or
+  $ OMI OMI$EXAMPLE /SUBMENU=INPUT /JUMPS=4,5,5,3,10,^Z,3,EXIT
+
+2 Entering_values
+
+When an input element is selected, the user is either prompted for a
+value, or a list is displayed from which values can be selected.
+
+Some input elements need to have special formats. This depends on the
+definition in the menu file. When a wrong value is entered, the error
+message tells what the format should be.
+
+3 Tag_lists
+
+Some input elements display a list of possible that can be tagged. If a
+tag element is selected, a list of possible values will be displayed. 
+Entering the corresponding numbers will cause the values to be selected
+and added to a list.
+
+When all required values are selected, use <Ctrl/Z>.
+
+3 Select_lists
+
+If an input element is selected, that can have one value from a predefined
+list, this list is displayed in a pop-up window.
+
+Typing the corresponding number, followed by <Return>, selects that value
+and returns control to the menu.
+The <Ctrl/Z> keystroke cancels the selection.
+
+When the list is too long to fit on one screen, the commands NEXT and
+PREVIOUS can be used to scroll through the list.
+
+2 Protected_Menus
+
+When a menu is selected that is protected with a password, the
+Password prompt will appear. When an invalid password is entered,
+for three times in a row, access will be denied.
+
+When the same menu is selected for three times in a row, and and
+invalid password has been entered for nine times, the menu will
+be blocked for the current user. An intrusion record is set, that
+will not disappear until the user logged out from the system.
+
+1 Copyright
+
+The software and all associated files remains the copyright of the
+author but may be freely used and distributed without charge to any
+other user, provided that all copyright notices are retained intact.
+
+ © 1997 - 218, Oscar van Eijk, Oveas Functionality Provider
+                support@oveas.com
+
+This tool is delivered "as is". No warranty, express or implied,
+is offered as to the suitability of the software for any purpose.
+Any errors arising from the use of this software, are the
+responsibility of the user.
+
+Support and the latest version is available at
+    http://freeware.oveas.com/omi

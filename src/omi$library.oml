@@ -1,0 +1,61 @@
+!
+!******************************************************************************
+!*                                                                            *
+!*    LIBRARY NAME:                                                           *
+!*    =============                                                           *
+!*      Omi$Library                                                           *
+!*                                                                            *
+!*    DESCRIPTION:                                                            *
+!*    ============                                                            *
+!*      This library can be included in OMI Menus. It defines some generaly   *
+!*      usable sections, like value lists.                                    *
+!*      Most value lists are defined with a delimiter, which enables them to  *
+!*      be called as select- and as tag lists.                                *
+!*                                                                            *
+!*    CONTENTS:                                                               *
+!*    =========                                                               *
+!*      The following sections can be called from within menu types:          *
+!*                                                                            *
+!*      Section name          Section Type     Description                    *
+!*      ----------------------------------------------------------------      *
+!*      [DAY_OF_WEEK]         Tag and Select   Listing of weekdays            *
+!*      [MONTH_OF_YEAR]       Tag and Select   Listing of monthnames          *
+!*      [YES_OR_NO]           Select           Values 'Yes' and 'No',         *
+!*                                             usefull for confirmations      *
+!*                                                                            *
+!*    HISTORY:                                                                *
+!*    ========                                                                *
+!*      v1  16-05-99 Oscar van Eijk        Created                            *
+!*                                                                            *
+!******************************************************************************
+!
+[DAY_OF_WEEK]
+!
+  delimiter = /
+  value1    = Monday
+  value2    = Tuesday
+  value3    = Wednesday
+  value4    = Thursday
+  value5    = Friday
+  value6    = Saturday
+  value7    = Sunday
+!
+[MONTH_OF_YEAR]
+!
+  delimiter = /
+  value1    = January
+  value2    = February
+  value3    = March
+  value4    = April
+  value5    = May
+  value6    = June
+  value7    = July
+  value8    = August
+  value9    = September
+  value10   = October
+  value11   = November
+  value12   = December
+!
+[YES_OR_NO]
+  value1    = Yes
+  value2    = No

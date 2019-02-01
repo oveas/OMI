@@ -1,0 +1,160 @@
+$	on error then $ continue
+$	on severe_error then $ continue
+$	goto start$
+$!
+$!******************************************************************************
+$!*                                                                            *
+$!*    MODULE NAME:                                                            *
+$!*    ============                                                            *
+$!*      Omi$Background_Module                                                 *
+$!*                                                                            *
+$!*    DESCRIPTION:                                                            *
+$!*    ============                                                            *
+$!*      This module is called internally by OMI to execute an OMI module      *
+$!*      in the background (BATCH or DETACHED).                                *
+$!*      It is invoked when OMI is called with the /BACKGROUND qualifier.      *
+$!*                                                                            *
+$!*    HISTORY:                                                                *
+$!*    ========                                                                *
+$!*      v1  10-06-99 Oscar van Eijk        Created                            *
+$!*                                                                            *
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Look if the module that should be started exists.
+$!
+$ start$:
+$!
+$	omi$background_module = f$parse (omi$background_module,,,"name")
+$	omi$saved_module_name = omi$background_module
+$	omi$background_module = f$search -
+	   ("omi$menu_directory:''omi$background_module'.omi")
+$!
+$	if omi$background_module .eqs. ""
+$	   then
+$		omi$signal omi modnotfound,'omi$saved_module_name
+$		exit $status
+$	endif
+$!
+$	omi$saved_module_name = omi$background_module
+$	omi$background_module = f$parse (omi$background_module,,,, -
+	   "no_conceal") - "]["
+$!
+$!	Define some vars to make sure the filenames are unique
+$!
+$!	_current_pid = f$getjpi(0,"pid")
+$!	_timestamp   = "''f$extract(12,2,f$time())'''f$extract(15,2,f$time())'''f$extract(18,2,f$time())'''f$extract(21,2,f$time())'"
+$!	_ident       = "''_current_pid'_''_timestamp'"
+$	_ident = f$cvtime() - "-" - "-" - " " - ":" - ":" - "."
+$	_ident = f$fao("!XL", f$integer(_ident))
+$!
+$	Omi$_proc_name = "OMI$''_ident'"
+$!
+$	Omi$_logfile = "''bgrprocess$logfile'"
+$	if Omi$_logfile .eqs. "" then -
+	   $ Omi$_logfile = "Sys$login:Omi$Background_''_ident'.log"
+$	Omi$_logfile = f$parse(Omi$_logfile,,,,"no_conceal") - "]["
+$!
+$	Omi$_inputfile = "sys$login:omi$background_menu_''_ident'.com"
+$	Omi$_inputfile = f$parse(Omi$_inputfile,,,,"no_conceal") - "]["
+$!
+$	Proc$_lgicmd  = "''bgrprocess$detach_lgicmd'"
+$	Proc$_lgicmd  = f$parse(Proc$_lgicmd,,,,"no_conceal") - "]["
+$!
+$	gosub background$_menu_file
+$	gosub background$_command_file
+$!
+$	goto proc$omi_'omi$background_mode'
+$!
+$ proc$omi_batch:
+$!
+$	if .not. omi$batch_mode then -
+	   bgrprocess$options_bat = bgrprocess$options_bat + "/noidentification"
+$	submit /queue='bgrprocess$batch_queue /noprint /name='Omi$_proc_name' -
+	   /log='Omi$_logfile 'Omi$_inputfile 'bgrprocess$options_bat
+$	_status = $status
+$	if .not. _status
+$	   then
+$		omi$signal omi bgerr,_status
+$		exit $status
+$	endif
+$	goto background$_done
+$!
+$ proc$omi_detach:
+$!
+$	run /detached /process_name='Omi$_proc_name /output='Omi$_logfile -
+	   /input='Omi$_inputfile sys$system:loginout.exe 'bgrprocess$options_det
+$	_status = $status
+$	if .not. _status
+$	   then
+$		omi$signal omi bgerr,_status
+$		exit $status
+$	endif
+$	goto background$_done
+$!
+$ background$_done:
+$!
+$	omi$signal omi bgstart,'omi$saved_module_name
+$	exit $status
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Create the menu file that will call the requested module as an
+$!	ON_INIT module
+$!
+$ background$_menu_file:
+$!
+$	open /write omi_bmenu omi$menu_directory:omi$background_menu_'_ident'.mnu
+$	write omi_bmenu "! This menu file is created by OMI"
+$	write omi_bmenu "! It is currently running in the background, and will be deleted when"
+$	write omi_bmenu "! processing is done"
+$	write omi_bmenu "!"
+$	write omi_bmenu "! Do NOT delete or edit this file !"
+$	write omi_bmenu "[MENU_MENU]"
+$	write omi_bmenu "   on_init = ''omi$saved_module_name'"
+$	write omi_bmenu "   name    = main"
+$	write omi_bmenu "   item1   = ##"
+$	close omi_bmenu
+$!
+$	return
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Create the DCL script that will be used as input for LOGINOUT.EXE
+$!	or submitted
+$!
+$ background$_command_file:
+$!
+$	open /write omi_bfile 'Omi$_inputfile
+$	write omi_bfile "$! This menu file is created by OMI"
+$	write omi_bfile "$! It is currently running in the background, and will be deleted when"
+$	write omi_bfile "$! processing is done"
+$	write omi_bfile "$!"
+$	write omi_bfile "$! Do NOT delete or edit this file !"
+$	if omi$_debug
+$	   then $ write omi_bfile "$ set verify"
+$	   else $ write omi_bfile "$ set noverify"
+$	endif
+$	if omi$background_mode .eqs. "detach"
+$	   then
+$		_lgi_dir = f$parse("sys$login:",,,,"no_conceal")-"]["-".;"
+$		write omi_bfile "$ define /exec sys$login ''_lgi_dir'"
+$		write omi_bfile "$ define /exec sys$scratch ''_lgi_dir'"
+$		write omi_bfile "$ set default ''_lgi_dir'"
+$		write omi_bfile "$ @''Proc$_lgicmd'"
+$	endif
+$	write omi_bfile "$ @",f$trnlnm("OMI$SetupProcedure")
+$	write omi_bfile "$ omi omi$background_menu_''_ident' /submenu=main /jump=exit /batch"
+$	write omi_bfile "$ delete /log /noconfirm omi$menu_directory:omi$background_menu_''_ident'.mnu;*"
+$	write omi_bfile "$ delete /log /noconfirm 'f$environment(""procedure"")"
+$	write omi_bfile "$ exit"
+$	close omi_bfile
+$!
+$	return
+$!
+$!******************************************************************************

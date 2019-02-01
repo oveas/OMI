@@ -1,0 +1,51 @@
+$	goto start$
+$!
+$!******************************************************************************
+$!*                                                                            *
+$!*    MODULE NAME:                                                            *
+$!*    ============                                                            *
+$!*      Mgt$List_Facil.Omi                                                    *
+$!*                                                                            *
+$!*    CALLED BY:                                                              *
+$!*    ==========                                                              *
+$!*      Omi$Manage.Mnu       - The OMI Management Menu                        *
+$!*      Mgt$Check_Ident.Omi  - OMI module to check a message identifier       *
+$!*      Msg$Message.Omi      - OMI module that performs all actions           *
+$!*                                                                            *
+$!*    DESCRIPTION:                                                            *
+$!*    ============                                                            *
+$!*      This module lists all message facilities, and dumps them to a file    *
+$!*      in the users Login directory. This file is used by the Select list,   *
+$!*      from which facilities can be selected.                                *
+$!*                                                                            *
+$!*    HISTORY:                                                                *
+$!*    ========                                                                *
+$!*      v1  10-11-97 Oscar van Eijk        Created                            *
+$!*                                                                            *
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$ start$:
+$!
+$	if f$search("''constants$facil_list'", 0) .nes. "" then -
+	   $ deletee /nolog /noconfirm 'constants$facil_list';*
+$	if p1 .eqs. "REM_FILE" then $ exit omi$_ok
+$	_counter = 0
+$!
+$ facil$_loop:
+$!
+$	_counter = _counter + 1
+$	facil_file = f$search("Omi$Menu_Directory:*$messages.dat", 1)
+$	if facil_file .eqs. "" then $ goto facil$end_loop
+$	omi$record'_counter' = f$parse(facil_file,,,"name") - "$MESSAGES"
+$	goto facil$_loop
+$!
+$ facil$end_loop:
+$!
+$	omi$record'_counter' = "{New facility}"
+$	omi$dump_info 'constants$facil_list'
+$!
+$	exit omi$_ok
+$!
+$!******************************************************************************

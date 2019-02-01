@@ -1,0 +1,1080 @@
+1 Menu_File
+
+NOTE This section of the online help is no longer maintained.
+     For a complete description, refer to the documentation.
+
+The Menu File contains all specifications and actions of the menu
+structures. The files are built with sections, specified as a name
+between square brackets ([section_name]).
+
+Any section name can be chosen. The elements that are specified in the
+section, are defined as symbols, and are available during the OMI
+session.
+
+e.g. if the following section is defined:
+
+  [MY_SECTION]
+    A_STRING   = My String
+    AN_INTEGER = 2
+
+the symbols MY_SECTION$A_STRING (with value "My String") and
+MY_SECTION$AN_INTEGER (with value 2) are available in OMI.
+
+These sections are used for defining and configuring the menu
+structure. For special purposes, the section names 'COUNTER',
+'MAIN', 'SCREEN' and 'QUESTIONS', and section names starting
+with 'MENU_' are reserved.
+
+2 Forced_EOF
+
+If a menu file needs contain a long description, this can be placed
+behind the '<EOF>' identifier. This improves performance when OMI
+reads the menu file, since it will stop reading and close the file
+when it reads this identifier, skipping all comments that might follow.
+
+The same identifier can also be used in configuration files.
+
+3 Example
+
+   ! Comments are at the bottom of this file
+   [MENU_MENU]
+     ITEM1 = Leave this menu#command#exit
+
+   ! Pretty short menu, isn't it?!
+     
+   <EOF>
+
+   The example you are reading now is not described in
+   this HELP, since this text is still a part of the example.
+   OMI won't read this from the menu file, since the end-of-file
+   was already reached.
+   Therefore, the lines don't need to start with an exclamation mark.
+
+2 Special_Characters
+
+The exclamation mark (!), double quote (") and accolades ({}) cannot
+be used for elements or values.
+An exclamation mark can be used for comments.
+
+The hash (#), the pipe-sign (|) and the combination of tilde and
+questionmark (~?) cannot be used in input- or item- elements.
+
+2 Menu_section
+
+The name of a menu section always starts with 'MENU_', and the top
+menu has to be named 'MENU', so a section [MENU_MENU] is required.
+
+All information, and all elements, of the menu are specified inside
+a menu section.
+
+3 Title
+ Format: TITLE = title
+
+Sepcifies the title as it will be displayed in the menu header.
+
+3 Comment
+ Format: COMMENT = string [{variable}]
+
+An informational comment line can be used to display some info
+about the current menu at top of the window. This can be any string.
+If you want to include variables in the comment string, enclose them
+by '{' '}' (eg. '{variable_name}')
+
+3 Counter
+ Format: COUNTER = counter_name
+
+You can add a counter to a menu, which will be increased by 1 every
+time the menu is called. Thus, you can have more variables with the
+same name.
+
+If you want to add a counter, you have to define a [COUNTER] section,
+containing all counter names.
+Several menus can share the same counter, but only ony counter per
+menu is allowed.
+
+4 Example
+
+  [MENU_MENU]
+    counter = mycounter
+    item1  = New value#command#increase refresh
+    input1 = Enter a value#var'counter$mycounter
+
+  [COUNTER]
+    mycounter = 0
+
+  This examples shows how counters can be used to create an 
+  array- like variable. If the user calls the menu three times,
+  entering a different value every time, or increases the counter
+  by selecting the 'New value' option (which calls the OMI command
+  INCREASE with the REFRESH option). the variables 'var1', 'var2'
+  and 'var2' are set.
+  The initial value is set to zero, but is increased by every call,
+  including the first one.
+
+3 Auto_increase
+ Format: AUTO_INCREASE = (TRUE | FALSE)
+
+  If a submenu uses a counter from another (higher level) menu, and
+  default values are used in array- variables, the counter has to
+  be specified in the menu.
+  To prevent the counter from being increased automatically, set
+  the AUTO_INCREASE value in the submenu to FALSE.
+  If this element is set to TRUE or omitted, the counter value
+  will be increased each time the menu is chosen.
+
+3 Auto_refresh
+ Format: AUTO_REFRESH = value
+
+When this element is specified, it gives the number of seconds seconds
+that OMI waits for input on the OMI prompt before the menu screen is
+automatically refreshed. The value should between between 0 and 255.
+When this elemented is omitted, or has value 0, the automatic screen
+refresh is disabled.
+
+
+3 All_inputs
+
+By default, OMI will display an option that can be selected to enter
+all input elements without selecting them separately. This can be
+disabled by adding the ALL_INPUTS element to a menu section with
+value '0' or FALSE.
+
+This ement will be disabled by default when the REQUIRED_ORDER element
+is specified for this menu.
+
+3 Name
+ Format: NAME = menu_name
+
+A menu can have a name, that can be used to jump to the menu immediatly
+from any other menu in the structure, or from the DCL command prompt.
+
+If a menu name is used to start up with a specified submenu, the complete
+menu structure has to be started using a parameter, e.g. if the menu file is
+MY_MENU.MNU, and you want to start up with the submenu with the name 'SUB2',
+you have to start up with the command:
+  $ OMI MY_MENU SUB2
+even if the logical OMI$STARTMENU points to MY_MENU.MNU.
+
+3 On_exit
+ Format: ON_EXIT = omi module
+
+Specifies an OMI module that should be called when the user
+exits the current (sub) menu. 
+
+This module has default extension .OMI, and contains DCL commands
+that will be executed on exit. If the module returns the value
+OMI$_WARNING, control will be returned to the current menu.
+
+
+3 On_init
+ Format: ON_INIT = omi module
+
+Specifies an OMI module that should be called when the user
+enters the menu. 
+
+This module has default extention .OMI, and contains DCL commands
+that will be executed when the menu starts up.
+If the module returns OMI$_WARNING, control will not be passed to
+the selected menu
+
+3 Owner
+ Format: OWNER = username[,username,...]
+
+This menu specifies one or more usernames that will be considered
+as the owner(s) of the current menu. If a top menu ([MENU_MENU])
+as an owner specified, that user will also be the owner of all
+submenus that have no owner specified.
+
+The owner of a menu will have the highest security level by default.
+This can be overwritten with a security section.
+
+3 Required_order
+ Format: REQUIRED_ORDER = <nr>,<nr>[,<nr>...]
+
+The user can be forced to enter the input values in a predefined
+order. This can be done with the REQUIRED_ORDER element. Specify
+the list of values in the proper order, separated by comma.s, as
+the value for this element. When the user selects an input element
+which is found in the REQUIRED_ORDER element, but not as the first
+one, a warning message is displayed, telling the user to select
+another input element first.
+
+If the selected element is the first one required, it is removed
+from the list and the user can enter the input. When the list is
+completely empty (all required inputs have been entered in the
+correct order), no checks will be performed untill the
+RESET ORDER is issued from the menu.
+
+Using the REQUIRED_ORDER element will set the ALL_INPUTS element
+to FALSE.
+
+4 Example
+
+  [MENU_INPUTS]
+     REQUIRED_ORDER = 1,2,3,5
+     INPUT1         = Directory#{SEL|DIRLIST}direct
+     INPUT2         = Filename#{SEL|FN_.direct.LIST}fname
+     INPUT3         = Filetype#{SEL|FTYPELIST}ftype
+     INPUT4         = Comment#commentline
+     INPUT5         = Action#{SEL|ACTIONLIST}action
+
+  This example forces the user to enter input element 1
+  as the first one. With input 1, a value is selected from
+  a select list, which is required to determin from which
+  select list input 2 has to be selected.
+  In the example, input 5 cannot be selected when the
+  inputs 1, 2 and 3 have not been selected yet.
+  Input 4 is optional.
+
+
+3 Security
+ Format: SECURITY = security_section
+
+If specified, this should point to a section with the same name,
+in which userames can be specified, and their security level.
+For more information, refer to the 'Menu_file Security_section'
+subtopic.
+
+3 Password
+
+This element holds the password in encrypted format. It cannot be
+modified using an editor; a password can only be set or changed
+with the SET PASSWORD command from the menu prompt.
+
+If it is usefull to add a password using the editor anyway,
+this can be done by specifying the password element with an equals-
+sign, but without a value:
+
+  password =
+
+The password will default to 'Omi$System' (case sensitive!).
+This can be used as a reminder to change the passwors inter-
+active.
+
+3 Password_level
+
+Defines the security level for all users when a password is required.
+This is valid for all users, including the menu-owner.
+The value should be specified as an integer, which stand for the
+following security levels:
+
+   0         NONE
+   1         READ
+   2         EXEC
+   3         WRITE
+
+For more information about the security levels, refer to the
+'Menu_file Security_section' subtopic.
+If this element is not specified, the default security handling
+is used.
+
+3 Prompt
+ Format: PROMPT = prompt
+
+The prompt element defines the prompt that will show up in the menu.
+Every submenu can have its own prompt. If none is specified, the prompt
+from the toplevel menu is used. If no prompt element is found at all,
+the prompt from the configuration file (element option from section
+[QUESTIONS]) is used.
+This last prompt will always be used if it is protected.
+
+
+3 Item
+ Format: ITEMn = Text on display#item type#value for type
+
+Items can be used to define the menu structure, and the actual
+actions being taken.
+
+The keyword ITEM has to be followed by an integer, starting with
+'1', and without gaps in the counting, so if a menu has three
+item elements, they have to be specified as ITEM1, ITEM2 and ITEM3.
+
+The value of items consists of three arguments, separated by a hash (#).
+The first argument represents how the option will be displayed on the
+window.
+
+The second argument specifies the item type, which can be CALL,
+COMMAND or SUBMENU.
+
+The meaning of the third argument depends on the item type.
+Both CALL and COMMAND types can have dynamic input in the
+third argument. An example of this is given in the COMMAND
+subtopic below.
+
+4 CALL
+
+This item type specifies that a OMI module should
+be executed. This differs from a DCL @<procedure> in a way
+that it is executed silently, and takes advantage of several
+OMI commands and symbols.
+
+The third argument of the item value should be the full path and
+name of a DCL procedure, without the at-sign ('@').
+The default file type for OMI modules is OMI.
+
+If the procedure should be called with parameters, they
+can be specified in the third argument.
+
+A CALL item type can have dynamic input. For a description,
+refer to the help topic of the COMMAND item type.
+
+*** NOTE: When a OMI module is executed, all error,
+          warning and informational messages are suppresed.
+          If you don't want this, use the command
+           $ SET MESSAGE 'OMI$_MESSAGE'
+          in the top of the procedure.
+
+4 COMMAND
+
+Execute an OMI command. The command that should be executed
+should be specified in the third argument of the item value,
+including all keywords.
+
+5 Dynamic_input
+
+Dynamic input can be asked by using the string '~?' which
+will be substituted by any value the user enters. When the
+option is selected, the prompt DEFAULT_PROMPT from the
+[QUESTIONS] section in the configuration file is used to
+ask the user for additional input, or another prompt if speci-
+fied.
+
+This can be specified by adding '{prompt}' to the substitute
+string (eg '~?{Give some input}')
+
+Dynamic input can also be validated and formatted using a format
+section. This requires a prompt enclosed by accolades. After the
+prompt (still between the accolades), the name of the format section
+to use can be specified. The prompt and section name are separated
+by a pipe-sign (|).
+
+For more information about formatting sections, refer to section
+the help topic 'Menu_File', 'Format_Section'
+All CALL and COMMAND item types can have an unlimited number of
+dynamic inputs.
+More substitute string can be specified in the third argument.
+
+5 Example
+
+  ITEM1 = Type a file#COMMAND#DCL TYPE ~?{Filename:|FILE_FORMAT} /PAGE
+
+  [FILE_FORMAT]
+     TYPE     = FILESPEC
+     REQUIRED = TRUE
+     FTYPE    = .TXT
+
+  When this option is selected, the following prompt
+  will appear:
+
+   Filename: 
+
+  If the user enters MYFILE, the file MYFILE.TXT will be
+  displayed.
+
+4 SUBMENU
+  
+This points to a submenu. The third argument has to contain
+the name of the menu section (without the 'MENU_' string!).
+
+You can also specify dynamic menus. This is done in the
+third argument. In stead of 'menu_name', it should contain
+the value
+
+ '{text on display|menu_name}{text on display|menu_name}Prompt'
+
+You can have as menus in dynamic menu lists as you like,
+but take care the total length of the record in the MNU
+file, including leading blanks and the 'ITEMn = ', is less
+than 256 characters (instead of the VMS default of 512).
+
+Also, if the list is too long, displaying can screw up
+the window screen. This has no effect on the functionality,
+but the user'll have to enter the REFRESH command after
+selecting a menu.
+
+4 Examples
+
+  1. [MENU_MENU]
+      ITEM1  = Go to the second Menu#SUBMENU#SECOND_MENU
+
+     [MENU_SECOND_MENU]
+
+   In this example, the text "Go to the second Menu" is
+   displayed for this item. When selected, OMI will call
+   the menu SECOND_MENU. This menu is described in the
+   section called MENU_SECOND_MENU.
+
+  2. [MENU_MENU]
+      ITEM1  = Dynamic Menu#SUBMENU#{Menu 1|SUB1}{Menu 2|SUB2}Which Menu:
+
+     [MENU_SUB1]
+      ! Menu definitions...
+
+     [MENU_SUB2]
+      ! Menu definitions...
+ 
+   Here, one item can call two different menus. Selection of
+   this item will display a list that will look like this:
+
+                  +-----------+
+                  | 1> Menu 1 |
+                  | 2> Menu 2 |
+                  +-----------+
+
+  On the command line, the prompt 'Which Menu:' will be
+  displayed. The menu that'll be called, depends on the
+  users input.
+
+
+3 Input
+
+Inputs can be used to collect information from the used, that can
+be passed to OMI modules.
+
+The keyword INPUT has to be followed by an integer, starting with
+'1', and without gaps in the counting, so if a menu has three
+inputs, they have to be specified as INPUT1, INPUT2 and INPUT3.
+
+The value of inputs consists of two to four arguments, separated by a
+hash (#). The first argument represents how the option will be
+displayed on the window.
+
+The second argument specifies the a variable name. This argument
+can also be used to specify how the value is gathered. the input can be
+'straight' using a 'select list' or a 'tag list'
+
+The third argument can be a default value (except when using a
+tag list), and for straight inputs, the fourth argument can
+point to a formatting section.
+
+4 Straight_input
+ Format: INPUTn = Text on display#variable name[#default value][#format]
+
+This input type just lets the user enter input, which will be stored
+in the variable name.
+
+The third argument is optional, and can specify a default value.
+The fourth argument can point to a section in which 
+characteristics of the value are specified. For more information,
+refer to the 'Menu_file Format_section' subtopic.
+
+If a format section is used, but no default value, the default
+value has to be specified as empty, e.g.:
+
+  Text on display#variable name##format
+
+4 Select_list
+ Format: INPUTn = Text on display#{SEL|sellist}variable name[#default value]
+
+If the user cannot freely enter any input, a list with choices
+can be presented, from which the user can make selections.
+
+To do so, the second argument starts with the SEL keyword, followed
+by the pipe sign and the name of a section with choices, enclosed
+by acculades.
+
+The select section contains a list of variables, called
+VALUE1...VALUEn that will be displayed
+
+The optional third argument points to the default value.
+
+5 Example
+
+     [MENU_MENU]
+      INPUT1  = Confirm#{SEL|CONF}confirm#VALUE2
+
+     [CONF]
+      VALUE1 = Yes
+      VALUE2 = No
+      VALUE3 = Cancel
+ 
+
+   When this input element is selected, the user can select one
+   of the predefined values by entering '1', '2' or '3'.
+   VALUE2 is specified as the default value, which means
+   default is 'No'
+   The window that will be displayed looks like this:
+
+                  +-----------+
+                  | 1> Yes    |
+                  | 2> No     |
+                  | 3> Cancel |
+                  +-----------+
+
+
+   When this input is asked using the ALL command, the current
+   value is highlighted, so if the default value hasn't been
+   changed, the select window when the ALL command is user will
+   look like this:
+
+                  +-----------+
+                  | 1> Yes    |
+                  | 2> [7mNo[0m     |
+                  | 3> Cancel |
+                  +-----------+
+
+4 Tag_list
+ Format: INPUTn = Text on display#{TAG|taglist}variable name
+
+If a variable needs to contain a list of values, that can be
+searched in a OMI module useing the F$ELEMENT lexical,
+tag lists can be used as an input element.
+
+This is done by specifying the keyword TAG, followed by a
+pipe sign and the name of a tag list, enclosed by accolades,
+in front of the variable name in the second argument.
+
+When selected, all possible values will be displayed on the
+menu screen, and the user can select all desired values,
+which will be highlighted.
+
+Pressing Ctrl/Z will return to the menu screen. By then,
+all values have been stored in the named variable,
+separated by a specified delimiter.
+
+The layout of the taglist section is described in the
+'Menu_file Taglist_section' subtopic.
+
+A tag list cannot have a default value.
+
+5 Example
+
+     [MENU_MENU]
+      INPUT1  = Select days#{TAG|WEEKDAYS}daylist
+
+     [WEEKDAYS]
+      DELIMITER = /
+      VALUE1      = Monday
+      VALUE2      = Tuesday
+      VALUE3      = Wednesday
+      VALUE4      = Thursday
+      VALUE5      = Friday
+      VALUE6      = Saturday
+      VALUE7      = Sunday
+ 
+   If this option is selected, a list of weekdays will be presented
+   in the menu window with all days preceded by option numbers 1-7,
+   and option 8 to reverse the current selection.
+
+   If the user selects the numbers 1, 3 and 5 (one at a time), the
+   value of the variable 'daylist' will be
+   "Monday/Wednesday/Friday/"
+
+2 Selectlist_section
+
+Selection lists can be used to predefine the number of options
+a user can choose from when input is required.
+
+The name of a selectlist section can be freely choosen, but
+it must be the same in the input element where it's being called
+from (refer to the subtopic 'Menu_file Menu_section Input Select_list'
+for more information).
+
+The selectlist section only contains numbered VALUE elements, like
+
+   VALUE1  = any value
+   VALUE2  = any value
+   VALUE3  = any value
+
+One of the options (the last one is recommended), can be enclosed
+by accolades. This means, the user does not have to select from
+the list, but can also enter free input.
+*** NOTE: if this possibility is used, it won't display very
+          nicely if the same list is used as a tag- list 
+          somewhere else.
+
+In stead of specifying values, it is also possible to include a
+FILENAME element. This should point to a file, that contains a list
+of values, that will be defined as VALUE1, VALUE2,... VALUEn
+The default location of the file is OMI$MENU_DIRECTORY, or OMI$
+if not found there.
+
+3 Example
+
+  1. [SYSTEM_USERS]
+      VALUE1      = RDB$REMOTE
+      VALUE2      = RDM_MONITOR
+      VALUE3      = SYSTEM
+      VALUE4      = SYSTEST
+      VALUE5      = SYSTEST_CLIG
+      VALUE6      = UCX$FTP
+      VALUE7      = UCX$NTP
+      VALUE8      = UCX$REXEC
+      VALUE9      = UCX$RSH
+      VALUE10     = UCX$SNMP
+      VALUE11     = UCX_LPD
+      VALUE12     = UCX_SMTP
+      VALUE13     = DEFAULT
+      VALUE14     = {Other user}
+
+     This list lets the user select a VMS System username. However,
+     if the user needs to select a username that's not in the list,
+     selecting 14 will cause OMI to prompt for 'Other username'.
+     The value between accolades is the value as displayed in the
+     list, and will also be used as prompt when this option is
+     selected.
+
+  2. Menu file:
+     [MENU_PLANNING]
+       INPUT1  = Select a weekend#{SEL|WEEKENDS}selected_weekend
+
+     [WEEKENDS]
+       FILENAME  = ''F$EXTRACT(3,3,F$TIME())'.DAT
+
+     File NOV.DAT:
+       November 1 and 2
+       November 8 and 9
+       November 15 and 16
+       November 22 and 23
+       November 19 and 30
+
+     This example shows the use for input files in tag- or select lists.
+     The VALUEn fields are filled dynamiccally with values from the
+     specified file. The file in this example changes every month, and
+     contains all dates for the weekends in the selected month.
+
+     In stead of reading the variable from F$TIME(), it s also possible
+     to use another input element to get the variable pointing to the
+     requested value file.
+
+2 TagList_section
+
+Tag lists can be used to create a list of values that can
+be examined useing the F$ELEMENT in OMI modules. It
+displays a list of possible values that can be tagged and
+untagged.
+
+The name of a taglist section can be freely choosen, but
+it must be the same in the input element where it's being called
+from (refer to the subtopic 'Menu_file Menu_section Input Tag_list'
+for more information).
+
+All options are stored in the taglist as VALUEn, where 'n' is
+an integer, starting with one.
+
+Another required element of this section is the DELIMITER. This
+is used to separate the chosen values when stored in the variable.
+
+Optionally, a message can be specified that will be displayed on
+the top of the window screen. This can be used to give the user a
+small explanation of what's expected.
+
+In stead of specifying values, it is also possible to include a
+FILENAME element. This should point to a file, that contains a list
+of values, that will be defined as VALUE1, VALUE2,... VALUEn
+The default location of the file is OMI$MENU_DIRECTORY, or OMI$
+if not found there.
+
+3 Examples
+
+  1. [WEEKDAYS]
+       MESSAGE   = Select the day(s) on which the job should run
+       DELIMITER = /
+       VALUE1      = Monday
+       VALUE2      = Tuesday
+       VALUE3      = Wednesday
+       VALUE4      = Thursday
+       VALUE5      = Friday
+       VALUE6      = Saturday
+       VALUE7      = Sunday
+
+     This example shows a list of days that can be tagged
+
+  2. Menu file:
+     [MENU_PLANNING]
+       INPUT1  = Weekends to work#{TAG|WEEKENDS}work_weekends
+
+     [WEEKENDS]
+       MESSAGE   = Select the weekend day(s) you want to work this month
+       DELIMITER = /
+       FILENAME  = ''F$EXTRACT(3,3,F$TIME())'.DAT
+
+     File NOV.DAT:
+       Saturday 1st
+       Sunday 2nd
+       Saturday 8th
+       Sunday 9th
+       Saturday 15th
+       Sunday 16th
+       Saturday 22nd
+       Sunday 23rd
+       Saturday 29th
+       Sunday 30th
+
+     This example shows the use for input files in tag- or select lists.
+     The VALUEn fields are filled dynamiccally with values from the
+     specified file. The file in this example changes every month, and
+     contains all dates for the weekends in the selected month.
+
+     In stead of reading the variable from F$TIME(), it s also possible
+     to use another input element to get the variable pointing to the
+     requested value file.
+
+2 Format_section
+
+If a straight input element (see subtopic 'Menu_file Menu_section
+Input Straigh_input') contains a fourth argument, this should be
+the name of a format section.
+
+This section contains a description of what kind of input is
+expected, and/or how the input should be formatted.
+
+The keyword 'type' is required in the format section. This can
+be STRING, FILESPEC, INTEGER, DATE or TIME.
+
+When arguments of any of the type described below, are omitted,
+they will default to 'false'.
+
+3 FileSpec_type
+
+This indicates the input should be a filename, with or without a
+device and directory specification.
+
+If the input contains blanks, they will be removed, and the file
+name will automatically be converted to uppercase.
+
+The following keywords can be used for validating:
+
+  REQUIRED      [TRUE or FALSE]
+                If set to TRUE, OMI checks to see if the file
+		exists. If not, an error is displayed.
+
+  WILDCARDS     [TRUE or FALSE]
+                If set to true, OMI will allow wildcards ('*'
+                and '%') in the file name.
+
+  FDEVICE       [device name]
+                Enter a default device name
+
+  FDIRECTORY    [directory name]
+                Enter a default directory name
+
+  FTYPE         [file type]
+                Enter a default file type
+
+3 String_type
+
+This indicates the input should be of the STRING type. An invalid
+respons will result in a warning message.
+
+The following keywords can be used for formatting and validating:
+
+  UPCASE        [TRUE or FALSE]
+                If set to TRUE, the input string will be coverted
+                to upcase.
+                
+  LOWERCASE     [TRUE or FALSE]
+                If set to TRUE, the input string will be coverted
+                to lowercase.
+                
+  COLLAPSE      [TRUE or FALSE]
+                If set to TRUE, all blanks and tabls will be 
+                removed from the input string.
+                (in versions prior to v2.3, the keyword BLANKS performed
+                the same action. This keyword is still supported, but
+                will be overwritten by the value of COLLAPSE).
+
+  MINLENGTH     Mininum number of characters
+
+  MAXLENGTH     Maximum number of characters
+
+  IVCHARS       [list of invalid characters]
+                Specify a list of characters that are not allowed
+                in the input string. If any if the listed characters
+                are encoutered, a warning message will be displayed
+
+                *** NOTE1: If this list should contain a blank, it should
+                           be enclosed by other characters, it can NOT
+                           be the first or last character of the list.
+
+                *** NOTE2: The list can not contain an exclamation
+                           mark (!) or a double quote (").
+
+3 Integer_type
+
+This indicates the input should be of the INTEGER type. An invalid
+respons will result in a warning message.
+
+The following keywords can be used for validating:
+
+  MIN           Lowest value allowed
+  MAX           Highest value allowed
+  FLOAT         [TRUE or FALSE]
+                Specifies the input value can be a floating point 
+  FLOAT_POINT   [. or ,]
+                Specifies which character will be used as the
+                floating point character. It overwrites the
+                default value from the configuration file.
+                NOTE: Input entered by the user, must contain
+                      the same floating point character!
+
+
+3 Date_type
+
+This indicates the input should be of the DATE type. An invalid
+respons will result in a warning message.
+
+The following keyword can be used for formatting:
+
+  FORMAT        [ABSOLUTE, COMPARISON or DELTA]
+                Specify the format to which the input will be
+                converted.
+
+3 Time_type
+
+This indicates the input should be of the TIME type. An invalid
+response will result in a warning message. The user response has
+to be a valid time format (HH:MM [AM|PM]or HH.MM [AM|PM]).
+
+The following keywords can be used for formatting:
+
+  HOURS         [12 or 24]
+                Specifies if the time should be in 12 or 24 hours
+                format. In 12 hours format, the string "am" or "pm"
+                will be added, and the time value will, if necessary,
+                be converted (eg 21:45 will be converted to 9:45pm,
+                10:15 will be converted to 10:15am).
+                When omitted, the default from the configuration file
+                will be used.
+  SEPARATOR     [separator string]
+                By default, a colon (:) will be used to separate hours
+                and minutes (HH:MM), but by using this element, any
+                character string can be used. For user input, only a
+                colon (:) or a dot (.) are allowed.
+  TRZERO        [TRUE or FALSE]
+                If set to TRUE, trailing zeros will be included for
+                the hours if necessary, eg 9:45pm will be displayed
+                as 09:45pm.
+  UPCASE        [TRUE or FALSE]
+                If set to true, the string "am" or "pm" will be
+                converted to uppercase. This element will be ignored
+                when HOURS is specified as 24.
+
+3 Textarea_type
+
+Enter free input, using a text editor. The value is both stored
+in a file, and in the specified variable name. The size of the
+value in the variable name is limited by VMS. This does not affect
+the value stored in the file.
+
+When a valid filename is entered, the editor, specified in the
+configuration file, will be started. When the no filename is
+entered, a default value will be used. This is the default value
+from the menu file, or a newly generated value if omitted.
+The default location is OMI$MENU_DIRECTORY.
+
+The file will only be available during the current OMI session,
+and the file will be deleted when OMI exits, unless KEEP is set to TRUE.
+
+The following keywords can be used for formatting:
+
+FILENAME	[file name]
+		The name of the temporary file that will be
+		used to create the text area. The default location
+		is OMI$MENU_DIRECTORY, and the default type is .TXT.
+		If this field is not specified, the name TA_menu$INPUTn
+		will be used, where menu is the current menu name, and
+		INPUTn the OMI internal element name.
+KEEP		[TRUE or FALSE]
+		If set to TRUE, the temporary file will not be removed
+		when OMI exists, and so will be available for a future
+		session.
+HISTORY		[TRUE or FALSE]
+		If set to TRUE, older version of the temporary file
+		will also be saved, limited by the VMS VERSION_LIMIT.
+		When KEEP is set to FALSE or not specified, HISTORY
+		is automatically set to FALSE.By default, only the
+		last version will be saved (if KEEP is TRUE).
+LARGE		[TRUE or FALSE]
+		The size of a textarea is limited to 255 characters by
+		default. With this option it is possible to store values
+		up to 1024 characters in the variable.The maximum size
+		does not affect the value that is stored in the temporary
+		file.
+		NOTE: setting this option to TRUE, can cause the command
+		      SHOW TEXTAREA not to show anything without a warning! 
+
+3 Time_type
+
+This indicates the input should be of the TIME type. An invalid response will
+result in a warning message. The user response has to be a valid time format
+(HH:MM [AM|PM] or HH.MM [AM|PM]).
+
+The following keywords can be used for formatting:
+HOURS		[12 or 24]
+		Specifies if the time should be in 12 or 24 hours
+		format. In 12 hours format, the string am or pm will
+		be added, and the time value will, if necessary, be
+		converted (eg 21:45 will be converted to 9:45pm, 10:15
+		will be converted to 10:15am).
+		When omitted, the default from the configuration file
+		will be used.
+SEPARATOR	[separator string]
+		By default, a colon (:) will be used to separate hours
+		and minutes (HH:MM), but by using this element, any character 
+		string can be used. For user input, only a colon (:) or a dot
+		(.) are allowed.
+TRZERO		[TRUE or FALSE]
+		If set to TRUE, trailing zeros will be included for the
+		hours if necessary, eg 9:45pm will be displayed as 09:45pm.
+UPCASE		[TRUE or FALSE]
+		If set to true, the string am or pm will be converted to
+		uppercase. This element will be ignored when HOURS is
+		specified as 24.
+
+3 Example
+
+  [MENU_MENU]
+    input1 = Name of a .TXT file#FNAME#README#FNAME_FORMAT
+
+  [FNAME_FORMAT]
+   TYPE      = STRING
+   UPCASE    = TRUE
+   COLLAPSE  = TRUE
+   IVCHARS   = @#$%^&*(). /?|\'[]{}+
+
+2 Security_section
+
+You can specify any name a section, called by the menu section as
+a security section.
+
+This section contains security levels for all known usernames.
+The use of this section overwrites the default highest level for
+the menu owner
+
+By default, users that are not listed, have no access to the menu.
+This can be overwritten with the 'all_users' element.
+
+The following security levels are valid:
+
+   NONE     The specified user has no access to the menu
+   READ     The user can enter the menu and see the choices,
+            but cannot execute any of the options, or any
+            command at the command line. The only way to leave
+            the menu is by using <Ctrl/Z>
+   EXEC     The user has full access to all menu elements for 
+            execution.
+   WRITE    The user can make modifications to the menu, using the
+            (RE)SET command.
+
+When no security section is used, EXEC is the default for all users
+except for the owner (who'll have WRITE access)
+
+3 Example
+
+  [MENU_MENU]
+   ! Menu definition
+    SECURITY  = TOPMENU_PRIVS
+
+  [TOPMENU_PRIVS]
+    SYSTEM    = WRITE
+    USER1     = EXEC
+    USER2     = EXEC
+    USER3     = READ
+    ALL_USERS = NONE
+
+  This example grants the highest security level to user SYSTEM.
+  The users USER1 and USER2 both can execute all elements of the
+  menu. USER3 can only read information.
+  Access for all other users is denied (this is the default when
+  using a secrity section).
+
+2 Interactive_authorization
+
+Users can be blocked from using interactive DCL with the SPAWN or
+[SILENT_]DCL command by including the section [INTERACTIVE_AUTH]
+in the menu file. This section can contain user names that are, or
+are not authorized to use interactive DCL.
+
+By default, all users can use DCL. Users that should be blocked,
+can be included in this section, with value FALSE.
+
+The default can by overwritten, by including the ALL_USERS with
+value FALSE. All users are now disabled for interactive DCL, except
+those that are explicitly included with value TRUE.
+
+Note that this does not affect the [SILENT_]DCL and SPAWN commands
+that are called by menu items; they can always be executed by all
+users that have EXEC privilige to the submenu that contains the items.
+
+3 Example
+
+  [INTERACTIVE_AUTH]
+    SYSTEM    = TRUE
+    SYSTEST   = TRUE
+    DEVELOPER = TRUE
+    ALL_USERS = FALSE   ! Default is TRUE
+
+  [MENU_MENU]
+    ITEM1  = Exit#COMMAND#DCL LOGOUT
+    ITEM2  = Mail#COMMAND#SPAWN MAIL
+
+  When the menu file contains this section, the users SYSTEM, SYSTEST
+  and DEVELOPER can use the commands [SILENT_]DCL and SPAWN at the OMI
+  command line, all other users can't.
+  The items that are given in the main menu in the example can however
+  be executed by all users.
+
+2 #INCLUDE_directive
+
+An #INCLUDE directive can be used to load one or more library menus
+into the menu file.
+Library menus are normal OMI menus, but they should not have a main
+menu. All sections from the library menu are available in the menu
+that includes the library.
+The default file type for libraries is .OML.
+
+The #INCLUDE directive can be used anywhere in the menu file. The
+number of includes is unlimited, but nested includes are not allowed
+(the #INCLUDE directive cannot be used from within libraries).
+
+*** NOTE: OMI comes with one standard library, OMI$LIBRARY.OML.
+          It is advised not to edit this library, but to create
+          your own ones, since the library will be overwritten
+          with a new distribution.
+
+3 #LEADING_attribute
+
+When including one or more standard libraries, it can happen
+that one of the libraries contains a section with values that
+is used in the calling menu file as well.
+
+To prevent warning messages, the attribute #LEADING can be
+added to the item that should be used.
+The order in which the files are read is not relevant, the
+item that has been specified with #LEADING, will be the value
+that is used. If all values are specified with #LEADING, the
+last one will be used.
+
+3 Example
+
+  ! The menu file contains:
+  [MENU_MENU]
+    INPUT1  = Select a TCP product#{SEL|TCPPRODS}TCP_PROD#VALUE1
+
+  [ANOTHER_SELECT]
+    VALUE1#LEADING = Set in the menu file 
+    VALUE2 = Also set in the menu file
+
+  #INCLUDE MY_LIB
+
+  ! The file MY_LIB.OML contains:
+  [TCPPRODS]
+    VALUE1 = UCX
+    VALUE2 = WOLLONGONG
+    VALUE3 = TCPWARE
+    VALUE4 = MULTINET
+    VALUE5 = CMU/TEK
+
+  [ANOTHER_SELECT]
+    VALUE1 = Set in the library 
+    VALUE2#LEADING = Also set in the library file
+
+  The menu uses a select list that's not available in the menu file, but
+  it is in the library that is included.
+  When OMI starts, the select list is initialised from the library, and
+  UCX will be the default value stored in the variable TCP_PROD.
+
+  The #LEADING settings cause the duplicate values to be set as follows:
+     ANOTHER_SELECT$VALUE1 = "Set in the menu file"
+     ANOTHER_SELECT$VALUE2 = "Also set in the library"

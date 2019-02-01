@@ -1,0 +1,715 @@
+1 Calling_Modules
+
+Menu items can be used to start OMI modules, using the 'CALL' item-type,
+as in:
+
+  item1 = Text on Display#CALL#FILENAME[.OMI]
+
+This item executes the module FILENAME.OMI when selected. Parameters
+can optionally be specified in the menu item, eventually using the dynamic
+input identifier ('~?').
+
+A set of commands and symbols from the OMI toolbox is available for use
+in OMI modules.
+
+For a description of the default tools, refer to the
+topic 'OMI_Commands' below.
+
+You can write your own toolboxes, by creating DCL procedures and modi-
+fying the file OMI$TOOLBOX.INI, located in the OMI$: directory.
+
+A description of how to add tools is included in this .INI file.
+
+2 OMI_commands
+
+The following commands are available in the OMI default toolbox.
+All values of the OMI commands are returned as global symbols. When
+OMI exits, all symbols will be removed.
+
+The return values of all functions can be 1 (normal successful
+completion), OMI$_WARNING or OMI$_ERROR, where OMI$_ERROR is
+greater than OMI$_WARNING.
+
+If the return value of any command is equal to or greater than
+OMI$_WARNING, the global symbol which should be defined by the
+command, might not have been set, resulting in more errors or
+unpredictable behaviour due to the use of the value of a former
+call is the return status is not checked.
+
+3 OMI$ASK
+ Format: OMI$ASK question
+
+Prompt the user for input. The prompt is specified as a parameter.
+If no parameter is specified, the value 'default_input' from the
+section '[questions]' from the configuration file is used.
+
+The user response is returned in the global symbol OMI$RESPONSE.
+If the user enters <Ctrl/Z>, OMI$RESPONSE will be empty, and the
+status code will be OMI$_CANCELLED.
+
+
+3 OMI$CALC
+ Format: OMI$CALC calculation
+
+Invoke the OMI calculator. The result of the calculation is returned
+in the global symbol OMI$CALCULATED.
+For a description of the calculator, refer to the description of
+the OMI command CALC.
+
+
+3 OMI$CALL
+ Format: OMI$CALL omi-module [parameters]
+
+This command executes an OMI module. With this, it is possible
+to create several standard OMI modules that will perform generic
+actions, which will be executed from the action-specific modules.
+
+4 Parameters
+
+The first parameter is required. It is the name of the OMI module
+that will be executed.
+By default, the file has type .OMI and is located in OMI$:. If not
+found, OMI will look in OMI$MENU_DIRECTORY:, unless a full path
+was specified.
+
+All other parameters will be passed to the module.
+
+4 Return_value
+
+The status code returned by this command is the final exit status
+of the called module.
+
+3 OMI$CHECK
+ Format: OMI$CHECK variable [message] [NO]EMPTY_ALLOWED
+
+This command can be used to perform checks on the existance of required
+variables. This is userful if an OMI module needs input, that has to be
+specified in a menu where no default values are used.
+
+4 Parameters
+
+The first parameter is required. It specifies the variable name that
+needs to be checked.
+
+If a message needs to be displayed when the required variable has not
+been specified, this can be passed in the second parameter. This is
+optional.
+
+The third parameter indicated wheter or not the variable is allowed
+to be empty. By default, empty values are not allowed. You can override
+this by specifying EMPTY_ALLOWED as the third parameter.
+
+4 Return_values
+
+When the variable is valid, value '1' is returned.
+
+When the varianble exists but is empty, the value OMI$_WARNING
+is returned.
+
+When the variable doesn't exist at all, the value OMI$_ERROR
+is returned. This is an integer, larger than OMI$_WARNING.
+
+4 Examples
+
+  1. $ OMI$CHECK USERNM "* ERROR * You didn't specify a username"
+     $ IF $STATUS .GE. OMI$_WARNING THEN $ EXIT
+
+     In this example, the OMI module requires a username as input.
+     When this variable has not been filled with a value or specified
+     at all, the error message is displayed. The return value can
+     be OMI$_WARNING or greater, indicating not all required infor-
+     mation was specified, due to which conreol is returned to the
+     menu.
+
+  2. $ OMI$CHECK FNAME "* ERROR * No file name specified" EMPTY_ALLOWED
+     $ STATUS = $STATUS
+     $ IF STATUS .EQ. OMI$_ERROR THEN $ EXIT
+     $ IF STATUS .EQ. OMI$_WARNING
+     $  THEN
+     $    OMI$DISPLAY_MESSAGE "* INFO * Using all files"
+     $    FNAME = "*.*"
+     $ ENDIF
+
+     This example shows how OMI$CHECK can be used to check the
+     value of the variable FNAME, allowing an empty value.
+     The parameter EMPTY_ALLOWED causes OMI to display the
+     error message only when the variable doesn't exist at all.
+     The return value does indicate an empty value, but the
+     message won't be displayed, and the OMI module takes action
+     upon that.
+
+3 OMI$CMDLINE_CLEAR
+ Format: OMI$CMDLINE_CLEAR
+
+This command erases the contents of the command line of
+the OMI menu window.
+
+3 OMI$CONFIRM
+ Format: OMI$CONFIRM question [default]
+
+This command asks a question that can be answered with Y(es) or N(o)
+(refer to the documentation to translate these possible answers to
+your preferred language), and handles all input and output, returning
+the value back to the calling procedure.
+
+4 Parameters
+
+The first parameter is a string, that will be displayed exactly
+on the input line of the menu string, followed by the choices
+than can be made "(Y/N)", where 'Y' and 'N' are values that can
+be modified in the [QUESTIONS] section of the configuration file.
+
+The second parameter represents the default value. This paramater
+can be "Y" or "N" (only the first character is read). If omitted,
+no default value will be availble, and the user is required to
+enter valid input.
+
+4 Return_value
+
+This command defines a global symbol OMI$CONFIRMED. This can be
+'1' (true) or '2' (false).
+The symbol will be cleaned upat the end of the procedure, but also
+every time the OMI$CONFIRM command is called, to prevent conflicts.
+
+NOTE: Make sure you don't use an local symbol with the same name,
+      since that will always overwrite the returned value of this
+      command! 
+
+4 Example
+
+   $ OMI$CONFIRM "Are you sure ?" 'QUESTIONS$ANSWER_NO
+   $ IF OMI$CONFIRMED THEN $ GOTO USER_IS_SURE
+
+   This command will display the following question on the
+   input line:
+    Are you sure ? (Y/[N]) 
+
+   The square brackets indicate the default answer.
+
+3 OMI$CREATE_MBX
+ Format: OMI$CREATE_MBX logical-name
+
+Open a temporary mailbox. This command creates a mailbox for read
+and write, and a logical which points to the I/O channel. 
+
+The mailbox will automatically be removed when the command
+ $ CLOSE logical-name
+is issued and no other processes have an open connection with
+the mailbox. This can be done by the OMI module, but when OMI exits,
+the mailboxes that are still opened, will be closed automatically.
+
+
+4 Parameter
+
+The optional parameter specifies the name of the logical
+that points to the I/O channel, which is the same name that
+s used for the logical. An error occures if the parameter
+specifies a name thats already in use for an existing logical.
+If the parameter is omitted, the name will default to OMI$MAILBOX. 
+
+
+4 Return_values
+
+
+OMI$CREATE_MBX returns a logical name which points to the I/O channel.
+This can be used to write text to the mailbox using the command
+ $ WRITE logical-name "Line of text"
+or to read using the command
+ $ READ logical-name my-symbol
+
+A global symbol with the same name is also defined, containing the
+device name of the mailbox (MBAxxx:). This value can be transfered
+to other processes, with which they can open the same mailbox for
+communication:
+ $ OPEN /READ /WRITE my-logical `symbol-name`
+
+
+3 OMI$DATE_INFO
+ Format: OMI$DATE_INFO date
+
+Calculates the current daynumber (day-of-year), weeknumber and
+monthnumber. The values are returned in the following global symbols:
+
+   OMI$DAYNUMBER
+   OMI$WEEKNUMBER
+   OMI$MONTHNUMBER
+
+4 Parameter
+
+A date can optionally be specified as a parameter. If omitted, it
+defaults to the current date.
+The date information is returned for the current date.
+
+3 OMI$DECRYPT
+ Format: OMI$DECRYPT encrypted-string key-name
+
+This command can be used to decrypt a string, that was
+encrypted with OMI$ENCRYPT.
+
+The result will be returned in the global symbol
+OMI$DECRYPTED.
+
+4 Parameters
+
+Specify the encrypted string as the first parameter.
+
+The second parameter should be the name of the key with which
+the string was encrypted. It has to exist at the keyring of
+the users configuration file. If it s not there, it can be
+imported with the OMI command IMPORT KEY.
+
+3 OMI$DISPLAY_INFO
+ Format: OMI$DISPLAY_INFO
+
+Writes specified information to the menu screen. The information
+has to be specified as separate records, named OMI$RECORD1,
+OMI$RECORD2, ... OMI$RECORDn.
+
+*** NOTE: If this command is called more than once during the
+          same run (without any 'exit' commands), make sure
+          the symbols OMI$RECORDn of the previous calls are
+          erased or overwritten.
+
+      eg. If the first call writes 5 records to the screen, and
+          the second call should write 4 records, it'll also
+          write the last record of the first call.
+          The older fifth record should be removed using
+            $ DELETE /SYMBOL /LOCAL OMI$RECORD5
+
+          The OMI$RECORDn symbols should be local.
+
+4 Example
+
+   $ OMI$RECORD1  = "Username   : " + USR$NAME
+   $ OMI$RECORD2  = "Login dir  : " + USR$HOME
+   $ OMI$RECORD3  = "Owner      : " + USR$OWNER
+   $ OMI$RECORD4  = "Used quota : " + USR$QUOTA
+   $ OMI$DISPLAY_INFO
+   $ OMI$WAIT
+   $ OMI$REFRESH
+   $ EXIT
+
+   In this example, information, gathered by the procedure,
+   if stored in the OMI$RECORDn symbols, and presented on
+   the menu window. After being displayed, OMI$WAIT is called,
+   to give the user the change to read the information before
+   the menu window is set up again.
+
+3 OMI$DISPLAY_MESSAGE
+ Format: OMI$DISPLAY_MESSAGE message
+
+This command writes a message to SYS$ERROR, on the message
+line of the OMI menu window.
+
+4 Parameter
+
+You can enter any string as a parameter, enclosed by double
+quotes ("), using variable substitution using double single
+quotes (''), in exactly the same way as the DCL command
+WRITE.
+
+3 OMI$DUMP_INFO
+ Format: OMI$DUMP_INFO filename
+
+This command can be used to dump the information, that can be
+displayed by OMI$DISPLAY_INFO to a specified file. The information
+has to be specified as separate records, named OMI$RECORD1,
+OMI$RECORD2, ... OMI$RECORDn.
+
+*** NOTE: If this command is called more than once during the
+          same run (without any 'exit' commands), make sure
+          the symbols OMI$RECORDn of the previous calls are
+          erased or overwritten.
+
+      eg. If the first call writes 5 records to the screen, and
+          the second call should write 4 records, it'll also
+          write the last record of the first call.
+          The older fifth record should be removed using
+            $ DELETE /SYMBOL /LOCAL OMI$RECORD5
+
+          The OMI$RECORDn symbols should be local.
+
+4 Parameter
+
+A parameter is required, and should contain the name of the file
+to write the information to. If the file already exists, the new
+information will be added at the end of the file. Otherwise, the
+file will be created.
+
+3 OMI$ENCRYPT
+ Format: OMI$ENCRYPT string
+
+This command can be used to perform some rude encryption on
+the input string, which is specified as a parameter.
+
+The result will be returned in the global symbol
+OMI$ENCRYPTED.
+
+3 OMI$GET_VMSMESSAGE
+ Format: OMI$GET_VMSMESSAGE status-code
+
+This command translates a VMS status code and returns it in the
+global symbol OMI$VMS_MESSAGE.
+
+4 Parameter
+
+A valid status code is required. This must be an integer value,
+which can be specified as decimal or hexadecimal. 
+
+4 Return_value
+
+If a message was found, this function returns OMI$_OK and stores
+the found message in the global symbol OMI$VMS_MESSAGE.
+
+If no message was found, this function returns OMI$_WARNING.
+On other warnings and errors, OMI$_ERROR is returned.
+
+3 OMI$INPUT_VALIDATE
+ Format: OMI$VARIABLE = <variable to validate>
+         OMI$INPUT_VALIDATE
+
+On any input prompt, variables can be entered using single quotes.
+This command can be used to validate input entered by the user,
+to see if the string is straight, or should be interpreted as a
+variable or a fuction.
+
+Before the function is called, the variable OMI$VARIABLE has to
+be defined, containing the name of the variable that should be
+checked.
+
+This function fixes a possible bug pointed to by Henry Juengst
+(juengst@saph1.iskp.uni-bonn.de), when "''f$pid(goto)'" (without
+the double quotes) is entered as a password anywhere; this
+causes OMI to crash.
+
+The same problem can occur anywhere where an input string is
+compared.
+
+4 Return_Value
+
+OMI$INPUT_VALIDATE returns OMI$_OK when the input string or
+variable has the correct syntax.
+
+When a variable name was entered between two single quotes
+(eg. 'INPUT') and the variable (INPUT in this example) is
+not defined, the function returns OMI$_WARNING.
+
+When a variable name was entered between three single quotes
+(eg. ''INPUT') and the variable (INPUT in this example) is
+not defined, the function returns OMI$_ERROR.
+
+This value is also returned when OMI$VARIABLE is not set (this
+is a programming bug).
+
+4 Examples
+
+ 1. $ READ /PROMPT="Password: " SYS$COMMAND PASSWD
+    $ OMI$CMDLINE_CLEAR
+    $ OMI$VARIABLE = "PASSWD"
+    $ OMI$INPUT_VALIDATE
+    $ IF $STATUS .EQ. OMI$_ERROR
+    $  THEN
+    $   OMI$DISPLAY_MESSAGE "Invalid password"
+    $   RETURN
+    $ ENDIF
+    $ OMI$ENCRYPT "''PASSWD'"
+
+    In this example, OMI$INPUT_VALIDATE is called to check the
+    syntax of the password that was entered.
+    If the input was enclosed by single quotes ('INPUT'), these
+    are compared literally, but if three single quotes are
+    used (''INPUT'), INPUT will be translated by the call of
+    OMI$ENCRYPT.
+    If INPUT is a function like F$PID(GOTO), the function
+    is executed causing GOTO to be defined as a new symbol!
+
+ 2. $ READ /PROMPT="Password: " SYS$COMMAND PASSWD
+    $ OMI$CMDLINE_CLEAR
+    $ OMI$VARIABLE = "PASSWD"
+    $ OMI$INPUT_VALIDATE
+    $ IF $STATUS .EQ. OMI$_WARNING
+    $  THEN
+    $   OMI$DISPLAY_MESSAGE "Invalid password"
+    $   RETURN
+    $ ENDIF
+    $ OMI$ENCRYPT PASSWD
+
+    The main difference in this example is the call of
+    OMI$ENCRYPT, where the password is not passed to the
+    function between double quotes (causing the input to
+    be translated to uppercase).
+    Due to this, the return value of OMI$INPUT_VALIDATE
+    is checked on warning status; any input will be evaluated
+    when enclosed by single quotes ('INPUT').
+
+    If you're not sure if you should check on OMI$_WARNING
+    or OMI$_ERROR, it's always safe to use the folling check:
+       $ IF $STATUS .GE. OMI$_WARNING
+
+3 OMI$MSGLINE_CLEAR
+ Format: OMI$MSGLINE_CLEAR
+
+This command erases the contents of the message line of
+the OMI menu window.
+
+3 OMI$POPUP
+ Format: OMI$POPUP message [NOREFRESH]
+
+This command display a popup message box on top of the menu
+screen. The user then has to press return to acknowledge the
+message.
+
+4 Parameters
+
+The first parameter should be enclosed by double quotes. It
+contains the message that will be displayed in the popup box.
+
+The second parameter is optional; by default, the screen will
+be refreshed after the call of this command, but when the command
+is called by an ON_INIT element, the menu screen is yet to be
+drawn. To prevent the screen to be drawn twice, specify a second
+paramer as NOREFRESH in such situation.
+
+3 OMI$REFRESH
+ Format: OMI$REFRESH
+
+Rebuilds the menu window with the current menu options. This
+option is especially usefull after the OMI$DISPLAY_INFO command.
+
+3 OMI$REVERSE
+ Format: OMI$REVERSE string
+
+This command does what you would expect the DCL lexical
+F$EDIT(string,"REVERSE") to do.
+
+The reversed value of the input string will be returned
+in the global symbol OMI$REVERSED.
+
+4 Example
+
+   $ DIRECTORY = "DEVICE:[TOPDIR.SUBDIR]"
+   $ OMI$REVERSE 'DIRECTORY'
+   $ REVERSED = OMI$REVERSED - "]"
+   $ FILENAME = F$ELEMENT(0, ".", REVERSED)
+   $ REVERSED = REVERSED - "''FILENAME'."
+		! Dot behind the filename:
+                ! it's reversed!
+   $ FILENAME = "RID." + FILENAME + "]" + REVERSED
+   $ OMI$REVERSE 'FILENAME'
+   $ FILENAME = OMI$REVERSED
+
+   This example reads a directory specificaion as input,
+   reverses it and filters the last directory as a filename.
+   The new filename is composed completely reversed including
+   the filetype (reversed of '.DIR').
+   After this, the complete name is reversed again, resulting
+   in the value DEVICE:[TOPDIR]SUBDIR.DIR
+
+3 OMI$SIGNAL
+ Format: OMI$SIGNAL facility identifier[,variable,variable...]
+
+This command signals a message that will be read from the
+message datafile.
+Message datafiles can be created and filled with the OMI$MANAGE
+menu.
+For more information about message definitions, refer to the
+OMI Documentation.
+
+4 Parameters
+
+Facility
+
+The first parameter points to the facility of which the message
+should be signaled.
+This requires the message file 'OMI$:facility$MESSAGES.DAT'
+
+Identifier
+
+The second parameter identies the message. The message file
+has an indexed format, and the identifies is the key that will
+be used to read the message.
+If the message contains variables, the string in the datafile has
+to contain the substring ~S, which will be replaced by the arguments
+that were given in the second argument, separated by commas.
+
+*NOTE: If arguments are passed to OMI$SIGNAL using lexical
+       functions they have to be preceded by a single quote,
+       e.g.:
+        $ OMI$SIGNAL MYFACIL MYIDENT,var1,'f$edit(str2,"upcase")
+
+3 OMI$SUBMIT
+ Format: OMI$SUBMIT omi_module
+
+With this command, an OMI module can be started in the background.
+It works the same as using the qualife /BACKGROUND=BATCH from the
+DCL prompt.
+When starting a background process from the OMI prompt,a module
+can only be started as a batch job; not as a detached process.
+
+All defaults for the Submit command (batch queue, logfile) are
+taken from the [BGRPROCESS] section in the user's configuration file.
+
+4 Parameter
+
+The parameter is the name of the OMI module to start (name.OMI). It
+has to be located in the OMI$MENU_DIRECTORY: searchpath.
+This module should be created to run unattended (e.g. using
+Mailboxes for communication).
+
+
+3 OMI$SUBSTITUTE
+ Format: OMI$SUBSTITUTE search-str replace-str input-str
+
+This command can be used to replace a substring by another
+string in the input string.
+
+4 Parameters
+
+The first parameter specifies the search string. This
+string will be replaced by the substring specified in
+the second parameter
+
+The third parameter is the input string in which the
+substring has to be replaced.
+
+4 Return_value
+
+The result of this function is returned in the global
+symbol OMI$SUBSTITUTED.
+
+If the search string of the first argument was not found
+in the input string, this command returns OMI$_WARNING.
+
+3 OMI$WAIT
+ Format: OMI$WAIT
+
+Causes the procedure to wait until the user hits the Return key.
+By default the user will be prompted with the line
+ "Press <Return> to continue "
+This can be overwritten by modifying the value of 'wait_prompt'
+in the section [questions] of OMI$MENU.CFG.
+
+This command is very useful when output is displayed, eg. using the
+OMI$DISPLAY_INFO command, and the screen has to be refreshed before
+returning to the menu.
+
+When running in BATCH mode, this command is ignored.
+
+4 Return_value
+
+By default, this command returns status code 1 (normal successful
+completion).
+When the user presses Ctrl/Z in stead of return, this function
+returns OMI$_CANCELLED.
+
+4 Example
+
+   $LOOP:
+   $ READ /END_OF_FILE=DONE INPUT RECORD
+   $ OMI$RECORD1  = "Date   : " + F$ELEMENT(0, "#", RECORD)
+   $ OMI$RECORD2  = "Count  : " + F$ELEMENT(1, "#", RECORD)
+   $ OMI$DISPLAY_INFO
+   $ OMI$WAIT
+   $ IF $STATUS .EQ. OMI$_CANCELLED THEN $ GOTO END
+   $ GOTO LOOP
+   $END:
+   $ CLOSE INPUT
+   $ OMI$REFRESH
+   $ EXIT
+
+   In this example, information, read from an input file, is
+   displayed record by record in a loop.
+   When the user has seen enough, he can cancel the loop by
+   pressing Ctrl/Z.
+
+2 OMI_symbols
+
+There are two types of symbols; local symbols, which are available
+by default, and global symbols, which will be set when the proper
+command from the OMI toolbox is called.
+
+The local symbols are described below. The subtopic 'Global_Symbols'
+contains a list of symbols and the OMI command that sets them.
+For more information, refer to the command description.
+
+3 Local_Symbols
+
+The following symbols are availble by default for use in
+OMI modules.
+
+  OMI$_OK      		This is an exit status that indicates a
+                        normal successful completion.        
+
+  OMI$_WARNING		This is an exit status that can be used
+                        for warnings. If a OMI module exits
+                        with a warning, OMI$MENU takes no action,
+                        but it might be useful when OMI modules
+                        call other procedures.
+
+  OMI$_ERROR   		This is an exit status that can be used
+                        for errors. If a OMI module exits
+                        with an error, OMI$MENU takes no action,
+                        but it might be useful when OMI modules
+                        call other procedures.
+
+  OMI$NODENAME     	The nodename on which OMI is currently running.
+
+  OMI$CURRENT_USER	The name of the user currently running the 
+                        menu is stored in this symbol.
+
+  OMI$MENU_FILE         The filename of the menu that's currently  
+                        in use, without the directory specification.
+
+  OMI$MENU_LOCATION     The location of the menu file that's currently  
+                        in use.
+
+  OMI$_MESSAGE          This symbol is used to store the environmental
+                        value of 'message' in. Before an OMI module is
+                        called, all messages are switched off by
+                        SET MESSAGE /NOFACI /NOSEVE /NOIDEN /NOTEXT
+                        To switch it on, use the command
+			  $ SET MESSAGE 'OMI$_MESSAGE'
+                        This is especially usefull when debugging
+                        OMI modules.
+
+  OMI$OPTION            This symbol contains the last numeric that has  
+                        been entered by the user.
+
+  OMI$OPTION_TYPE       This symbol contains the option type of the latest
+                        item that was selected by the user. This can be
+                        SUBMENU, COMMAND or CALL.
+
+3 Global_Symbols
+
+The following can be available for OMI modules. Therefore, the
+command that's listed in the table should be called first.
+For further information, refer to the OMI_Commands descriptions.
+
+The symbols will automatically be removed when OMI exits.
+
+  Symbol:               Set by the command:
+
+
+  OMI$CALCULATED        OMI$CALC
+
+  OMI$CONFIRMED         OMI$CONFIRM
+
+  OMI$DAYNUMBER         OMI$DATE_INFO
+
+  OMI$DECRYPTED         OMI$DECRYPT
+
+  OMI$ENCRYPTED         OMI$ENCRYPT
+
+  OMI$MAILBOX           OMI$CREATE_MBX
+
+  OMI$MONTHNUMBER       OMI$DATE_INFO
+
+  OMI$RESPONSE          OMI$ASK
+
+  OMI$REVERSED          OMI$REVERSE
+
+  OMI$SUBSTITUTED	OMI$SUBSTITUTE
+
+  OMI$VMS_MESSAGE       OMI$GET_VMSMESSAGE
+
+  OMI$WEEKNUMBER        OMI$DATE_INFO

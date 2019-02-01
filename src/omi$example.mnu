@@ -1,0 +1,152 @@
+[MENU_MENU]
+  owner = system
+  title = OMI Example Menu
+  name  = Main                                  ! Menu name for shortcut
+  item1 = Print the menu file#command#silent_dcl print -
+	  /queue=~?{Printer queue:} /notify omi$:omi$example.mnu
+                                                ! Print this menu file to read
+                                                ! on paper what's happening.
+  item2 = Exit#command#exit                     ! Command item, EXIT the menu
+  item3 = Protected Menu#submenu#pwdtest	! Submenu item, calls PWDTEST
+  item4 = Get some inputs#submenu#inptest	! Submenu item, calls INPTEST
+  item5 = Counter menu#submenu#cnttest		! Submenu item, calls CNTTEST
+
+[MENU_PWDTEST]
+   password = êÀèºé çÀåàãâää’
+!  password_level = 2                           ! If not outcommented, nobody
+                                                ! can change the password.
+  name  = Protected                             ! Menu name for shortcut
+  comment = This menu is password protected     ! Put a comment line on screen
+  security = grant_me_write                     ! Define authorisation
+  title = Dummy Menu                            ! Give this one another title
+  item1 = Main Menu#command#back		! Command item, one level BACK
+
+
+[MENU_INPTEST]
+  name  = Input                                 ! Menu name for shortcut
+  item1 = Main Menu#command#back		! Command item, one level BACK
+  item2 = Formatted inputs#submenu#frmtest	! Submenu item, calls FRMTEST
+  item3 = Display the inputs#call#omi$example
+						! Call a test procedure to
+                                                ! display the inputs.
+  input1 = Select a weekday#{SEL|weekdays}inp_weekday#value1
+						! Select from a predefined
+                                                ! list. Default is "Monday"
+  input2 = Select some months#{TAG|months}inp_months
+                                                ! Select one ore more months.
+  input3 = Enter free input#{HIDDEN}inp_free    ! Free input, not shown on screen
+
+[MENU_FRMTEST]
+  name  = Format                                ! Menu name for shortcut
+  item1 = Main Menu#command#main		! Command item, back to MAIN
+  item2 = Previous Menu#command#back		! Command item, one level BACK
+  input1 = Enter a date#inp_date#today#date_frm ! Input item, should be a date
+						! Default is "TODAY"
+  input2 = Enter a valid filename#inp_file##fname_frm
+					      ! Input item, should be a filename
+  input3 = Enter an int between 0 and 100#inp_int##int_frm
+					      ! Input item, should be an integer
+
+[MENU_CNTTEST]
+  counter = just_a_counter   		      ! Define a counter for this menu
+  comment = The counter is now {counter$just_a_counter}
+  name  = Counter1                            ! Menu name for shortcut
+  item1 = Main Menu#command#back	      ! Command item, one level BACK
+  item2 = More counters#submenu#cnttest2      ! Submenu item, calls CNTTEST2
+
+[MENU_CNTTEST2]
+  counter = another_counter	      	      ! Define a counter for this menu
+  comment = The counter is now {counter$another_counter}
+  name  = Counter2                            ! Menu name for shortcut
+  item1 = Main Menu#command#main	      ! Command item, back to MAIN
+  item2 = Previous Menu#command#back	      ! Command item, one level BACK
+  item3 = Reset the counter#command#reset counter
+                                              ! Command item, RESET counter
+  item4 = Increase the counter#command#increase refresh
+                                              ! Command item, INCREASE counter
+                                              ! followed by a screen refresh
+                                              ! to update the comment line
+  item5 = Display the arrays#command#dcl show symbol inp_array*
+                                              ! Command item, call to DCL
+                                              ! to display the inputs
+  input1 = Enter anything#inp_arraya'counter$another_counter
+  input2 = Select a day#{SEL|weekdays}inp_arrayb'counter$another_counter
+
+
+[DATE_FRM]
+  type = date                                 ! Input should be a valid date
+  format = absolute                           ! Will be convert. to absolute
+
+[FNAME_FRM]
+  type = filespec                             ! Input should be of FILESPEC type
+  wildcards = true                            ! Wildcards are allowed
+  required = false                            ! The file does not have to exist
+
+! The arguments below are from version 1.0b2, the FILESPEC type was implemented
+! later, but with the arguments below, used in the STRING type, almost
+! the same result can be reached.
+! The arguments are outcommented in stead of remove, so they can remain here
+! as an extra example.
+! 
+!  upcase   = true                            ! String will be conver. to upcase
+!  collapse = false                           ! All blanks will be removed
+!  ivchars   = @#$%^&*()'?/|\+`~{}[]<>        ! These characters are not allowed
+
+
+[INT_FRM]
+  type = integer			      ! Input should be an integer
+  min = 0  				      ! Input value should be between
+  max = 100                                   !  '0' and '100'
+
+
+[WEEKDAYS]
+!
+! Define the days of the week from which a selection can be made
+! using the SEL input in the INPTEST menu (input1).
+!
+  value1 = Monday
+  value2 = Tuesday
+  value3 = Wednesday
+  value4 = Thursday
+  value5 = Friday
+  value6 = Saturday
+  value7 = Sunday
+
+[MONTHS]
+!
+! Define the months that can be tagged using the TAG input in the 
+! INPTEST menu (input2).
+!
+  delimiter = /
+  value1  = January
+  value2  = February
+  value3  = March
+  value4  = April
+  value5  = May
+  value6  = June
+  value7  = July
+  value8  = August
+  value9  = September
+  value10 = October
+  value11 = November
+  value12 = December
+
+
+[COUNTER]
+  just_a_counter  = 0
+  another_counter = 0
+
+[GRANT_ME_WRITE]
+!
+! This security section was added, granting write privilege to my userid,
+! to enable me to set a password on the PWDTEST menu, without the need
+! to log in as SYSTEM (the owner of the menu)
+!
+  oscar     = write
+  all_users = read, exec
+
+<EOF>
+
+The '<EOF>' above will be interpreted as an end-of-file. This means the
+OMI will never read these lines. This is done to improve performance while
+initializing; long comments can now be written past the end-of-file.

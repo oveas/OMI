@@ -1,0 +1,345 @@
+1 Config_File
+
+A great deal of the behaviour (lay-out in specific) can be modified
+using a configuration file. This is a file called OMI$MENU.CFG, that
+should be located in the users SYS$LOGIN, or any other file name in
+another directory, pointed to by the logical OMI$CONFIG
+
+If none of these are found, the default file OMI$:OMI$MENU.CFG
+is used.
+
+The topics below describe the sections that can be modified in
+the file. Some values can be empty (only when explicitly said so).
+All element names are case insensitive
+
+
+*** NOTE: Blank lines and comments (!) are allowed.
+          Double quotes (") are NOT allowed.
+
+
+2 MAIN
+
+This section defines some generally used values.
+
+3 EMPTY_VALUE
+
+In menus where input values are displayed, 'empty_values'
+represents the way an unspecified value will be displayed.
+If it shouldn't display anything, just remove any value
+(empty_value = ).
+
+3 KEY
+
+If a key was set using the SET KEY command before version 1.3,
+it will be stored here in the configuration file. The key has a
+binary code, and should not be set or changed manually.
+
+Since version 1.3, this key cannot be set anymore. Keys are now
+named and stored in the user specific keyring. Decryption of strings
+that were encrypted with this key before version 1.3 is still supported.
+
+
+3 SILENT_OUTPUT
+
+If DCL commands are executed in silent mode, the output,
+if any, including errors, will be written to the NULL device
+(NLA0:), or any file name specified by this element.
+The final return status of the command will always be displaded.
+
+3 TIME_FORMAT
+
+This element can have the values 12 or 24. It specifies the default
+time format for the TIME format type. The default value is 12.
+
+3 EDITOR 
+
+When you need to use an editor somewhere in an OMI procedure,
+this symbol will be used. Specify any (foreign) command.
+
+3 FLOAT_POINT
+
+Specifies the default character ('.' or ',') that will be used in
+the floating point INTEGER format type.
+
+3 VERSION_ID
+
+The element is obsolete.
+
+3 PROTECT_PROMPT
+
+When an own prompt is defined, this can be overwritten by
+a prompt in a chosen menu. Setting the protect_prompt to 1
+or TRUE, will tell OMI to use the prompt from the configuration
+file in all menus.
+
+3 PRINTER
+
+This element can be used to define a user specific printer queue.
+By default, this will be SYS$PRINT. The installation procedure will
+prompt for a default printer.
+
+3 SHOW_PROGRESS
+
+By default, OMI display the percentage of the menu file that was
+read during initialization. This can be switched off by setting this
+element to FALSE or 0.
+
+Display the percentage read is usefull is large menu files are used,
+since initialization can take pretty long, depending on the system
+on which OMI runs.
+The setting of this element can be overwritten when starting OMI from
+the DCL prompt with the /[NO]PROGRESS qualifier.
+
+
+2 SCREEN
+
+This section contains all elements that define the lay-out of the
+menu screen.
+
+3 WIDTH_MARGIN
+
+You can use the full width of the screen (without border lines
+at both sides), by setting this margin to '0'. If you do want
+borders, any value ('n') will cause the leftmost and rightmost 'n'
+columns not to be used.
+
+3 HEIGHT_MARGIN
+
+You can use the full height of the screen by setting this margin
+to '0'. If you do want a smaller windows, any value ('n') will
+cause the uppermost and lowermost 'n' lines not to be used.
+
+3 WIDTH
+
+The symbol 'width' allowes two integer values: 80 and 132. Values up
+to 80 will be changed to 80. All values greater than 80 will be changed
+to 132. It defines the screen width of the menu window.
+
+Since OMI V2.4, the value '0' is also allowed. Specifying this
+leaves the current value unchanged.
+
+3 HEIGHT
+
+Define the number of lines the menu should use.
+
+The value '0' can be used to leave the current terminal's value
+unchanged.
+
+3 EXIT_WIDTH
+
+When leaving the menu,'exit_width' is the screenwidth that's
+set on exit.
+
+The value '0' can be used to restore to the original value before
+OMI started.
+
+3 EXIT_WIDTH
+
+When leaving the menu,'exit_height' is the number of lines that
+the terminal will be set to on exit.
+
+The value '0' can be used to restore to the original value before
+OMI started.
+
+3 WINDOW_TOPMARGIN
+
+Secify the number of lines that should be left blank at the top
+of the window. This is inside the menu window, so is specifies the
+number of blank lines between the menu header and the first line
+being used.
+
+3 SCROLL_REGION
+
+You can enable or disable a scroll_region.
+Only the first three characters are validated, so SCROLL_REGION = ENA
+SCROLL_REGION = DIS is enough.
+When enabled, a scroll region is created, leaving the menu screen
+intact, for the output of DCL commands.
+
+
+3 SCROLLREGION_AUTODISABLE
+
+Using a scroll region might screw up the menu window when a width
+margin is used. By setting SCROLLREGION_AUTODISABLE to '1' or YES,
+the use of a scroll region is automatically disabled in this case.
+
+3 SEPARATE_INPUTS
+
+This is a boolean, which can be set to TRUE or FALSE (or '1' or '0')
+that specifies wether or not the menu screen should be split in two
+separate parts when input elements are specified in the current menu,
+using the lower past of the screen for the input values.
+
+3 DISPLAY_NAMES
+
+This element, which can be 'true' or 'false', specifies if menu names have
+to be displayed. If set to 'true', the name of the menu will be displayed
+in the window, enclosed by brackets.
+
+3 TAB
+
+The 'tab' setting is used when more columns are displayed on the
+menu screen. It specifies the number of blanks between the two
+columns.
+
+A second column is used to display the values of input options on
+the menu screen, and for tag lists if they don't fit in one column.
+
+2 QUESTIONS
+
+This section defines the several strings as they will be displayed
+whenever OMI or the menu needs input. These strings can be used
+to translate all questions in your native language.
+
+3 ALL_INPUTS
+
+In input screens, the last option will be to enter all values
+without the need to make the choice for all options separatly. 
+This element specifies how this choice is represented on the screen.
+
+3 REVERSE_TAGS
+
+In tag screens, the last option will reverse the current selection,
+This element specifies how this choice is represented on the screen.
+
+3 OPTION
+
+Represents how the user will prompted to select an option.
+This can be overwritten by a prompt element in a menu file,
+unless the 'protect_prompt' in section [main] is set to TRUE.
+
+3 INPUT
+
+Represents how the user will prompted to enter input.
+
+3 DCL_COMMAND
+
+Represents how the user will prompted to enter a DCL command.
+
+3 DEFAULT_INPUT
+
+When input is required for a command (specified by the string '~?'
+in the item element), this option specifies the default prompt if
+none is specified in the item element (this can by done by adding
+'{prompt}' to the input string. Refer to the help section of
+the menu files for more information).
+
+3 CONFIRM
+
+Several commands ask for a confirmation before executing by default.
+This can be changed by setting this element to FALSE.
+
+3 WAIT_PROMPT
+
+When OMI waits until the user hits return (or any called procedure
+using the OMI$WAIT command), this represents the prompt.
+
+
+2 [BGRPROCESS]
+
+This section contains all elements that define how background
+processes should be started.
+
+
+3 BATCH_QUEUE
+
+Define which queue should be used when OMI modules are started
+in a batch. Default is SYS$BATCH.
+
+
+3 DETACHED_LGICMD
+
+When starting processes in DETACHED mode, the user's LOGIN.COM
+is not executed. Therefore, several logicals, symbols etc. might
+not be available. This element specifies a command procedure which
+sets up the proper user environment. Default is SYS$LOGIN:LOGIN.COM.
+The file OMI$SETUP.COM will be executed automatically.
+
+3 LOGFILE
+
+Specifies the name of the logfile that will be written by the
+background process. Default is
+SYS$LOGIN:OMI$BACKGROUND_<identifier>.LOG.
+
+
+3 OPTIONS_BAT
+
+Used to add extra qualifiers to the SUBMIT command, eg:
+ OPTIONS_BAT = /NOTIFY
+For more information, refer to the OpenVMS documentation.
+
+
+3 OPTIONS_DET
+
+Used to add extra qualifiers to the RUN /DETACH command, eg:
+ OPTIONS_DET = /JOB_TABLE_QUOTA=8192
+For more information, refer to the OpenVMS documentation.
+
+
+2 KEYRING
+
+All encryption keys that are created by the user with the SET KEY
+command, or imported with the IMPORT KEY command, are stored in this
+section. They have a binary value, and cannot be added or modified
+manually.
+
+
+2 Adding_Sections
+
+When you want to create default settings that can be used in your
+own menus and modules, you can add your own sections to the
+configuration file.
+
+E.g., if you want to add a printer queue that can be changed per
+user for use in OMI, the following section and element can be added:
+ [MYDEFS]
+   PRINT_QUEUE   = MY_PRINTER
+
+If a file needs to be printed on the user specific printer queue,
+use the command:
+ $ PRINT /QUEUE='MYDEFS$PRINTER_QUEUE' filename
+
+* NOTE: The following section names are reserved:
+        [MAIN]
+        [SCREEN]
+        [QUESTIONS]
+        [COUNTER]
+	[INTERACTIVE_AUTH]
+        [MENU_*]   (all sections starting with 'MENU_')
+
+2 Example
+
+Below is an example of how a configuration file can look like.
+
+  [main]
+    empty_value   = .....
+    version_id    = 1            ! Do not change this manually
+    silent_output = NLA0:
+    editor        = edit/tpu
+  
+  [screen]
+    width_margin             = 4
+    height_margin            = 1
+    width                    = 80
+    height                   = 24
+    exit_width               = 80
+    window_topmargin         = 1
+    scroll_region            = enabled
+    scrollregion_autodisable = y
+    tab                      = 8
+  
+  [questions]
+    all_inputs    = All Inputs
+    reverse_tags  = Reverse selection
+    option        = OMI>
+    input         = Enter Value
+    dcl_command   = DCL Command
+    default_input = Input
+    wait_prompt   = Press <Return> to continue
+
+  !
+  ! Below are my peronal additions
+  !
+  [mydefs]
+    print_queue   = my_printer
+    data_location = device:[data_dir]

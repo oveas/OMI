@@ -1,0 +1,70 @@
+$	goto start$
+$!
+$!******************************************************************************
+$!*                                                                            *
+$!*    MODULE NAME:                                                            *
+$!*    ============                                                            *
+$!*      Mgt$Check_Ident.Omi                                                   *
+$!*                                                                            *
+$!*    CALLED BY:                                                              *
+$!*    ==========                                                              *
+$!*      Omi$Manage.Mnu  - The OMI Management Menu                             *
+$!*                                                                            *
+$!*    DESCRIPTION:                                                            *
+$!*    ============                                                            *
+$!*      This module is called by the Message Submenu. It checkes if the       *
+$!*      user entered an existing message identification.                      *
+$!*                                                                            *
+$!*    HISTORY:                                                                *
+$!*    ========                                                                *
+$!*      v1  12-09-97 Oscar van Eijk        Created                            *
+$!*                                                                            *
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$ start$:
+$!
+$	omi$call mgt$check_facil
+$	if $status .ne. omi$_ok then $ exit $status
+$!
+$	omi$check msg_ident "%OMI-W-NOIDENT, identification not specified"
+$	if $status .ge. omi$_warning
+$	   then
+$		if omi$option_type .eqs. "SUBMENU" -
+		   then $ omi$wait  ! Give the user the change to read the msg
+$		exit omi$_warning
+$	endif
+$!
+$	open /read /write /share=read omi$msg /error=msg$flock -
+	   Omi$Menu_Directory:'msg_facil'$messages.dat
+$	read /error=msg$notfound /key="''msg_ident'" omi$msg _message
+$	close omi$msg
+$!
+$	exit omi$_ok
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Error handlings are below
+$!
+$ msg$flock:
+$!
+$! Message file locked
+$!
+$	omi$signal omimgt msgflock,msg_facil
+$	omi$wait
+$	exit omi$_warning
+$!
+$!
+$ msg$notfound:
+$!
+$! Message does not exist
+$!
+$	close omi$msg
+$	omi$signal omimgt nomsg,msg_ident
+$	omi$wait
+$	exit omi$_warning
+$!
+$!******************************************************************************

@@ -1,0 +1,54 @@
+$	goto start$
+$!
+$!******************************************************************************
+$!*                                                                            *
+$!*    MODULE NAME:                                                            *
+$!*    ============                                                            *
+$!*      Edit_Element.Omi                                                      *
+$!*                                                                            *
+$!*    CALLED BY:                                                              *
+$!*    ==========                                                              *
+$!*      Omi$Edit_Cmd.Com                                                      *
+$!*                                                                            *
+$!*    DESCRIPTION:                                                            *
+$!*    ============                                                            *
+$!*      This is the On_Exit module for the on-the-fly menu called by          *
+$!*      the EDIT ELEMENT command. It calls Omi$Config.Com to write an         *
+$!*      update to the menu file                                               *
+$!*                                                                            *
+$!******************************************************************************
+$!
+$ start$:
+$!
+$	if f$type(edit_elem_inptype) .nes. ""
+$	   then
+$		if f$edit(f$extract(0, 3, edit_elem_inptype), "upcase") .eqs. "SEL" then -
+		   $ edit_element_p2 = "{SEL|''edit_elem_lstname'}''edit_elem_varname'"
+$		if f$edit(f$extract(0, 3, edit_elem_inptype), "upcase") .eqs. "TAG" then -
+		   $ edit_element_p2 = "{TAG|''edit_elem_lstname'}''edit_elem_varname'"
+$		if f$edit(f$extract(0, 3, edit_elem_inptype), "upcase") .eqs. "STR" then -
+		   $ edit_element_p2 = "''edit_elem_varname'"
+$	endif
+$!
+$	_new_value = "''edit_element_p1'#''edit_element_p2'#"
+$	if f$type(edit_element_p3) .nes. ""
+$	   then
+$		if edit_element_p3 .nes. "" then $ _new_value = _new_value + -
+		   "''edit_element_p3'"
+$	endif
+$	if f$type(edit_element_p4) .nes. ""
+$	   then
+$		if edit_element_p4 .nes. "" then $ _new_value = _new_value + -
+		   "#''edit_element_p4'"
+$	endif
+$!
+$	omi$current_menu = omi$saved_current_menu  ! Use the saved name, since
+$!                                                 ! Omi$Config uses this symbol
+$!                                                 ! The actual current menu
+$!                                                 ! is an on-the-fly menu
+$!
+$	omi$config 'omi$menu_file' update "menu_''omi$current_menu'" -
+	   "''edit$_element_name'" "''_new_value'"
+$	exit $status
+$!
+$!******************************************************************************

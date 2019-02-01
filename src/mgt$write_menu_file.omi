@@ -1,0 +1,127 @@
+$!******************************************************************************
+$!*                                                                            *
+$!*	This module is called when the submenu 'Create a new Submenu'          *
+$!*	is called from the management menu. It checkes to see if the menu      *
+$!*	filename was entered, and creates it.                                  *
+$!*                                                                            *
+$!******************************************************************************
+$!
+$	omi$check msection -
+	   "%OMIMGT-W-SPECSECTION, no section name specified"
+$	if $status .ge. omi$_warning
+$	   then
+$		omi$confirm "Do you want to cancel this menu ? " 'questions$answer_no
+$		if omi$confirmed then $ exit omi$_ok
+$		exit omi$_warning
+$	endif
+$!
+$	omi$check mtitle "" empty_allowed
+$	if $status .eq. omi$_error then $ mtitle = ""
+$!
+$	omi$check mname "" empty_allowed
+$	if $status .eq. omi$_error then $ mname = ""
+$!
+$	omi$check mcounter "" empty_allowed
+$	if $status .eq. omi$_error then $ mcounter = ""
+$!
+$	if mowner .eqs. "NONE" then $ mowner = ""
+$!
+$	open /append new_menu 'mnu_file
+$	write new_menu "[MENU_''msection']"
+$	if mtitle   .nes. "" then $ write new_menu "   title	= ''mtitle'"
+$	if mname    .nes. "" then $ write new_menu "   name	= ''mname'"
+$	if mowner   .nes. "" then $ write new_menu "   owner	= ''mowner'"
+$	if mcounter .nes. "" then $ write new_menu "   counter	= ''mcounter'"
+$!
+$! Find out if this menu requires a password. If so, prompt for one,
+$!
+$	if mpassword .eqs. "Yes"
+$	   then
+$		omi$ask "Enter a password for this menu "
+$		if $status .eq. omi$_cancelled
+$		   then $ write new_menu "   password	= " ! Use initial passwd
+$		   else
+$			omi$encrypt "''omi$response'" "''p$_key'"
+$			write new_menu "   password	= ''omi$encrypted'"
+$			delete_ /symbol /global omi$response
+$			delete_ /symbol /global omi$encrypted
+$		endif
+$	endif
+$!
+$	omi$check ssection
+$	if $status .eq. omi$_ok
+$	   then
+$		write new_menu "   security	= ''ssection'"
+$	       	security_block = true
+$	   else $ security_block = false
+$	endif
+$!
+$	if counter$input_counter .eq. 1 then -
+	   $ write new_menu "   all_inputs	= false"
+$!
+$	i = 1
+$!
+$ add_items:
+$!
+$	omi$check itemtext'i'
+$	if $status .eq. omi$_warning
+$	   then
+$		i = 1
+$		goto add_inputs
+$	endif
+$!
+$	write new_menu "   item''i'	= ", -
+	   itemtext'i',"#",itemtype'i',"#",itemp3'i'
+$	i = i + 1
+$	goto add_items
+$!
+$ add_inputs:
+$!
+$	omi$check displtext'i'
+$	if $status .ge. omi$_warning .eqs. "" then $ goto menu_section_done
+$!
+$	_string = "   input''i'	= ",displtext'i'
+$	if f$element(0," ",inptype'i') .eqs. "Straight" then $ gosub inp_str
+$	if f$element(0," ",inptype'i') .eqs. "Select"   then $ gosub inp_sel
+$	if f$element(0," ",inptype'i') .eqs. "Tag"      then $ gosub inp_tag
+$	i = i + 1
+$	write new_menu _string
+$	goto add_inputs
+$!
+$ inp_str:
+$!
+$	_string = _string + "#" + varname'i' + "#"
+$	omi$check defvalue'i'
+$	if $status .eq omi$_ok
+$	   then
+$		_string = _string + defvalue'i'
+$	endif
+$	omi$check frm_type'i'
+$	if $status .eq omi$_ok
+$	   then
+$		_string = _string + "#" + frm_sname'i'
+$	endif
+$	return
+$!
+$ inp_sel:
+$!
+$	_string = _string + "#{SEL|" + sellist_name'i' + "}" + varname'i'
+$	omi$check defvalue'i'
+$	if $status .eq. omi$_ok
+$	   then
+$		_string = _string + "#VALUE''i'"
+$	endif
+$	return
+$!
+$ inp_tag:
+$!
+$	_string = _string + "#{TAG|" + taglist_name'i' + "}" + varname'i'
+$	return
+$!
+
+
+$ menu_section_done:
+$!
+$	close new_menu
+$	exit
+

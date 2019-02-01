@@ -1,0 +1,14 @@
+ADDMSG         S new message successfully added
+CREMSGFIL      S message file for ~S created
+DELCAN         I delete cancelled
+DELETE         S message was successfully deleted
+DELETED        S message was successfully deleted
+DUPLIDENT      W message for ~S already exists
+EDTMSG         S message successfully updated
+EXMSGFILE      W message file for ~S already exists
+MSGFLOCK       W message file ~S is currently locked
+MSGREP         S message file for ~S successfully repaired
+NOMSG          W no message found for identification ~S
+NOMSGFILE      E no message file found for facility ~S
+SPECFILE       W please specify a menu file first
+UPDATED        S message was successfully updated

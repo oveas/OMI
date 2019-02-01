@@ -1,0 +1,66 @@
+[menu]
+This Management menu is created in an early OMI version,
+but never documented of finished.
+It is not likely new functionality will be added to this menu,
+nor will it ever be fully documented, but the messages menu
+is used quite often, and is therefor now briefly documented
+with the OMI Info function.
+
+Type INFO in each submenu for more information.
+
+[messages]
+This menu can be used to create a new message file, repair an existing
+message file, or to add a message to a message file
+
+Messages in OMI look similar to standard VMS messages, e.g.:
+%FACIL-I-MSGEX, this is a message example
+where:
+   FACIL    is the facility name
+   I        is the severity level
+   MSGEX    is the message identification
+   <...>    the rest is the message text.
+<FF>
+Before you start working with message, select or create a facility.
+You can select a facility with the option "Select a facility..."
+or specify a new one there.
+After entering the name for the new facility, select "Create this
+facility" to create it.
+This creates an indexed file named <facil>$MESSAGES.DAT.
+Note: The file is created in the directory OMI$:
+      It can be moved to any other directory in the
+      OMI$MENU_DIRECTORY search list afterwards.
+
+Messages can now be stored in this facility and displayed from
+within modules using the command:
+$ OMI$SIGNAL <facil> <identifier>
+<FF>
+By specifying an identifier, a message can be selected from the 
+current facility for Display, Delete or Edit.
+
+When a message file is corrupt (e.g. after a manual edit), you'll get
+the error %OMI-F-BADMSGFIL each time a message from the facility
+should be displayed.
+This menu can also be used to repair such message files.
+
+[add_message]
+In this menu, new messages can be added to the selected facility.
+Fill in all fields in this menu, then select "Add this message".
+
+The identification can be freely choosen, but its size must be
+between 3 and 14 characters.
+An error will be displayed if the identification already exists.
+<FF>
+If the message text should contain variables, they can be specified
+by the string "~S" (tilde- sign, immediatly followed by an
+uppercase 'S').
+This string will be replaced by it's value by the OMI$SIGNAL
+command, e.g., if the facility MYFACIL contains the message
+SHOWDAY with severity I (informational) and the text
+"today is a ~S", the following code:
+  $ var = "TUESDAY"
+  $ omi$signal myfacil showday,'var
+
+will display the message:
+  %MYFACIL-I-SHOWDAY, today is a TUESDAY
+
+For more information, please refer to the printed documentation.

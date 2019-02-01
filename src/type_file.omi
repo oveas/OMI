@@ -1,0 +1,110 @@
+$	goto start$
+$!
+$!******************************************************************************
+$!*                                                                            *
+$!*    MODULE NAME:                                                            *
+$!*    ============                                                            *
+$!*      Type_File.Omi                                                         *
+$!*                                                                            *
+$!*    USAGE:                                                                  *
+$!*    ======                                                                  *
+$!*      OMI$CALL TYPE_FILE file-specification [NO]REFRESH                     *
+$!*                                                                            *
+$!*    DESCRIPTION:                                                            *
+$!*    ============                                                            *
+$!*      Standard OMI module to type a file on the menu window using the       *
+$!*      OMI$DISPLAY_INFO command.                                             *
+$!*      After the file has been typed, this module refreshes the screen,      *
+$!*      unless P2 has been specified as NOREFRESH.                            *
+$!*                                                                            *
+$!*    HISTORY:                                                                *
+$!*    ========                                                                *
+$!*      v1  10-07-97 Oscar van Eijk        Created                            *
+$!*      v2  15-09-97 Oscar van Eijk        Added the NOREFRESH option         *
+$!*      v3  15-07-03 Oscar van Eijk        Minor fix; %DCL-W-UNDSYM warning   *
+$!*                                                                            *
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$ start$:
+$!
+$	_status = omi$_ok
+$	available_lines = screen$line_command - screen$line_header - -
+	   screen$window_topmargin - 2
+$!
+$ 1$:
+$!
+$	if p1 .eqs. ""           then $ goto 51$
+$	if f$search(p1) .eqs. "" then $ goto 52$
+$!
+$	open /read /share=write /error=53$ in$file 'p1'
+$	rec_counter = 1
+$!
+$ 2$:
+$!
+$	read /end_of_file=9$ in$file omi$record'rec_counter'
+$	if omi$record'rec_counter' .eqs. "" then -
+	   $ omi$record'rec_counter' = " " ! Workaround for a known bug
+$	rec_counter = rec_counter + 1
+$	if rec_counter .gt. available_lines then $ goto 3$
+$	goto 2$
+$!
+$ 3$:
+$!
+$	omi$display_info
+$	omi$wait
+$	if $status .eq. omi$_cancelled then $ goto 98$
+$	rec_counter = 1
+$	goto 2$
+$!
+$ 9$:
+$!
+$	omi$display_info
+$ !	if f$type(omi$record'rec_counter') .nes. "" then -
+  !	   deletee /symbol /global omi$record'rec_counter'
+$	if f$extract(0, 5, p2) .eqs. "NOREF" then $ goto 98$
+$	omi$wait
+$	goto 98$
+$!
+$!******************************************************************************
+$!
+$ 51$:
+$!
+$	omi$ask "File to type: "
+$	omi$cmdline_clear
+$	omi$msgline_clear
+$	p1 = omi$response
+$	deletee /symbol /global omi$response
+$	goto 1$
+$!
+$ 52$:
+$!
+$	omi$signal omi fnf,'p1
+$	p1 = ""
+$	goto 1$
+$!
+$ 53$:
+$!
+$	omi$signal omi readerr,'p1
+$	goto 97$
+$!
+$!******************************************************************************
+$!
+$ 97$:
+$!
+$	_status = omi$_warning
+$	goto 99$
+$!
+$ 98$:
+$!
+$	close in$file
+$	if f$extract(0, 5, p2) .eqs. "NOREF" then $ goto 99$
+$	omi$refresh
+$	goto 99$
+$!
+$ 99$:
+$!
+$	exit _status
+$!
+$!******************************************************************************
