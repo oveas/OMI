@@ -215,8 +215,19 @@ $	endif
 $!
 $	_input_module = p2
 $	_module = ""
-$	if _module .eqs. "" then -
-	   $ _module = f$search(f$parse(_input_module, "Omi$Menu_Directory:.Omi"))
+$	_log_index = 0
+$!
+$ call$check_path:
+$	_menu_directory = f$trnlnm("Omi$Menu_Directory",,'_log_index')
+$	if _menu_directory .eqs. "" then $ goto call$end_of_list
+$	_module = f$search(f$parse(_input_module, "''_menu_directory'.Omi"))
+$	if _module .eqs. ""
+$	   then
+$		_log_index = _log_index + 1
+$		goto call$check_path
+$	endif
+$!
+$ call$end_of_list:
 $	if _module .eqs. "" then -
 	   $ _module = f$search(f$parse(_input_module, "Omi$:.Omi"))
 $	if f$search(_module) .eqs. ""
