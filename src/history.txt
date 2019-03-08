@@ -1,3 +1,11 @@
+
+2.5, Released: xx-xx-2019
+
+* Fix: Modules where not found if not located in the first index when
+  OMI$MENU_DIRECTORY is a searchpath.
+* Fix: Find a given menu when the menu name is also a logical pointing somewhere else
+* Fix: Clear input when a format block returns an error or warning.
+
 2.4   Released: 04-10-2018
 
 * Added the "{HIDDEN}" option for free input types

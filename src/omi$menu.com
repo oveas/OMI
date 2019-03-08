@@ -126,6 +126,7 @@ $!*     2.2       29-08-2002  Oscar van Eijk, OVEAS                            *
 $!*                           With thanks to Edward Vlak, EDS                  *
 $!*     2.3       25-06-2004  Oscar van Eijk, OVEAS                            *
 $!*     2.4       04-10-2018  Oscar van Eijk, OVEAS                            *
+$!*     2.5       xx-xx-2019  Oscar van Eijk, OVEAS                            *
 $!*                                                                            *
 $!******************************************************************************
 
@@ -3560,6 +3561,14 @@ $!
 $	if options$_startmenu .nes. ""
 $	   then
 $		omi$startmenu = "''f$parse(options$_startmenu,,,"name")'.MNU"
+$		if omi$startmenu .eqs. "" .and. f$trnlnm("options$_startmenu") .nes. "" -
+		   .and. f$locate(".", options$_startmenu) .lt. f$length(options$_startmenu)
+$		   then
+$!			There's a logical with the same name pointing somewhere else, so force
+$!			the menuname to be a filename by adding an extension and try again.
+$			options$_startmenu = options$_startmenu + ".MNU"
+$			omi$startmenu = "''f$parse(options$_startmenu,,,"name")'.MNU"
+$		endif
 $		return omi$_ok
 $	endif
 $!
