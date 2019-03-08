@@ -223,6 +223,7 @@ $	if f$type('omi$current_menu'$all_inputs) .eqs. ""
 $	   then $ _display_allinp_prompt = 1
 $	   else $ _display_allinp_prompt = 'omi$current_menu'$all_inputs
 $	endif
+$	if _input_cnt .eq. 2 then $ _display_allinp_prompt = 0 ! 2nd was empty so only 1 input
 $	if f$type('omi$current_menu'$required_order) .nes. "" then -
 	   $ _display_allinp_prompt = 0
 $	if _display_allinp_prompt

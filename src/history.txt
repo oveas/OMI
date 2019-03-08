@@ -5,6 +5,7 @@
   OMI$MENU_DIRECTORY is a searchpath.
 * Fix: Find a given menu when the menu name is also a logical pointing somewhere else
 * Fix: Clear input when a format block returns an error or warning.
+* Dont't show 'All input' when a menu has only 1 input
 
 2.4   Released: 04-10-2018
 
