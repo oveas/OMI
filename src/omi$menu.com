@@ -769,7 +769,18 @@ $	on warning then $ goto input$invalid_format
 $	if .not. omi$_debug then -
 	   $ set message /nofacility /noseverity /noidentification /notext
 $	_req_format = f$edit('_format'$type,"collapse,upcase")
-$	goto input$'_req_format'_format
+$!
+$	if f$type(_saved_value) .nes. "" then $ delete\ /symbol _saved_value
+$	if f$type('_variable') .nes. "" then $ _saved_value = '_variable'
+$	gosub input$'_req_format'_format
+$	_status = $status
+$	if _status .ge. omi$_warning
+$	   then
+$		if f$type(_saved_value) .eqs. ""
+$		   then $ delete\ /symbol '_variable'
+$		   else $ '_variable' = "''_saved_value'"
+$	endif
+$	return _status
 $!
 $!******************************************************************************
 $!
