@@ -20,10 +20,10 @@ $!******************************************************************************
 $!
 $ start$:
 $!
-$!==>	Evaluate the parameter. 
+$!==>	Evaluate the parameter.
 $!
 $	if f$type(menu$title) .eqs. "" then -
-	   $ menu$title = "Oscar's Menu Interpreter v''omi$version' - ©1997-2018, Oveas"
+	   $ menu$title = "Oscar's Menu Interpreter v''omi$version' - (c)1997-2019, Oveas"
 $!
 $	if p1 .eqs. "CLEANUP"      then $ gosub screen$_erase
 $	if p1 .eqs. "CLEAR"        then $ gosub screen$erase_window
@@ -60,7 +60,7 @@ $	   then
 $		ws "''ESC$'[1;''screen$height'r"
 $		gosub screen$_initialize
 $		gosub screen$setup_window
-$	endif		
+$	endif
 $!
 $ screen$_exit:
 $!
@@ -139,7 +139,7 @@ $	   then $ _comment = "''_comment1'***''_comment'"
 $	   else
 $		_comment_val = '_comment_var
 $		_comment = "''_comment1'''_comment_val'''_comment'"
-$	endif                                             
+$	endif
 $	goto comment$substitute
 $!
 $!******************************************************************************
@@ -319,9 +319,9 @@ $		endif
 $		scroll$_start_at = scroll$'list$_scroll'_page
 $	endif
 $	if f$type(scroll$next_page) .nes. "" then -
- 	   $ delete\/symbol/global scroll$next_page
+	   $ delete\/symbol/global scroll$next_page
 $	if f$type(scroll$previous_page) .nes. "" then -
- 	   $ delete\/symbol/global scroll$previous_page
+	   $ delete\/symbol/global scroll$previous_page
 $!
 $	_sel_opt = 1
 $	_sel_size = 0
@@ -467,7 +467,7 @@ $	_mnu_opt = 1
 $	_mnu_size = 0
 $!
 $ dynmnu$_find_longest:
-$!                       
+$!
 $	if f$type(_dynmenu'_mnu_opt') .eqs. "" then $ goto dynmnu$end_find_longest
 $	if f$length(f$element(0, "|", _dynmenu'_mnu_opt')) .gt. _mnu_size then -
  	   $ _mnu_size = f$length(f$element(0, "|", _dynmenu'_mnu_opt'))
@@ -823,4 +823,3 @@ $!
 $	return
 $!
 $!******************************************************************************
-

@@ -13,7 +13,7 @@ $!*     Omi$Menu.Com       Oscar's Menu Interpreter                            *
 $!*                                                                            *
 $!* ************************************************************************** *
 $!* *                                                                        * *
-$!* * ©1997 - 0218, Oscar van Eijk - Oveas Funtionality Provider              * *
+$!* * (c) 1997 - 2019, Oscar van Eijk - Oveas Funtionality Provider          * *
 $!* *   This tool is delivered as is, and has no warranties whatsoever.      * *
 $!* *   It may be freely distributed as long as the distribution set is      * *
 $!* *   complete. It is not allowed to change any of the files, without      * *
@@ -141,7 +141,7 @@ $	omi$option = ""
 $	if f$type(omi$current_menu) .nes.""
 $	   then
 $		if f$edit(omi$current_menu, "upcase") .eqs. "OTF_MENU"
-$		   then     
+$		   then
 $			'omi$current_menu'$previous = ""
 $			omi$otf_menu = 1
 $			init_def$search_string = "otf_menu$input"
@@ -198,7 +198,7 @@ $!
 $	 main$_askfor_start:
 $!
 $		read /end_of_file=main$_exit sys$command omi$startmenu -
-		   /prompt="''screen$prompt_position'Menu file: " 
+		   /prompt="''screen$prompt_position'Menu file: "
 $		omi$cmdline_clear
 $		omi$msgline_clear
 $		omi$variable = "omi$startmenu"
@@ -399,7 +399,7 @@ $!******************************************************************************
 
 $!******************************************************************************
 $!
-$!==>	Check to see if an On_Exit job is defined for this menu. If so, 
+$!==>	Check to see if an On_Exit job is defined for this menu. If so,
 $!	execute if (if the execute bit PERF$INIT_EXIT is set to true)
 $!	and return the status. If there was an error or warning, set the
 $!	execute bit to false, to make sure the INIT procedure is not
@@ -488,12 +488,12 @@ $!
 $	if f$type(list$_scroll) .nes. "" then -
 	   $ delete\ /symbol /local list$_scroll
 $!
-$	_format = f$element(3, "#", 'omi$current_menu'$input'_input') 
+$	_format = f$element(3, "#", 'omi$current_menu'$input'_input')
 $	if _format .nes. "" .and. _format .nes. "#"
 $	   then
 $		if f$edit('_format'$type, "upcase") .eqs. "TEXTAREA" then -
 		   $ goto input$dont_ask
-$	endif 
+$	endif
 $!
 $	if omi$_jumping
 $	   then
@@ -855,7 +855,7 @@ $	endif
 $!
 $	if f$type('_format'$alfanum) .nes. ""
 $	   then
-$		if '_format'$alfanum then - 
+$		if '_format'$alfanum then -
 		   $ '_format'$ivchars = "`'~^!?@#$%&* -+=(){}[]<>:;,.\|/"
 $	endif
 $	if f$type('_format'$ivchars) .eqs. "" then $ goto input$end_format
@@ -1287,7 +1287,7 @@ $		endif
 $		if f$type('omi$current_menu'$counter) .nes. ""
 $		   then
 $			_menu_counter = 'omi$current_menu'$counter
-$			if f$type('omi$current_menu'$auto_increase) .eqs. "" 
+$			if f$type('omi$current_menu'$auto_increase) .eqs. ""
 $			   then $ counter$'_menu_counter' == counter$'_menu_counter' + 1
 $			   else
 $				if 'omi$current_menu'$auto_increase then -
@@ -1325,7 +1325,7 @@ $ !!! 		omi$job_call  = f$parse(omi$job_call,".OMI", -
 $! The above line is outcommented; it doesn't work when there's a variable
 $! in the filename (eg. 'DIRECTORIES$OMI_JOBS'MY_MODULE)
 $! Below is the wordaround.
-$!!!! Left in for a while..... 
+$!!!! Left in for a while.....
 $  !!!		if f$locate(".",omi$job_call) .eq. f$length(omi$job_call) -
    !!!		   then $ omi$job_call = omi$job_call + ".OMI"
 $		if .not. omi$_debug then -
@@ -1434,7 +1434,7 @@ $!
 $ main$input_to_subst:
 $!
 $	read /end_of_file=main$subst_cancelled sys$command _value -
-	   /prompt="''screen$prompt_position'''_prompt' " 
+	   /prompt="''screen$prompt_position'''_prompt' "
 $	omi$msgline_clear
 $	omi$variable = "_value"
 $	omi$input_validate
@@ -1443,7 +1443,7 @@ $	   then
 $		omi$signal omi tranerr
 $		omi$cmdline_clear
 $		goto main$input_to_subst
-$	endif   
+$	endif
 $!
 $	if f$type(_format) .nes. ""
 $	   then
@@ -1505,14 +1505,14 @@ $		_tag_sel = f$element(options$_jumpcounter,",",options$_jumps)
 $		if _tag_sel .eqs. "" .or. _tag_sel .eqs. ","
 $		   then
 $			read /end_of_file=main$end_taglist sys$command _tag_sel -
-			   /prompt="''screen$prompt_position'Select, <Ctrl/Z> when done: " 
+			   /prompt="''screen$prompt_position'Select, <Ctrl/Z> when done: "
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
 $		   else $ options$_jumpcounter = options$_jumpcounter + 1
 $		endif
 $	   else $ read /end_of_file=main$end_taglist sys$command _tag_sel -
-		   /prompt="''screen$prompt_position'Select, <Ctrl/Z> when done: " 
+		   /prompt="''screen$prompt_position'Select, <Ctrl/Z> when done: "
 $	endif
 $	if f$edit(_tag_sel,"upcase") .eqs. "^Z" then $ goto main$end_taglist
 $	omi$cmdline_clear
@@ -1557,7 +1557,7 @@ $	if _reverse then $ _tag_sel = 1
 $!
 $ tag$_reverse:
 $!
-$	_tag_value = '_tagblock'$value'_tag_sel' 
+$	_tag_value = '_tagblock'$value'_tag_sel'
 $	if f$locate("''_tagdelim'''_tag_value'''_tagdelim'",'_taglist') .lt. -
 	   f$length('_taglist') .or. (f$length('_taglist') .ne. 0 .and. -
 	   f$locate("''_tag_value'''_tagdelim'",'_taglist') .eq. 0)
@@ -1772,7 +1772,7 @@ $!
 $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=export_command$_cancelled sys$command omi$_p1 -
-		   /prompt="''screen$prompt_position'_What: " 
+		   /prompt="''screen$prompt_position'_What: "
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_export
@@ -1837,7 +1837,7 @@ $!
 $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=import_command$_cancelled sys$command omi$_p1 -
-		   /prompt="''screen$prompt_position'_What: " 
+		   /prompt="''screen$prompt_position'_What: "
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_import
@@ -1996,7 +1996,7 @@ $	   then
 $		omi$signal omi nohlp,'omi$current_menu
 $		return $status
 $	endif
-$!             
+$!
 $	open /read omi$hlp '_hlp_file
 $!
 $ info$_find:
@@ -2175,7 +2175,7 @@ $!
 $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=resetcommand$_cancelled sys$command omi$_p1 -
-		   /prompt="''screen$prompt_position'_What: " 
+		   /prompt="''screen$prompt_position'_What: "
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_reset
@@ -2208,7 +2208,7 @@ $		return omi$_ok
 $	endif
 $!
 $	if f$length(omi$_p1) .ge. 3 .and. omi$_p1 .eqs. f$extract(0, f$length(omi$_p1), "VARIABLES")
-$	   then                                                                          
+$	   then
 $		varreset$ = 0
 $		init_def$search_string =  "''omi$current_menu'$input"
 $		gosub main$default_values
@@ -2291,7 +2291,7 @@ $!
 $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=setcommand$_cancelled sys$command omi$_p1 -
-		   /prompt="''screen$prompt_position'_What: " 
+		   /prompt="''screen$prompt_position'_What: "
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_set
@@ -2301,7 +2301,7 @@ $	   then
 $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p2 -
-			   /prompt="''screen$prompt_position'_Value: " 
+			   /prompt="''screen$prompt_position'_Value: "
 $			omi$_p2 = f$edit(omi$_p2,"uncomment,trim,compress")
 $			omi$cmdline_clear
 $			goto main$execcmd_set
@@ -2324,7 +2324,7 @@ $	   then
 $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p2 -
-			   /prompt="''screen$prompt_position'_Value: " 
+			   /prompt="''screen$prompt_position'_Value: "
 $			omi$_p2 = f$edit(omi$_p2,"uncomment,trim,compress")
 $			omi$cmdline_clear
 $			goto main$execcmd_set
@@ -2349,7 +2349,7 @@ $	   then
 $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p2 -
-			   /prompt="''screen$prompt_position'_Value: " 
+			   /prompt="''screen$prompt_position'_Value: "
 $			omi$_p2 = f$edit(omi$_p2,"uncomment,trim,compress")
 $			omi$cmdline_clear
 $			goto main$execcmd_set
@@ -2429,7 +2429,7 @@ $!
 $		if omi$_p3 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p3 -
-			   /prompt="''screen$prompt_position'_Key: " 
+			   /prompt="''screen$prompt_position'_Key: "
 $			omi$_p3 = f$edit(omi$_p3,"uncomment,trim,compress")
 $			omi$msgline_clear
 $			omi$cmdline_clear
@@ -2439,9 +2439,13 @@ $!
 $		_validate_key = "omi$_p3"
 $		gosub security$key_validate
 $		if omi$_p3 .eq. 0 then $ goto main$execcmd_setkey
-$		_key = "  Å∏òπ"
-$		_key[0,8] = %X1
-$		_key[8,8] = f$integer(omi$_p3)
+$		_key = "      "
+$		_key[16,8] = %x81
+$		_key[24,8] = %xb8
+$		_key[32,8] = %x98
+$		_key[40,8] = %xb9
+$		_key[0,8]  = %X1
+$		_key[8,8]  = f$integer(omi$_p3)
 $		@Omi$:Omi$Config setup "" UPDATE "keyring" "''omi$_p2'" "''_key'"
 $!
 $		if $status .eq. omi$_ok then $ omi$signal omi setkey
@@ -2469,7 +2473,7 @@ $!
 $	  setpwd$_prompt:
 $!
 $		read /end_of_file=setpasswrd$_cancelled sys$command _pwd_1 -
-		   /prompt="''screen$prompt_position'_New password: " 
+		   /prompt="''screen$prompt_position'_New password: "
 $		omi$cmdline_clear
 $		if f$length(_pwd_1) .lt. 5
 $		   then
@@ -2477,7 +2481,7 @@ $			omi$signal omi shortpwd
 $			goto setpwd$_prompt
 $		endif
 $		read /end_of_file=setpasswrd$_cancelled sys$command _pwd_2 -
-		   /prompt="''screen$prompt_position'_Verification: " 
+		   /prompt="''screen$prompt_position'_Verification: "
 $		if _pwd_1 .nes. _pwd_2
 $		   then
 $			omi$signal omi pwdverfail
@@ -2536,7 +2540,7 @@ $!
 $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=showcommand$_cancelled sys$command omi$_p1 -
-		   /prompt="''screen$prompt_position'_What: " 
+		   /prompt="''screen$prompt_position'_What: "
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_show
@@ -2618,7 +2622,7 @@ $!
 $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p2 -
-			   /prompt="''screen$prompt_position'_Status code: " 
+			   /prompt="''screen$prompt_position'_Status code: "
 $			omi$_p2 = f$edit(omi$_p2,"uncomment,trim,compress")
 $			omi$msgline_clear
 $			omi$cmdline_clear
@@ -2844,12 +2848,12 @@ $	   then
 $		if f$type('_variable') .eqs. ""
 $		   then $ _value = main$empty_value
 $		   else
-$			_format = f$element(3, "#",'omi$current_menu'$input'_input') 
+$			_format = f$element(3, "#",'omi$current_menu'$input'_input')
 $			if _format .nes. "" .and. _format .nes. "#"
 $			   then
 $				gosub input$_format
 $				if $status .eq. omi$_warning
-$				   then 
+$				   then
 $					omi$cmdline_clear
 $					ws f$fao("''ESC$'[''_line';''inputs$value_location'H!''inputs$max_size'* ")
 $					goto allinput$_prompt
@@ -2900,12 +2904,12 @@ $				omi$refresh
 $			'_variable' = '_select_list'$value'_selected'
 $		   else
 $			'_variable' = _value
-$			_format = f$element(3, "#",'omi$current_menu'$input'_input') 
+$			_format = f$element(3, "#",'omi$current_menu'$input'_input')
 $			if _format .nes. "" .and. _format .nes. "#"
 $			   then
 $				gosub input$_format
 $				if $status .eq. omi$_warning
-$				   then 
+$				   then
 $					omi$cmdline_clear
 $					ws f$fao("''ESC$'[''_line';''inputs$value_location'H!''inputs$max_size'* ")
 $					goto allinput$_prompt
@@ -2969,7 +2973,7 @@ $!
 $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=dclcommand$_cancelled sys$command omi$_p1 -
-		   /prompt="''screen$prompt_position'''questions$dcl_command': " 
+		   /prompt="''screen$prompt_position'''questions$dcl_command': "
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress")
 $		if omi$_p1 .eqs. "" then $ goto  main$execcmd_dcl
 $		omi$_p2 = f$edit(f$element(1," ",omi$_p1),"trim")
@@ -3041,7 +3045,7 @@ $!
 $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=deletecommand$_cancelled sys$command omi$_p1 -
-		   /prompt="''screen$prompt_position'_What: " 
+		   /prompt="''screen$prompt_position'_What: "
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_delete
@@ -3253,7 +3257,7 @@ $!
 $	_input_counter = _input_counter + 1
 $	if f$type('omi$current_menu'$input'_input_counter') .eqs. "" then -
 	   $ goto textarea$end_loop_ta
-$	_format = f$element(3, "#", 'omi$current_menu'$input'_input_counter') 
+$	_format = f$element(3, "#", 'omi$current_menu'$input'_input_counter')
 $	if _format .eqs. "" .or. _format .eqs. "#" then $ goto textarea$_loop_ta
 $	if f$edit('_format'$type, "upcase") .nes. "TEXTAREA" then $ goto textarea$_loop_ta
 $	_areas_found = _areas_found + 1
@@ -3470,7 +3474,7 @@ $!	errors, we don't want to, since that would also erase the messages.
 $!
 $ main$_interrupt:
 $!
-$	if f$type(_silent) .nes. "" 
+$	if f$type(_silent) .nes. ""
 $	   then
 $		if _silent      ! In case the interrupt was during SILENT_DCL
 $		   then
@@ -3489,7 +3493,7 @@ $	exit %X28
 $!
 $ main$_fatal:
 $!
-$	if f$type(_silent) .nes. "" 
+$	if f$type(_silent) .nes. ""
 $	   then
 $		if _silent      ! In case the error was during SILENT_DCL
 $		   then
@@ -3535,7 +3539,7 @@ $!	find the start menu. If it ain't given as a parameter, the procedure
 $!	looks for the file Omi$Menu.Mnu in the current directory. Next, a
 $!	logical is checked to find a user specified default. Finally, the
 $!	procedure looks for the file Omi$Menu.Mnu in Sys$Login.
-$!	The order in which this takes place can be modified using the 
+$!	The order in which this takes place can be modified using the
 $!	'search_path' variable in the 'main' section of the configuration
 $!	file, except for the parameter; this will allways overrule everything
 $!	else.
@@ -3849,7 +3853,8 @@ $	search Nla0: DummyStringToSetOmi$_NoMatch /output=Nla0:
 $	omi$_nomatch   = $status
 $	set message 'omi$_message
 $!	omi$_nomatch   = %X08d78053
-$	keyring$p$_key = "W"
+$	keyring$p$_key = " W"
+$	keyring$p$_key[0,8] = %X1
 $	perf$init_exit = 1
 $!
 $	@Omi$:Omi$Config Setup
