@@ -802,7 +802,7 @@ $!
 $	call config$_set_defaults questions$all_inputs		"All Inputs"
 $	call config$_set_defaults questions$option		"OMI>"
 $	call config$_set_defaults questions$reverse_tags	"Reverse selection"
-$	call config$_set_defaults questions$input		"Enter Value"
+$!	call config$_set_defaults questions$input		"Enter Value"
 $	call config$_set_defaults questions$dcl_command		"DCL Command"
 $	call config$_set_defaults questions$default_input	"Input"
 $	call config$_set_defaults questions$wait_prompt		"Press <Return> to continue"

@@ -496,13 +496,20 @@ $		if f$edit('_format'$type, "upcase") .eqs. "TEXTAREA" then -
 		   $ goto input$dont_ask
 $	endif
 $!
+$	if f$type(questions$input) .eqs. ""
+$	   then $ _prompt = f$element(0, "#", 'omi$current_menu'$input'_input')
+$	   else $ _prompt = questions$input
+$	endif
+$!
+$	if f$type(_saved_value) .nes. "" then $ delete\ /symbol _saved_value
 $	if omi$_jumping
 $	   then
 $		'_variable' = f$element(options$_jumpcounter,",",options$_jumps)
 $		if '_variable' .eqs. "" .or. '_variable' .eqs. ","
 $		   then
 $			if _hidden then $ set terminal /noecho
-$			read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''questions$input': " sys$command '_variable'
+$			if f$type('_variable') .nes. "" then $ _saved_value = '_variable'
+$			read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''_prompt': " sys$command '_variable'
 $			if _hidden then $ set terminal /echo
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
@@ -512,7 +519,8 @@ $		   else $ options$_jumpcounter = options$_jumpcounter + 1
 $		endif
 $	   else
 $		if _hidden then $ set terminal /noecho
-$		read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''questions$input': " sys$command '_variable'
+$		if f$type('_variable') .nes. "" then $ _saved_value = '_variable'
+$		read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''_prompt': " sys$command '_variable'
 $		if _hidden then $ set terminal /echo
 $		omi$msgline_clear
 $	endif
@@ -771,8 +779,6 @@ $	if .not. omi$_debug then -
 	   $ set message /nofacility /noseverity /noidentification /notext
 $	_req_format = f$edit('_format'$type,"collapse,upcase")
 $!
-$	if f$type(_saved_value) .nes. "" then $ delete\ /symbol _saved_value
-$	if f$type('_variable') .nes. "" then $ _saved_value = '_variable'
 $	gosub input$'_req_format'_format
 $	_status = $status
 $	if _status .ge. omi$_warning
@@ -780,6 +786,7 @@ $	   then
 $		if f$type(_saved_value) .eqs. ""
 $		   then $ delete\ /symbol '_variable'
 $		   else $ '_variable' = "''_saved_value'"
+$		endif
 $	endif
 $	return _status
 $!
@@ -3561,8 +3568,8 @@ $!
 $	if options$_startmenu .nes. ""
 $	   then
 $		omi$startmenu = "''f$parse(options$_startmenu,,,"name")'.MNU"
-$		if omi$startmenu .eqs. "" .and. f$trnlnm("options$_startmenu") .nes. "" -
-		   .and. f$locate(".", options$_startmenu) .lt. f$length(options$_startmenu)
+$		if omi$startmenu .eqs. ".MNU" .and. f$trnlnm("''options$_startmenu'") .nes. "" -
+		   .and. f$locate(".", options$_startmenu) .eq. f$length(options$_startmenu)
 $		   then
 $!			There's a logical with the same name pointing somewhere else, so force
 $!			the menuname to be a filename by adding an extension and try again.
