@@ -1,5 +1,4 @@
-
-2.5, Released: xx-xx-2019
+2.5   Released: 17-03-2019
 
 * Fix: Modules where not found if not located in the first index when
   OMI$MENU_DIRECTORY is a searchpath.
@@ -7,6 +6,7 @@
 * Fix: Clear input when a format block returns an error or warning.
 * Dont't show 'All input' when a menu has only 1 input
 * Use input descriptiont as prompt when questions$input is not set
+* Moved the project to GitHub
 
 2.4   Released: 04-10-2018
 

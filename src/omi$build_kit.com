@@ -14,14 +14,14 @@ $	omiSource = F$Parse(omiSource,,,"NAME")
 $	omiVersion = omiSource - "OMI-"
 $	write sys$output "Start building distribution for OMI ''omiVersion'..."
 $!
-$	vms_share [.'omiSource']*.*; omi-'omiVersion' /part_size=1500
-$	zip "-V" OMI-'omiVersion'.ZIP [.'omiSource']*.*
+$	vms_share [.'omiSource']*.*;/exclude=omi$build_kit.com omi-'omiVersion' /part_size=1500
+$	zip "-V" OMI-'omiVersion'.ZIP [.'omiSource']*.* -x *build_kit.com
 $!
 $	create /directory [.omi_distro]
 $	rename /nolog omi-'omiVersion'.1-OF-1; [.omi_distro]omi-'omiVersion'.com
 $	rename /nolog omi-'omiVersion'.zip [.omi_distro]
 $	copy /nolog [.'omiSource']readme.txt [.omi_distro]
-$	copy /nolog [.'omiSource']freeware_readme.txt [.omi_distro]
+$!	copy /nolog [.'omiSource']freeware_readme.txt [.omi_distro]
 $	copy /nolog [.'omiSource']omi$install.com [.omi_distro]
 $	directory\ /col=1 [.omi_distro]
 $!

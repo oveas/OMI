@@ -211,11 +211,11 @@ to build menus with MNU files.
 For menu specific help, type INFO.
 
 For support, please use the OMI forum at
-http://freeware.oveas.com/omi/forum.html.
+    https://github.com/oveas/OMI/issues
 
-This is version 2.4, Released: October 4, 2018
+This is version 2.5, Released: March 17, 2019
 The latest version can always be obtained from
-    http://freeware.oveas.com/omi
+    https://github.com/oveas/OMI/releases
 
 Full documentation can be downloaded from this site as well. This online
 help might contain some documentation errors, but the printable docu-

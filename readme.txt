@@ -1,29 +1,29 @@
-OMI v2.4 - ©1997-2018, Oscar van Eijk, Oveas Functionality Provider
-===================================================================
+OMI v2.5 - (c) 1997-2019, Oscar van Eijk, Oveas Functionality Provider
+======================================================================
 
-Oscar's Menu Interpreter is a DCL procedure that reads menu files and  
-represents the menu structure on a ChUI based window.                
+Oscar's Menu Interpreter is a DCL procedure that reads menu files and
+represents the menu structure on a ChUI based window.
 
-OMI does not perform any actions on its own. Additional procedures   
-are required to handle upon the users input. OMI is strictly created 
-to create a standard user interface for all kinds of actions, with a 
-clear structure, support for different security levels and password  
-protection.                                                          
+OMI does not perform any actions on its own. Additional procedures
+are required to handle upon the users input. OMI is strictly created
+to create a standard user interface for all kinds of actions, with a
+clear structure, support for different security levels and password
+protection.
 
-The additional procedures that are required for any actions are      
-referred to 'callable jobs'. A section in the help file describes    
-how several commands, defined in OMI, can be used to create such     
-procedures.                                                          
+The additional procedures that are required for any actions are
+referred to 'callable jobs'. A section in the help file describes
+how several commands, defined in OMI, can be used to create such
+procedures.
 
 Documentation and support
 -------------------------
-Full documentation for OMI can be found at the OMI site:
-http://freeware.oveas.com/omi.
+Full documentation for OMI can be found at GitHub:
+https://github.com/oveas/OMI.
 An online HELP is also provided, but since v2.0 the printable documentation
 is completely reviewed. This has not (yet?) been done with the online
 HELP, except for the interactive OMI command section.
 
-This site also offers a forum (http://freeware.oveas.com/omi/forum.html)
+GitHub also offers a  tracker (https://github.com/oveas/OMI/issues)
 where you can get support.
 Please note OMI comes without any warranty, but I'll try to give as much
 support as possible via this forum.
