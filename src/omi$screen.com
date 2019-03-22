@@ -769,14 +769,14 @@ $!==>
 $!
 $ screen$_erase:
 $!
-$!	if .not. omi$batch_mode
-$!	   then
+$	if .not. omi$batch_mode
+$	   then
 $!		if .not. screen$terminal_app_mode then $ set terminal /numeric_keypad
+$		delete\/symbol/global screen$terminal_app_mode
 $!		delete\/key/nolog kp2
 $!		delete\/key/nolog kp8
-$!	endif
+$	endif
 $!
-$	delete\/symbol/global screen$terminal_app_mode
 $	delete\/symbol/global screen$menu_width
 $	delete\/symbol/global screen$line_command
 $	delete\/symbol/global screen$line_message
