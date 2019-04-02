@@ -51,8 +51,8 @@ $!******************************************************************************
 $!
 $!==>	Popus a message box. The message is given as a parameter. This
 $!	routine decides how wide the message box can be, breaks the input
-$!	line is necessary, and draws the box.
-$!	After a confirm the screen is redrawn.
+$!	line if necessary, and draws the box.
+$!	After a confirm (depeinding on options) the screen is redrawn.
 $!
 $ popup$:
 $!
@@ -107,6 +107,7 @@ $!
 $	ws f$fao("''ESC$'[''_t_loc';''_m_loc'H''ESC$'(0m!''_t_width'*qj''ESC$'(B")
 $	_refresh = 1
 $	_wait    = 1
+$	_conf    = 0
 $	_cnt = 0
 $!
 $ popup$check_options:
@@ -115,11 +116,25 @@ $	_opt = f$element(_cnt, ",", p3)
 $	if _opt .eqs. "," .or. _opt .eqs. "" then $ goto popup$checked_options
 $	if f$extract(0,5,_opt) .eqs. "NOREF" then $ _refresh = 0
 $	if f$extract(0,5,_opt) .eqs. "NOWAI" then $ _wait    = 0
+$	if f$extract(0,5,_opt) .eqs. "CONFI"
+$	   then
+$		_confirm = 1
+$		_wait    = 0
+$	endif
 $	_cnt = _cnt + 1
 $	goto popup$check_options
 $!
 $ popup$checked_options:
 $!
+$	if _confirm
+$	   then
+$		omi$confirm "''questions$default_confirm'"
+$		if .not. omi$confirmed
+$		   then
+$			if _refresh then $ omi$refresh
+$			return omi$_warning
+$		endif
+$	endif
 $	if _wait    then $ omi$wait
 $	if _refresh then $ omi$refresh
 $	return omi$_ok
