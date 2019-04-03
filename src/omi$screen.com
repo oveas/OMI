@@ -33,13 +33,15 @@ $		gosub screen$_values
 $		if .not. omi$batch_mode then $ gosub screen$_initialize
 $	endif
 $!
-$	if p1 .eqs. "DISPLAY_INFO"   then $ gosub screen$display_information
-$	if p1 .eqs. "DYNAMIC_MENU"   then $ gosub screen$setup_dynamic_menu
-$	if p1 .eqs. "MENU"           then $ gosub screen$setup_window
-$	if p1 .eqs. "SELECT_LIST"    then $ gosub screen$setup_select_list
-$	if p1 .eqs. "TAGLIST"        then $ gosub screen$setup_tag_list
-$	if p1 .eqs. "KEYSELECT_DOWN" then $ gosub screen$keyselect_down
-$	if p1 .eqs. "KEYSELECT_UP"   then $ gosub screen$keyselect_up
+$	if p1 .eqs. "DISPLAY_INFO"    then $ gosub screen$display_information
+$	if p1 .eqs. "DYNAMIC_MENU"    then $ gosub screen$setup_dynamic_menu
+$	if p1 .eqs. "MENU"            then $ gosub screen$setup_window
+$	if p1 .eqs. "SELECT_LIST"     then $ gosub screen$setup_select_list
+$	if p1 .eqs. "TAGLIST"         then $ gosub screen$setup_tag_list
+$	if p1 .eqs. "KEYSELECT_DOWN"  then $ gosub screen$keyselect_down
+$	if p1 .eqs. "KEYSELECT_UP"    then $ gosub screen$keyselect_up
+$	if p1 .eqs. "DISPLAY_MESSAGE" then $ gosub screen$display_message
+$	if p1 .eqs. "MSGLINE_CLEAR"   then $ gosub screen$msgline_clear
 $!
 $	if omi$batch_mode then $ goto screen$_exit
 $!
@@ -644,6 +646,7 @@ $	_screenheight = screen$height - screen$height_margin
 $!
 $	screen$menu_width   == screen$width - (2 * screen$width_margin)
 $	screen$line_length  == screen$menu_width - 2
+$	screen$msgline_length == screen$menu_width + 2
 $	screen$line_command == _screenheight - 2
 $	screen$line_message == _screenheight
 $	screen$line_header  == screen$height_margin
@@ -763,6 +766,34 @@ $	return
 $!
 $!******************************************************************************
 
+$
+$!******************************************************************************
+$!
+$!==>	Display a message on the messageline
+$!
+$ screen$display_message:
+$!
+$	_msg = P2
+$	if f$length(_msg) .gt. screen$msgline_length
+$	   then
+$		_msg = f$extract(0, screen$msgline_length-1, P2) + "''ESC$'(0`''ESC$'(B"
+$	endif
+$	write sys$error "''ESC$'[''screen$line_message';''screen$default_position'H''_msg'"
+$	return
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Clear the messageline
+$!
+$ screen$msgline_clear:
+$!
+$	write sys$error f$fao("''ESC$'[''screen$line_message';''screen$default_position'H!''screen$msgline_length'* ")
+$	return
+$!
+$!******************************************************************************
+
 $!******************************************************************************
 $!
 $!==>	
@@ -782,6 +813,7 @@ $	delete\/symbol/global screen$line_command
 $	delete\/symbol/global screen$line_message
 $	delete\/symbol/global screen$line_header
 $	delete\/symbol/global screen$line_length
+$	delete\/symbol/global screen$msgline_length
 $	delete\/symbol/global screen$default_position
 $	delete\/symbol/global screen$prompt_position
 $!

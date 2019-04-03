@@ -3905,8 +3905,8 @@ $		omi$msgline_clear   := "!"
 $		omi$display_message := "write sys$error"
 $	   else
 $		omi$cmdline_clear   := "write sys$output f$fao(""''screen$prompt_position'!''screen$line_length'* "")"
-$		omi$msgline_clear   := "write sys$error f$fao(""''ESC$'[''screen$line_message';''screen$default_position'H!''screen$line_length'* "")"
-$		omi$display_message := "write sys$error ""''ESC$'[''screen$line_message';''screen$default_position'H""+"
+$		omi$msgline_clear   := @Omi$:Omi$Screen MsgLine_Clear
+$		omi$display_message := @Omi$:Omi$Screen Display_Message
 $	endif
 $!
 $	open /read /share=read /error=main$notoolbox_ini -

@@ -1162,7 +1162,7 @@ $!
 $	if _message .eqs. "%" then $ _message = "" 
 $	if f$type(omi$display_message) .eqs. ""
 $	   then $ write sys$error _message
-$	   else $ omi$display_message _message
+$	   else $ omi$display_message "''_message'"
 $	endif
 $	return _signal_retval
 $!
