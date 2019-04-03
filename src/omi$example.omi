@@ -1,4 +1,14 @@
- $!	set message 'omi$_message'	! Uncomment this for debugging
+$!	set message 'omi$_message'	! Uncomment this for debugging
+$!
+$!	Call the requested subroutine. Normally you'ld so some checking
+$!	on the parameter...
+$!
+$	gosub 'p1'
+$	exit $status
+
+$ display:
+$!
+$!	Setup the output records to show the inputs that were entered
 $	omi$record1 = "The weekday you have selected was:
 $	omi$record2 = "  ''inp_weekday'"
 $	omi$record3 = "The month(s) you have tagged were:
@@ -24,9 +34,16 @@ $ month$end_loop:
 $!
 $	_counter = _counter + 4
 $	omi$record'_counter = "Your free input was: ''inp_free'"
+$!
+$!	We got all output records, now display them
 $	omi$display_info
+$!
+$!	Check if the user wants to see some more
 $	omi$confirm "More ? " 'questions$answer_yes
-$	if .not. omi$confirmed then $ goto end
+$	if .not. omi$confirmed then $ goto end_display
+$!
+$!	He/she does... considering the fact we got this far.
+$!	Fill some more records...
 $	omi$record1 = " The date you entered was     : ''inp_date'"
 $	omi$record2 = " The filename you entered was : ''inp_file'"
 $	omi$reverse "''inp_file'" "''inp_date'"
@@ -34,14 +51,32 @@ $	omi$record3 = " Reversing this results in    : ''omi$reversed'"
 $	omi$record4 = " The integer you entered was  : ''inp_int'"
 $	omi$record5 = " You called the Counter menu ''counter$another_counter' times"
 $!
-$! Make sure the list with months won't be redisplayed, starting with rec. 5
+$!	Make sure the list with months won't be redisplayed, starting with rec. 5
 $	if f$type(omi$record6) .nes. "" then -
 	   deletee/symbol/local omi$record5
 $!
+$!	... and display them
 $	omi$display_info
 $	omi$wait
 $	omi$refresh
 $!
-$ end:
+$ end_display:
 $!
-$	exit
+$	return omi$_ok
+
+$ onexit:
+$!
+$!	This routine is called when the user leaves the Inputs submenu
+$!	Here we check if all inputs that have been enteres were reset.
+$!	If not, we display a popup and confirm is the user wants to leave.
+$	if inp_weekday .eqs. weekdays$value1 - ! The default value
+	   .and. f$type(inp_months) .eqs. "" - ! Not set by default
+	   .and. f$type(inp_free) .eqs. ""   - ! Not set by default
+	   then $ return omi$_ok               ! Ok, everyhting was reset
+$!
+$	omi$popup "Please note the given input variables have not been reset" confirm
+$!
+$!	If "N" is answered we get an omi$_warning status, otherwise omi$_ok.
+$!	Just return the status; OMI will handle this and won't leave the menu
+$!	if the status is not omi$_ok.
+$	return $status
