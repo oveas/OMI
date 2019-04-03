@@ -216,12 +216,14 @@ $		_section = f$edit(f$extract(1, f$length(_config) - 2, -
 		   _config), "upcase")
 $		if f$extract(0, 5, _section) .eqs. "MENU_"
 $		   then
+$			_item_counter  = 1
+$			_input_counter = 1
 $			_section = _section - "MENU_"
 $			block$type_menu = 1
 $		   else $ block$type_menu = 0
 $		endif
 $		goto readcfg$_loop
-$	endif                                
+$	endif
 $	_item  = f$edit(f$element(0, "=", _config), "trim")
 $	_value = f$edit((_config - _item - "="), "trim")
 $	_item  = f$edit(_item,"trim,upcase")
@@ -231,6 +233,18 @@ $		_item = f$element(0, "#", _item)
 $		lead$_bool = 1
 $	   else $ lead$_bool = 0
 $	endif
+$!
+$	if _item .eqs. "ITEM"
+$	   then
+$		_item = "ITEM''_item_counter'"
+$		_item_counter = _item_counter + 1
+$	endif
+$	if _item .eqs. "INPUT"
+$	   then
+$		_item = "INPUT''_input_counter'"
+$		_input_counter = _input_counter + 1
+$	endif
+$!
 $	if p3 .eqs. "CLEANUP"
 $	   then
 $		if f$type('_section'$'_item') .nes. "" then -
