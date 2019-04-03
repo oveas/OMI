@@ -234,12 +234,12 @@ $		lead$_bool = 1
 $	   else $ lead$_bool = 0
 $	endif
 $!
-$	if _item .eqs. "ITEM"
+$	if _item .eqs. "ITEM" .and. block$type_menu
 $	   then
 $		_item = "ITEM''_item_counter'"
 $		_item_counter = _item_counter + 1
 $	endif
-$	if _item .eqs. "INPUT"
+$	if _item .eqs. "INPUT" .and. block$type_menu
 $	   then
 $		_item = "INPUT''_input_counter'"
 $		_input_counter = _input_counter + 1
