@@ -13,10 +13,12 @@
 \newcommand{\gt}{\texttt{>}}
 \setlength{\parindent}{5mm}
 \renewcommand{\indent}{\hspace*{5mm}}
+\makeatletter
+\makeatother
 \begin{document}
 
 \title{
-OMI v2.5\\
+OMI v2.6\\
 Oscar's Menu Interpreter for VMS\\
 Reference Guide}
 
@@ -26,7 +28,7 @@ Oveas Functionality Provider\\
 oscar.van.eijk@oveas.com\\
 https://github.com/oveas/OMI}
 
-\date{Belgium, March 17, 2019}
+\date{Belgium, xxxxx xx, 20xx}
 
 \maketitle
 
@@ -510,7 +512,9 @@ OMI can start in one of those menus.
 This qualifier reads the menu file and validates the syntax line by line. It 
 signals errors and warnings when errors or possible errors are found, like 
 calling non- existing submenus, commands or modules, missing elements (e.g. 
-\textsl{ITEM1}, \textsl{ITEM2}, \textsl{ITEM4}\ldots), duplicate elements etc.
+\textsl{ITEM1}, \textsl{ITEM2}, \textsl{ITEM4}\ldots\footnote{ Although items do not
+have to be explicitly numbered (see section \ref{subsec:mylabel4}), this is still supported.
+When explicit and implicit numbering is mixed, the validation will also find errors there.}), duplicate elements etc.
 
 \vs
 
@@ -939,15 +943,14 @@ The symbol \textsl{WIDTH} allows two values: 80 and 132. Values up to 80 will be
 changed to 80. All values greater than 80 will be changed to 132. It defines 
 the screen width of the menu window.
 
-Specifying 0 to leave the current screen width unchanged.
+Specify 0 to leave the current screen width unchanged.
 
 \paragraph{HEIGHT}
 
 Define the number of lines the menu should use. It is not recommended to 
 change the default value of 24.
 
-Specifying 0 to leave the current screen height unchanged.
-
+Specify 0 to leave the current screen height unchanged.
 
 \paragraph{EXIT{\_}WIDTH}
 
@@ -1050,6 +1053,10 @@ item from the menu file is used as prompt (see also section \ref{subsec:mylabel5
 
 Represents how the user will be prompted to enter a DCL\index{OMI 
 commands!DCL} command.
+
+\paragraph{DEFAULT{\_}CONFIRM}\label{para:defconfirm}
+
+When \textsl{OMI{\$}POPUP} is called with the \textsl{CONFIM} option (see section \ref{subsubsec:mylabel59}, this specifies the question asked for confirmation.
 
 \paragraph{DEFAULT{\_}INPUT}
 
@@ -1310,8 +1317,8 @@ shows the use of init- and exit modules.
 \noindent Example of the Menu file\newline
 \begin{ttfamily}\begin{small}
 \noindent [MENU{\_}MENU] \newline
-\indent ITEM1 = Exit the menu{\#}COMMAND{\#}EXIT \newline
-\indent ITEM2 = Start another menu{\#}MENU{\#}OTHER{\_}MENU \newline
+\indent ITEM = Exit the menu{\#}COMMAND{\#}EXIT \newline
+\indent ITEM = Start another menu{\#}MENU{\#}OTHER{\_}MENU \newline
 \indent ON{\_}INIT\index{menu!define an initialisation procedure} = START{\_}WITH ! This module will be executed when OMI starts \newline
 \indent ON{\_}EXIT\index{menu!define an exit procedure} = EXIT{\_}WITH ! This module will be executed when OMI exits \newline
 \end{small}\end{ttfamily}
@@ -1350,10 +1357,10 @@ The return value of the OMI command is not evaluated.
 \begin{ttfamily}\begin{small}
 \noindent [MENU{\_}ASKINPUT] \newline
 \indent ON{\_}EXIT = :RESET VARIABLES BACKGROUND \newline
-\indent ITEM1  = Back to the main menu{\#}COMMAND{\#}MAIN \newline
-\indent ITEM2  = Start another menu{\#}MENU{\#}OTHER{\_}MENU \newline
-\indent INPUT1 = Select a day\#\{SEL|WEEKDAYS\}wk\_day\#VALUE1 \newline
-\indent INPUT2 = Enter a time\#tme\#\#FRM\_TIME
+\indent ITEM  = Back to the main menu{\#}COMMAND{\#}MAIN \newline
+\indent ITEM  = Start another menu{\#}MENU{\#}OTHER{\_}MENU \newline
+\indent INPUT = Select a day\#\{SEL|WEEKDAYS\}wk\_day\#VALUE1 \newline
+\indent INPUT = Enter a time\#tme\#\#FRM\_TIME
 \end{small}\end{ttfamily}
 \noindent  the variable name \textit{wk\_day} will be reset to it's default value listed as \textit{VALUE1}
 in the \textit{WEEKDAYS} select list. The variable \textit{tme} is removed from memory (if it was
@@ -1458,11 +1465,11 @@ section \ref{subsubsec:mylabel30}) to \textsl{FALSE}.
 \begin{ttfamily}
 \noindent[MENU{\_}INPUTS] \newline
 \indent REQUIRED{\_}ORDER = 1,2,3,5 \newline
-\indent INPUT1 = Directory{\#}{\{}SEL\textbar DIRLIST{\}}DIRECT \newline
-\indent INPUT2 = Filename{\#}{\{}SEL\textbar FN{\_}'DIRECT'LIST{\}}FNAME \newline
-\indent INPUT3 = Filetype{\#}{\{}SEL\textbar FTYPELIST{\}}FTYPE \newline
-\indent INPUT4 = Comment{\#}COMMENTLINE \newline
-\indent INPUT5 = Action{\#}{\{}SEL\textbar ACTIONLIST{\}}ACTION \newline
+\indent INPUT = Directory{\#}{\{}SEL\textbar DIRLIST{\}}DIRECT \newline
+\indent INPUT = Filename{\#}{\{}SEL\textbar FN{\_}'DIRECT'LIST{\}}FNAME \newline
+\indent INPUT = Filetype{\#}{\{}SEL\textbar FTYPELIST{\}}FTYPE \newline
+\indent INPUT = Comment{\#}COMMENTLINE \newline
+\indent INPUT = Action{\#}{\{}SEL\textbar ACTIONLIST{\}}ACTION \newline
 \end{ttfamily}
 \noindent This example forces the user to enter input element 1 as the first one. With 
 input 1, a value is selected from a select list (select lists are described 
@@ -1535,8 +1542,8 @@ Using this structure, it is possible to define arrays\index{arrays}, as in figur
 \begin{ttfamily}
 \noindent[MENU{\_}TEST] \newline
 \indent COMMENT\index{menu!comment line}\index{comment lines} = The counter is now {\{}COUNTER{\$}TEST{\_}COUNTER{\}} \newline
-\indent ITEM1 = Display the array{\#}CALL{\#}DISPLAY{\_}ARRAY \newline
-\indent INPUT1 = Enter any value{\#}MY{\_}VAR'COUNTER'{\$}TEST{\_}COUNTER` \newline
+\indent ITEM = Display the array{\#}CALL{\#}DISPLAY{\_}ARRAY \newline
+\indent INPUT = Enter any value{\#}MY{\_}VAR'COUNTER'{\$}TEST{\_}COUNTER` \newline
 \indent COUNTER = TEST{\_}COUNTER \newline
  \newline
 \noindent[MENU{\_}TEST2] \newline
@@ -1731,8 +1738,8 @@ provides an overview with the valid values and their corresponding security leve
 \noindent[MENU{\_}MENU] \newline
 \indent OWNER = SYSTEM \newline
 \indent SECURITY = TOPLEVEL{\_}SECURITY \newline
-\indent ITEM1 = First submenu{\#}SUBMENU{\#}FIRST \newline
-\indent ITEM2 = Second submenu{\#}SUBMENU{\#}SECOND \newline
+\indent ITEM = First submenu{\#}SUBMENU{\#}FIRST \newline
+\indent ITEM = Second submenu{\#}SUBMENU{\#}SECOND \newline
  \newline
 \noindent[MENU{\_}FIRST] \newline
 \indent OWNER = FIELD \newline
@@ -1812,8 +1819,8 @@ are called by menu items; they can always be executed by all users that have
 \indent ALL{\_}USERS = FALSE ! Default is TRUE \newline
  \newline
 \noindent[MENU{\_}MENU] \newline
-\indent ITEM1 = Exit{\#}COMMAND{\#}DCL LOGOUT \newline
-\indent ITEM2 = Mail{\#}COMMAND{\#}SPAWN MAIL \newline
+\indent ITEM = Exit{\#}COMMAND{\#}DCL LOGOUT \newline
+\indent ITEM = Mail{\#}COMMAND{\#}SPAWN MAIL \newline
 \end{ttfamily}
 
 \noindent When the menu file contains this section, the users SYSTEM, SYSTEST and 
@@ -1831,13 +1838,18 @@ the example.
 \label{subsec:mylabel4}
 
 Items are used to define the menu structure, and the actual actions being 
-taken. The basic layout of an item element has the keyword ITEM, followed by 
-an integer, and a value consisting of three arguments, separated by a hash 
+taken. The basic layout of an item element has the keyword ITEM and a value
+consisting of three arguments, separated by a hash 
 (\textsl{{\#}}): \\
-\indent\textsf{ITEMn = Text on display{\#}item type{\#}value for type} \\
-The keyword \textsl{ITEM} must be followed by an integer, starting with `1', and 
+\indent\textsf{ITEM = Text on display{\#}item type{\#}value for type} 
+
+\vs
+
+Up til OMI V2.5, The keyword \textsl{ITEM} had to be followed by an integer, starting with `1', and 
 without gaps in the counting, so if a menu has three item options, the 
-elements have to be specified as \textsl{ITEM1}, \textsl{ITEM2} and \textsl{ITEM3}.
+elements had to be specified as \textsl{ITEM1}, \textsl{ITEM2} and \textsl{ITEM3}.\\
+This explicit numbering is still supported, but since V2.6 the items are numbered automatically based
+on the order in which they appear in the menufile.\footnote{ \textbf{NOTE:} In on-the-fly menus (see chapter \ref{sec:mylabel2}), items and inputs must still be explicitly numbered!}
 
 \vs
 
@@ -1879,7 +1891,7 @@ executed, as in figure \ref{fig:dyninput}.
 \begin{minipage}[t]{\textwidth}
 \hrulefill \\
 \noindent Extract from a menu file: \newline
-\textsf{ITEM1 = Display the weekday{\#}CALL{\#}DISPLAY WEEKDAY \~{}?{\{}Enter a date{\}}} \newline
+\textsf{ITEM = Display the weekday{\#}CALL{\#}DISPLAY WEEKDAY \~{}?{\{}Enter a date{\}}} \newline
 \vspace{1mm}
 \noindent Example of DISPLAY.OMI: \newline
 \begin{ttfamily}
@@ -1928,7 +1940,7 @@ figure \ref{fig:dyninputformat}.
 \begin{minipage}[t]{\textwidth}
 \hrulefill \\
 \begin{ttfamily}
-\indent ITEM1 = Type a text file{\#}COMMAND{\#} DCL TYPE /PAGE - \newline
+\indent ITEM = Type a text file{\#}COMMAND{\#} DCL TYPE /PAGE - \newline
 \indent\indent\~{}?{\{}Filename:\textbar FILE{\_}FORMAT{\}} \newline
  \newline
 \noindent [FILE{\_}FORMAT] \newline
@@ -1956,7 +1968,7 @@ You can also specify dynamic menus. This is done in the third argument. In
 stead of \textit{my{\_}menu{\_}name}, it should contain the value \\
 \textsl{{\{}\textit{Text}\textbar\textit{submenu}{\}}{\{}\textit{Text}\textbar\textit{submenu}{\}}\textit{prompt}},
 as in\\
-\indent\textsf{ITEM1 = Choose a submenu{\#}SUBMENU{\#}{\{}First submenu\textbar MYMENU1{\}} - }\\
+\indent\textsf{ITEM = Choose a submenu{\#}SUBMENU{\#}{\{}First submenu\textbar MYMENU1{\}} - }\\
 \indent\indent\textsf{{\{}Second submenu\textbar MYNAME2{\}}Select a menu}
 
 \vs
@@ -1977,10 +1989,10 @@ Figure \ref{fig:submenu} illustrates the use of the \textsf{SUBMENU} element.
 \hrulefill \\
 \begin{ttfamily}
 \noindent[MENU{\_}MENU] \newline
-\indent ITEM1 = Go to the second Menu{\#}SUBMENU{\#}SECOND{\_}MENU \newline
+\indent ITEM = Go to the second Menu{\#}SUBMENU{\#}SECOND{\_}MENU \newline
  \newline
 [MENU{\_}SECOND{\_}MENU] \newline
-\indent ITEM1 = Dynamic Menu{\#}SUBMENU{\#}{\{}Menu 1\textbar SUB1{\}} - \newline
+\indent ITEM = Dynamic Menu{\#}SUBMENU{\#}{\{}Menu 1\textbar SUB1{\}} - \newline
 \indent\indent{\{}Menu 2\textbar SUB2{\}}Which Menu: \newline
  \newline
 [MENU{\_}SUB1] \newline
@@ -2008,9 +2020,9 @@ on the user input.\caption{Using the SUBMENU element}\label{fig:submenu}
 \label{subsec:mylabel5}
 
 Inputs can be used to collect information from the user, which can be passed 
-to OMI modules. The keyword \textsf{INPUT} has to be followed by an integer, starting 
-with `1', and without gaps in the counting, so if a menu has three input 
-options, the elements have to be specified as \textsf{INPUT1}, \textsf{INPUT2} and \textsf{INPUT3}.
+to OMI modules. Up til OMI V2.5, the khe keyword \textsf{INPUT} had to be followed by an integer, starting with `1', and without gaps in the counting, so if a menu had three input 
+options, the elements have to be specified as \textsf{INPUT1}, \textsf{INPUT2} and \textsf{INPUT3}.\\
+This syntax is still supported, but if \textsf{INPUT}s are given without number, they will be numbered automatically based on their order in the menufile.
 
 \vs
 
@@ -2042,7 +2054,7 @@ described below, and more specific in section \ref{subsubsec:formatting}.
 The Free input type is an element that prompts the user for input (using 
 the prompt represented by \textsf{INPUT} from the \textsf{[QUESTIONS]} section in the 
 configuration file) when selected. The basic layout is as follows:\\
-\indent\textsf{INPUTn = Text on display{\#}VARIABLE{\_}NAME{\#}default value{\#}format} \\
+\indent\textsf{INPUT = Text on display{\#}VARIABLE{\_}NAME{\#}default value{\#}format} \\
 in which the third argument, `default value', and the fourth argument, 
 `format' (described below), are optional.
 
@@ -2053,7 +2065,7 @@ overwritten when the same menu is called again.
 \vs
 
 The user input can be hidden using the \textsf{\{HIDDEN\}} option:\\ \index{user input!hidden}\index{hidden input}
-\indent\textsf{INPUTn = Text on display{\#}\{HIDDEN\}VARIABLE{\_}NAME} \\
+\indent\textsf{INPUT = Text on display{\#}\{HIDDEN\}VARIABLE{\_}NAME} \\
 Using this option, the input will not be echoed to the terminal and in the menu screen it will be
 shown as asterisks (\textsl{*******}) making only the length of the input visible.
 
@@ -2063,7 +2075,7 @@ Note the original input can be displayed by modules, as can be seen in the examp
 
 If a FORMAT argument is used, without a default value, the default value has 
 to be specified empty, as in \\
-\indent\textsf{INPUTn = Text on display{\#}variable name{\#}{\#}format}
+\indent\textsf{INPUT = Text on display{\#}variable name{\#}{\#}format}
 
 \subsection{Formatting the input}
 \index{format input}
@@ -2233,7 +2245,7 @@ text area. The default location is \textsl{OMI\$MENU\_DIRECTORY:} (see footnote 
 and the default type is \textsl{.TXT}. \linebreak
 If this field is not specified, the name \textsl{TA\_\textit{menu}\$INPUT\textit{n}} will 
 be used, where \textit{menu} is the current menu name, and \textsl{INPUT\textit{n}} the 
-OMI internal element name. \\
+OMI internal element name\footnote{ \textit{n} can either be the explicit element number, or the automatic generated number}. \\
 \textsl{KEEP} & [\textsf{TRUE} or \textsf{FALSE}] & If set to \textsl{TRUE}, the temporary file will not be removed when 
 OMI exists, and so will be available for a future session.\\
 \textsl{HISTORY} & [\textsf{TRUE} or \textsf{FALSE}] &  If set to \textsl{TRUE}, older version of the temporary file will also 
@@ -2289,8 +2301,8 @@ This element will be ignored when \textsl{HOURS} is specified as \textsl{24}. \\
 \hrulefill \\
 \begin{ttfamily}
 \noindent[MENU{\_}INPUTS] \newline
-\indent INPUT1 = Enter a file name{\#}FNAME{\#}{\#}FILNAM{\_}FRM ! No default value \newline
-\indent INPUT2 = Enter a date{\#}DATE{\#}TODAY{\#}DATE{\_}FRM ! Default is Today \newline
+\indent INPUT = Enter a file name{\#}FNAME{\#}{\#}FILNAM{\_}FRM ! No default value \newline
+\indent INPUT = Enter a date{\#}DATE{\#}TODAY{\#}DATE{\_}FRM ! Default is Today \newline
  \newline
 \noindent[FILNAM{\_}FRM] \newline
 \indent TYPE = FILESPEC \newline
@@ -2325,7 +2337,7 @@ presented, from which the user can make a selection.
 To do so, the variable name in the second argument is preceded with the \textsl{SEL} 
 keyword, followed by the pipe sign (\textsl{\textbar}) and the name of a section 
 with choices, enclosed by accolades: \\
-\indent\textsf{INPUTn = Text on display{\#}{\{}SEL\textbar section{\_}name{\}}variable{\_}name{\#}VALUEn} \\
+\indent\textsf{INPUT = Text on display{\#}{\{}SEL\textbar section{\_}name{\}}variable{\_}name{\#}VALUEn} \\
 The optional third argument points to the default value. This should be the 
 locator of the value (\textsl{VALUE\textit{n}}, see below), \textit{not} the value itself. This input type 
 accepts no fourth argument.
@@ -2359,7 +2371,7 @@ the same list is used as a taglist somewhere else (refer to section
 \hrulefill \\
 \begin{ttfamily}
 \noindent[MENU{\_}USERS] \newline
-\indent INPUT1 = Select a user{\#}{\{}SEL\textbar SYSTEM{\_}USERS{\}}USRNAME{\#}VALUE3 \newline
+\indent INPUT = Select a user{\#}{\{}SEL\textbar SYSTEM{\_}USERS{\}}USRNAME{\#}VALUE3 \newline
 \noindent[SYSTEM{\_}USERS] \newline
 \indent VALUE1 = RDB{\$}REMOTE \newline
 \indent VALUE2 = RDM{\_}MONITOR \newline
@@ -2431,7 +2443,7 @@ input element.
 
 This is done by preceding the variable name by keyword \textsl{TAG}, followed by a 
 pipe sign (\textbar) and the name of a tag list, enclosed by accolades: \\
-\indent\textsf{INPUTn = Text on display{\#}{\{}TAG\textbar taglist{\_}name{\}}variable{\_}name} \\
+\indent\textsf{INPUT = Text on display{\#}{\{}TAG\textbar taglist{\_}name{\}}variable{\_}name} \\
 When selected, all possible values will be displayed on the menu screen, and 
 the user can select all desired values, which will be highlighted. The last 
 option in the tag list will always be to reverse the current selection.
@@ -2473,7 +2485,7 @@ ignored by the Select input.
 \hrulefill \\
 \begin{ttfamily}
 \noindent[MENU{\_}MODIFY-JOB] \newline
-\indent INPUT1 = Select days{\#}{\{}TAG\textbar WEEKDAYS{\}}daylist \newline
+\indent INPUT = Select days{\#}{\{}TAG\textbar WEEKDAYS{\}}daylist \newline
 \noindent[WEEKDAYS] \newline
 \indent MESSAGE = Select the day(s) on which the job should run \newline
 \indent DELIMITER = / \newline
@@ -2522,7 +2534,7 @@ not found there.
 \textsl{Menu file:} \newline
 \begin{ttfamily}
 \noindent[MENU{\_}PLANNING] \newline
-\indent INPUT1 = Weekends to work{\#}{\{}TAG\textbar WEEKENDS{\}}work{\_}weekends
+\indent INPUT = Weekends to work{\#}{\{}TAG\textbar WEEKENDS{\}}work{\_}weekends
 \noindent[WEEKENDS] \newline
 \indent message = Select the weekend day(s) you want to work this month \newline
 \indent delimiter = / \newline
@@ -2619,7 +2631,7 @@ duplicate values can be prevented.
 
 \begin{ttfamily}
 \noindent[MENU{\_}MENU] \newline
-\indent INPUT1 = Select a TCP product{\#}{\{}SEL\textbar TCPPRODS{\}}TCP{\_}PROD{\#}VALUE1 \newline
+\indent INPUT = Select a TCP product{\#}{\{}SEL\textbar TCPPRODS{\}}TCP{\_}PROD{\#}VALUE1 \newline
 \noindent[ANOTHER{\_}SELECT] \newline
 \indent VALUE1{\#}LEADING = Set in the menu file \newline
 \indent VALUE2 = Also set in the menu file \newline
@@ -2678,7 +2690,7 @@ The same identifier can also be used in configuration files.
 \begin{ttfamily}
 \noindent! Comments are at the bottom of this file \newline
 \noindent[MENU{\_}MENU] \newline
-\indent ITEM1 = Leave this menu{\#}command{\#}exit \newline
+\indent ITEM = Leave this menu{\#}command{\#}exit \newline
 \noindent! Pretty short menu, isn't it?! \newline
 \noindent\lt EOF\gt \newline
 \noindent The example you are reading now is not described in this document, 
@@ -2753,7 +2765,7 @@ has a help file that can be used as an example.
 
 Menu items can be used to start OMI modules, using the \textsl{CALL} item-type, as 
 in: \\
-\noindent\textsf{ITEM1 = Text on Display{\#}CALL{\#}FILENAME[.OMI]} \\
+\noindent\textsf{ITEM = Text on Display{\#}CALL{\#}FILENAME[.OMI]} \\
 This item executes the module FILENAME.OMI when selected. Parameters can 
 optionally be specified in the menu item, eventually using the dynamic input 
 identifier (\textsl{\~{}?}), as described in section \ref{para:dyninput}.
@@ -3237,17 +3249,24 @@ The first parameter should be enclosed by double quotes. It contains the
 message that will be displayed in the popup box.\\[3mm]
 
 \textbf{Options}\\*[3mm]
-By default, the screen will be refreshed 
-after the call of this command, but when the command is called by an 
-\textsl{ON{\_}INIT} element (see section \ref{subsubsec:mylabel22}), the menu 
-screen is yet to be drawn. To prevent the screen to be drawn twice, specify 
-a second parameter as \textsl{NOREFRESH} in this situation.
 
-Also default behaviour is a call of \textsl{OMI{\$}WAIT} after displaying
+\begin{itemize}
+\item \textsl{NOREFRESH} Prevent the screen to be refreshed after displaying a popup.
+This is done by default, but when the command is called by an 
+\textsl{ON{\_}INIT} element (see section \ref{subsubsec:mylabel22}), the menu 
+screen is yet to be drawn. Use \textsl{NOREFRESH} in this situation to prevent the screen to be drawn twice.
+
+\item \textsl{NOWAIT} Also default behaviour is a call of \textsl{OMI{\$}WAIT} after displaying
 the popup. This can be suppressed by the option \textsl{NOWAIT}. This is useful
 when the popup has a \textit{please wait...} function.
 
-Both options can be concatenated with a comma (,), but make sure there are \textit{no}
+\item \textsl{CONFIRM} This options causes \textsl{OMI{\$}CONFIRM} to be called after displaying the popup. The  question that is asked is taken from the \textsl{[QUESTIONS]} section in the configuration file: \textsl{DEFAULT{\_}CONFIRM} (see section \ref{para:defconfirm}), without a default answer.\\
+If \textsl{YES} is answered, \textsl{OMI{\$}POPUP} returns status \textsl{OMI{\$}{\_}OK}, otherwise \textsl{OMI{\$}{\_}WARNING}. This can be used to prevent leaving a submenu with an \textsl{ON{\_}EXIT} module.\\
+The \textsl{CONFIRM} option implies \textsl{NOWAIT}.
+
+\end{itemize}
+
+Multiple options can be specified comma-seperated, but make sure there are \textit{no}
 blanks between the options!
 
 \subsection{OMI{\$}REVERSE}
@@ -3924,8 +3943,9 @@ This command deletes values from the current menu environment.
 Delete the value of a text area from the current menu and the file in which 
 the value is stored. If the current menu has more than 1 text area, a 
 sequence number is required, indicating which text area should be displayed. 
-This sequence number is not the same as the option number; if internal 
-variable \textsl{INPUT2} is a textarea, and \textsl{INPUT1} is not, \textsl{INPUT2} has sequence number 1!
+This sequence number is not the same as the option number\footnote{\label{footnote:optionnumber} Option number refers to the number
+of the input as displayed in the menu, which can either be given explicitly in the menufile, or
+depends on the order in the menufile is \textsl{INPUT} elements are given without numbering}; if internal variable \textsl{INPUT2} is a textarea, and \textsl{INPUT1} is not, \textsl{INPUT2} has sequence number 1!
 
 A text area can only be deleted if the format section of the input element 
 has the option \textsl{KEEP} set to \textsl{TRUE} (see section \ref{para:mylabel5} on page \pageref{para:mylabel5}).
@@ -4384,7 +4404,8 @@ still have to be selected, and in which order.
 Display the value of a text area from the current menu. If the current menu 
 has more than 1 text area, a sequence number is required, indicating which 
 text area should be displayed. This sequence number is not the same as the 
-option number; if internal variable \textsl{INPUT2} is a textarea, and \textsl{INPUT1} is not, 
+option number (see footnote \ref{footnote:optionnumber} on page \pageref{footnote:optionnumber});
+if internal variable \textsl{INPUT2} is a textarea, and \textsl{INPUT1} is not, 
 \textsl{INPUT2} has sequence number 1
 
 \vs
@@ -4693,6 +4714,15 @@ $	exit
 
 \chapter{History}
 \index{history}
+
+
+\section*{Version 2.6, Released: xx-xx-20xx}
+
+\begin{itemize}
+\item Cosmetic: fix \textsl{\%DCL-W-UNDSYM} on exit in batchmode
+\item Added a CONFIRM option to \textsl{OMI{\$}POPUP}
+\item Automatic numbering of items and inputs
+\end{itemize}
 
 \section*{Version 2.5, Released: 17-03-2019}
 

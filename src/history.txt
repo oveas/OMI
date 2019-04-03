@@ -1,3 +1,10 @@
+2.6   Released: xx-xx-20xx
+
+* Cosmetic: fix %DCL-W-UNDSYM on exit in batchmode
+* Cosmetic: Don't messup the screen when a message is too long
+* Added a CONFIRM option to OMI$POPUP
+* Automatic numbering of items and inputs
+
 2.5   Released: 17-03-2019
 
 * Fix: Modules where not found if not located in the first index when
