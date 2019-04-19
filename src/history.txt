@@ -4,6 +4,7 @@
 * Calculator results are now rounded
 * Added a CONFIRM option to OMI$POPUP
 * Automatic numbering of items and inputs
+* Allow tag- and selectlist values to be set by a module
 * Cosmetic: fix %DCL-W-UNDSYM on exit in batchmode
 * Cosmetic: Don't messup the screen when a message is too long
 

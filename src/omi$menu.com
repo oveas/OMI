@@ -481,6 +481,12 @@ $			_blockname = _select_list
 $			gosub input$_from_file
 $			if $status .ne. omi$_ok then $ return $status
 $		endif
+$		if f$type('_select_list'$module) .nes. ""
+$		   then
+$			_blockname = _select_list
+$			gosub input$_from_module
+$			if $status .ne. omi$_ok then $ return $status
+$		endif
 $		omi$screen select_list
 $	endif
 $!
@@ -758,6 +764,63 @@ $	   then
 $		omi$signal omi valopenerr,'_values_file
 $		return $status
 $	endif
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	An input (tag- or selectlist) is selected that requires values to be set
+$!	by a module. These must be global symbols, but they won't be cleaned up, so
+$!	translate them to local symbols immediatly.
+$!
+$ input$_from_module:
+$!
+$	_val_module = f$element(0, " ", f$edit('_blockname'$module,"trim, compress"))
+$	_params = f$extract(f$length(_val_module), -
+	   f$length(f$edit('_blockname'$module,"trim, compress")) - f$length(_val_module), -
+	   f$edit('_blockname'$module,"trim, compress"))
+$	omi$call '_val_module' '_blockname' '_params'
+$	_status = $status
+$	if _status .ne. omi$_ok
+$	   then
+$		omi$signal omi valmoderr,_status,'_val_module'
+$		return $status
+$	endif
+$!
+$!	We must translate the global symbols to local since cleanup won't work here
+$	assign sys$scratch:omi$module_values._tmp$ sys$output
+$	show symbol '_blockname'$value*
+$	_status = $status
+$	deassign sys$output
+$	if _status .eq. %X00038140 ! %DCL-W-UNDSYM
+$	   then
+$		delete\ sys$scratch:omi$module_values._tmp$;
+$		omi$signal omi novalues,'_val_module'
+$		return $status
+$	endif
+$!
+$	open /read /error=valmod$_readerr valfile sys$scratch:omi$module_values._tmp$
+$!
+$ valmod$_getvalues:
+$!
+$	read /end_of_file=valmod$_gotvalues valfile _value
+$	_name  = f$edit(f$element(0, "=", _value), "trim")
+$	_value = f$element(2, "=", _value)
+$	'_name' = '_value'
+$	delete\ /symbol /global '_name'
+$	goto valmod$_getvalues
+$!
+$ valmod$_gotvalues:
+$!
+$	close valfile
+$	delete\ sys$scratch:omi$module_values._tmp$;
+$	return omi$_ok
+$!
+$ valmod$_readerr:
+$!
+$	delete\ sys$scratch:omi$module_values._tmp$;
+$	omi$signal omi valreaderr,'_val_module'
+$	return $status
 $!
 $!******************************************************************************
 
@@ -1511,6 +1574,12 @@ $	if f$type('_tagblock'$filename) .nes. ""
 $	   then
 $		_blockname = _tagblock
 $		gosub input$_from_file
+$		if $status .ne. omi$_ok then $ return $status
+$	endif
+$	if f$type('_tagblock'$module) .nes. ""
+$	   then
+$		_blockname = _tagblock
+$		gosub input$_from_module
 $		if $status .ne. omi$_ok then $ return $status
 $	endif
 $!

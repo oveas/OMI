@@ -62,10 +62,10 @@ $		_config_file = f$parse(_config_file,,,"name") + f$parse(_config_file,,,"type"
 $		if f$trnlnm("Omi$Menu_Directory") .nes. ""
 $		   then
 $			if f$search("Omi$Menu_Directory:''_config_file'") .nes. ""
-$		           then $ _config_file = "Omi$Menu_Directory:''_config_file'"
-$		           else $ _config_file = "Omi$:''_config_file'"
+$			   then $ _config_file = "Omi$Menu_Directory:''_config_file'"
+$			   else $ _config_file = "Omi$:''_config_file'"
 $			endif
-$	           else $ _config_file = "Omi$:''_config_file'"
+$		   else $ _config_file = "Omi$:''_config_file'"
 $		endif
 $		omi$menu_location == f$element(0,":",_config_file) + ":"
 $	endif

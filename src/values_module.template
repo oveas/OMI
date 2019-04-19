@@ -1,0 +1,58 @@
+$	goto start$
+$!
+$!******************************************************************************
+$!*                                                                            *
+$!*    MODULE NAME:                                                            *
+$!*    ============                                                            *
+$!*      values_module.Omi                                                     *
+$!*                                                                            *
+$!*    USAGE:                                                                  *
+$!*    ======                                                                  *
+$!*      This module is called by OMI when a tag- or select list has a         *
+$!*      module name in the list description, e.g.:                            *
+$!*                                                                            *
+$!*      [MENU_MYMENU]                                                         *
+$!*         ...                                                                *
+$!*         input = Select something here#{TAG|tagblock}my_variable            *
+$!*                                                                            *
+$!*      [TAGBLOCK]                                                            *
+$!*         delimiter = /                                                      *
+$!*         module    = values_module                                          *
+$!*                                                                            *
+$!*    DESCRIPTION:                                                            *
+$!*    ============                                                            *
+$!*      Set the variables <blockname>$VALUEx for a tag or selectlist          *
+$!*      The blockname is passed as the first parameter.                       *
+$!*      All symbols must be global!                                           *
+$!*                                                                            *
+$!*    HISTORY:                                                                *
+$!*    ========                                                                *
+$!*      v1  xx-xx-xx your name             Created                            *
+$!*                                                                            *
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$ start$:
+$!
+$	_status = omi$_ok
+$!
+$	_blockname = P1
+$	_valuecounter = 1
+$!
+$ set_values:
+$!
+
+	Write your code here
+
+$!	'_blockname'$value'_valuecounter' == "<Your value>"
+$!	if <done> then $ goto done
+$!
+$	_valuecounter = _valuecounter + 1
+$	goto set_values
+$!
+$ done:
+$!
+$	exit _status
+$!
+$!******************************************************************************

@@ -96,6 +96,7 @@ NOTYET         I format ~S not yet implemented
 NOT_YET        W this command is not yet implemented
 NOUNIQTA       W no unique text area found - specify an integer
 NOVALFILE      E value file ~S not found
+NOVALUES       E no values read from module ~S
 NOVARS         W no variables found for this menu
 NOVMSMSG       I no VMS message found for status ~S
 NOWILDCARD     W wildcards are not allowed in this option
@@ -133,8 +134,10 @@ TOPLEVEL       I you already are at the toplevel
 TOPONLY        W this option can only be used at the top level menu
 TRANERR        E cannot translate input - invalid variable
 VALLOGERR      F error opening logfile ~S
+VALMODERR      E module ~S returned error status ~S
 VALOK          S no errors or warnings found
 VALOPENERR     W value file ~S is probably locked
+VALREADERR     E error reading values set by ~S
 VALRESULT      I found ~S error(s) and ~S warning(s)
 VERSION        I current OMI version is ~S
 VMSERR         E VMS error occured - status was ~S

@@ -2571,6 +2571,63 @@ file.
 If you have write privilege to the current menu, the value file can be 
 modified with the \textsl{EDIT VALUE{\_}FILE} command.
 
+\subsection{Set Tag and Select values by a module}
+\index{select lists!set by a module}
+\index{tag lists!set by a module}
+\index{select lists!dynamic values}
+\index{tag lists!dynamic value}
+\index{values for tag and select lists}
+\label{subsubsec:dynamicvalues}
+
+Dynamic values for tag- and select lists can also be set by a module which will be called by 
+OMI when the users enters the input option.
+
+This is achieved with the \textsl{MODULE} element in the section describing the list. This element
+must contain the name of an OMI module that will be called and which sets the global \textsl{VALUE\textit{n}} symbols for the section. \\
+The section name is passed as the first parameter. Other parameters can be passed to the module
+as shown in figure \ref{fig:valuesfrommodule}
+
+The default location of the module is \textsl{OMI{\$}MENU{\_}DIRECTORY:}, or \textsl{OMI{\$}:} if 
+not found there.
+
+\begin{figure}[ht]
+\begin{minipage}[t]{\textwidth}
+\hrulefill \\
+\textsl{Menu file:} \newline
+\begin{ttfamily}
+\noindent[MENU{\_}JOBS] \newline
+\indent INPUT = Select a process ID{\#}{\{}SEL\textbar PIDLIST{\}}process{\_}id
+\noindent[PIDLIST] \newline
+\indent module = get{\_}processids  f{\$}getjpi(0, "username")
+\end{ttfamily}
+
+\textsl{File GET{\_}PROCESSIDS.OMI:} \newline
+\begin{ttfamily}
+\noindent{\$} {\_}blockname = P1 \newline
+\noindent{\$} {\_}username = P2 \newline
+\noindent{\$} {\_}valuecounter = 1 \newline
+\noindent{\$} ctx = "" \newline
+\noindent{\$} temp = f{\$}context("process", ctx, "username", - \newline
+    "''{\_}username'","eql") \newline
+\noindent{\$}! \newline
+\noindent{\$}get{\_}processes: \newline
+\noindent{\$} pid = f{\$}pid(ctx) \newline
+\noindent{\$} if pid .eqs. "" then {\$} exit omi{\$}{\_}ok \newline
+\noindent{\$} '{\_}blockname'{\$}VALUE'{\_}valuecounter' == pid \newline
+\noindent{\$} {\_}valuecounter = {\_}valuecounter + 1 \newline
+\noindent{\$} goto get{\_}processes \newline
+\end{ttfamily}
+\caption{Dynamic values set by a module}\index{select lists}\label{fig:valuesfrommodule}
+\hrulefill
+\end{minipage}
+\end{figure}
+
+Figure \ref{fig:valuesfrommodule} shows the use for modules creating dynamic values in tag- or select lists. The 
+\textsl{VALUE\textit{n}} fields are set by a module. \\ 
+Note the module must set global symbols! 
+
+A template module \textsl{VALUE{\_}MODULE.TEMPLATE} can be found in the \textsl{OMI{\$}:} directory.
+
 \section{Including Standard Libraries}
 \index{standard libraries}
 \index{libraries}
@@ -4723,6 +4780,7 @@ $	exit
 \item Calculator results are now rounded
 \item Added a CONFIRM option to \textsl{OMI{\$}POPUP}
 \item Automatic numbering of items and inputs
+\item Allow tag- and selectlist values to be set by a module
 \item Cosmetic: fix \textsl{\%DCL-W-UNDSYM} on exit in batchmode
 \item Cosmetic: Don't messup the screen when a message is too long
 \end{itemize}

@@ -235,6 +235,9 @@ $!
 $ call$check_path:
 $	_menu_directory = f$trnlnm("Omi$Menu_Directory",,'_log_index')
 $	if _menu_directory .eqs. "" then $ goto call$end_of_list
+$	if f$extract(f$length(_menu_directory)-1, 1, _menu_directory) .nes. "]" -
+	   .and. f$extract(f$length(_menu_directory)-1, 1, _menu_directory) .nes. ":" -
+	   then $ _menu_directory = "''_menu_directory':"
 $	_module = f$search(f$parse(_input_module, "''_menu_directory'.Omi"))
 $	if _module .eqs. ""
 $	   then
