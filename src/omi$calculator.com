@@ -394,6 +394,7 @@ $	exit calc$_status
 $!
 $ calc$_end:
 $!
+$	gosub calc$_round_result
 $	omi$calculated == _result
 $	if calc$show_subresults
 $	   then
@@ -402,6 +403,22 @@ $		omi$call type_file sys$scratch:calc$_subresults._tmp$
 $		delete\ /nolog /noconfirm sys$scratch:calc$_subresults._tmp$;
 $	endif
 $	exit omi$_ok
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==> Round the result if desired
+$! TODO Invent some way to let the user set the desired nr of digits or disable tis.
+$!
+$ calc$_round_result:
+$!
+$	if f$integer(f$element(1, ".", _result)) .eq. 0
+$	   then $ _result = f$element(0, ".", _result)
+$	   else $ _result = f$element(0, ".", _result) + -
+		   "." + f$integer(f$element(1, ".", _result))
+$	endif
+$	return
 $!
 $!******************************************************************************
 

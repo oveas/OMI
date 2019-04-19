@@ -1,9 +1,11 @@
 2.6   Released: xx-xx-20xx
 
-* Cosmetic: fix %DCL-W-UNDSYM on exit in batchmode
-* Cosmetic: Don't messup the screen when a message is too long
+* Fix: OMI$CALCULATOR did not pass the full calculation
+* Calculator results are now rounded
 * Added a CONFIRM option to OMI$POPUP
 * Automatic numbering of items and inputs
+* Cosmetic: fix %DCL-W-UNDSYM on exit in batchmode
+* Cosmetic: Don't messup the screen when a message is too long
 
 2.5   Released: 17-03-2019
 

@@ -42,7 +42,7 @@ $		omi$signal omi insarg,"OMI$CALC"
 $		return omi$_warning
 $	endif
 $!
-$	@omi$:omi$calculator "''p3'" "''p4'" "''p5'" "''p6'" "''p7'" "''p8'"
+$	@omi$:omi$calculator "''p2'" "''p3'" "''p4'" "''p5'" "''p6'" "''p7'" "''p8'"
 $	return $status
 $!
 $!******************************************************************************
