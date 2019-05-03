@@ -91,6 +91,7 @@ NOSUCHNAME     W no submenu found with name ~S
 NOSUCHTA       W invalid parameter - no such text area
 NOTAUTH        W not authorized - use <Ctrl/Z> to go back
 NOTEXTAREA     W no text areas found in this menu
+NOTINLIST      W default value \~S\ is not in the selectlist
 NOTMPFILE      W file name required for fixed areas
 NOTYET         I format ~S not yet implemented
 NOT_YET        W this command is not yet implemented

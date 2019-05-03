@@ -12,6 +12,7 @@
 \newcommand{\lt}{\texttt{<}}
 \newcommand{\gt}{\texttt{>}}
 \setlength{\parindent}{5mm}
+\setcounter{secnumdepth}{4}
 \renewcommand{\indent}{\hspace*{5mm}}
 \makeatletter
 \makeatother
@@ -2016,7 +2017,7 @@ on the user input.\caption{Using the SUBMENU element}\label{fig:submenu}
 
 \section{The INPUT element}
 \index{menu actions!read user input}
-\index{user input}
+\index{user input}\index{variables|(}
 \label{subsec:mylabel5}
 
 Inputs can be used to collect information from the user, which can be passed 
@@ -2041,12 +2042,11 @@ after the user selected the corresponding option). This also indicates the
 input type, which can be `Free input', `Select list'\index{select lists} 
 or `Tag list'\index{tag lists}.
 
-The third argument can optionally contain a default value. The way this is 
-handled depends on the input type. This argument is not valid in Tag 
-lists\index{tag lists}\index{enter input!tagging from a list}.
+The third argument can optionally contain a default value\footnote{ not valid in Tag lists.}.
+Default values will be described in section \ref{subsubsec:defaults}
 
-The fourth argument is only valid for the Free input. It will be 
-described below, and more specific in section \ref{subsubsec:formatting}.
+The fourth argument is only valid for the Free input and handles formatting. It will be 
+described in section \ref{subsubsec:formatting}.
 
 \subsection{The Free Input element}
 \label{subsubsec:mylabel37}
@@ -2534,7 +2534,7 @@ not found there.
 \textsl{Menu file:} \newline
 \begin{ttfamily}
 \noindent[MENU{\_}PLANNING] \newline
-\indent INPUT = Weekends to work{\#}{\{}TAG\textbar WEEKENDS{\}}work{\_}weekends
+\indent INPUT = Weekends to work{\#}{\{}TAG\textbar WEEKENDS{\}}work{\_}weekends\newline
 \noindent[WEEKENDS] \newline
 \indent message = Select the weekend day(s) you want to work this month \newline
 \indent delimiter = / \newline
@@ -2596,7 +2596,7 @@ not found there.
 \textsl{Menu file:} \newline
 \begin{ttfamily}
 \noindent[MENU{\_}JOBS] \newline
-\indent INPUT = Select a process ID{\#}{\{}SEL\textbar PIDLIST{\}}process{\_}id
+\indent INPUT = Select a process ID{\#}{\{}SEL\textbar PIDLIST{\}}process{\_}id\newline
 \noindent[PIDLIST] \newline
 \indent module = get{\_}processids  f{\$}getjpi(0, "username")
 \end{ttfamily}
@@ -2608,7 +2608,7 @@ not found there.
 \noindent{\$} {\_}valuecounter = 1 \newline
 \noindent{\$} ctx = "" \newline
 \noindent{\$} temp = f{\$}context("process", ctx, "username", - \newline
-    "''{\_}username'","eql") \newline
+\hspace*{5mm}    "''{\_}username'","eql") \newline
 \noindent{\$}! \newline
 \noindent{\$}get{\_}processes: \newline
 \noindent{\$} pid = f{\$}pid(ctx) \newline
@@ -2626,7 +2626,72 @@ Figure \ref{fig:valuesfrommodule} shows the use for modules creating dynamic val
 \textsl{VALUE\textit{n}} fields are set by a module. \\ 
 Note the module must set global symbols! 
 
+\vs
+
 A template module \textsl{VALUE{\_}MODULE.TEMPLATE} can be found in the \textsl{OMI{\$}:} directory.
+
+\subsection{Default values}\label{subsubsec:defaults}\index{variables!default value}
+
+The third argument in the input item description can optionally contain a default value.\\
+Default values for Tag-lists are note supported\index{tag lists!default value}.
+
+\vs
+
+Default values can either be hardcoded in the menu file, or a module can be called to set the default at runtime.
+To do this, the value must start with \textsl{CALL:}.\\
+See section \ref{subsubsection:defaultbymodule} for more on this.
+
+\subsubsection{Default for Free input}
+When the input item is a Free input type (see secion \ref{subsubsec:mylabel37}), the default will be the exact
+value as given in the input element.
+
+If the input element contains a formating block and the default value is invalid\index{variables!invalid default value}, the value will be set to:\\
+\texttt{Invalid default value}
+
+\subsubsection{Default for Select lists}\label{subsubsection:defaultforselectlist}\index{select lists!default value}
+
+For select lists, the third argument should not contain the value itself, but the value item from the block containing
+all possible value (\textsl{VALUE\textit{n}}), e.g.:
+
+\begin{ttfamily}
+\indent INPUT = Select a day{\#}{\{}SEL\textbar WEEKDAYS{\}}selected{\_}day{\#}VALUE5\newline
+\noindent[WEEKDAYS] \newline
+\indent VALUE1 = Monday \newline
+\indent VALUE2 = Tuesday \newline
+\indent VALUE3 = Wednesday \newline
+\indent VALUE4 = Thursday \newline
+\indent VALUE5 = Friday \newline
+\end{ttfamily}
+
+In this example, the selected default will be \textsl{Friday}.
+
+\subsubsection{Default values set by a module}\label{subsubsection:defaultbymodule}\index{variables!default value!set by modules}
+
+A default value will be set at runtime when the given value starts with \textsl{CALL:}, as in:\\
+\indent\textsf{INPUT = Text on display{\#}VARIABLE{\_}NAME{\#}CALL:SET{\_}DEFAULT MY{\_}PARAMETER}\\
+This causes OMI to call the module names \textsl{SET{\_}DEFAULT.OMI} with \textsl{VARIABLE{\_}NAME} as the first
+parameter.\\
+In this example, \textsl{MY{\_}PARAMETER} will be passed as the second parameter.
+
+The module must return the default value in the global symbol \textsl{OMI{\$}DEFAULT{\_}VALUE}. The default location of the module is \textsl{OMI{\$}MENU{\_}DIRECTORY:}, or \textsl{OMI{\$}:} if not found there.
+
+\vs
+
+The value will be exact as passed by the module for any variable type. This means, for select lists it should \textit{not} contain the \textsl{VALUE\textit{n}} reference!\index{select lists!default value}.\\
+If a default value should be set by a module in the example of section \ref{subsubsection:defaultforselectlist},
+\textsl{OMI{\$}DEFAULT{\_}VALUE} should contain the dayname, e.g. ``\textsl{Friday}''.
+
+This way is it possible to set a value that is not in the select list (e.g. ``\textsl{Saturday}''). If this is done, OMI will display a warning, but the value \textit{is} accepted.
+
+\vs
+
+For Free input items with a formatting block, formatting will be done after the module is called.
+
+\vs
+
+A template module \textsl{VALUE{\_}DEFAULT.TEMPLATE} can be found in the \textsl{OMI{\$}:} directory.
+
+\index{variables|)}
 
 \section{Including Standard Libraries}
 \index{standard libraries}
@@ -4781,6 +4846,7 @@ $	exit
 \item Added a CONFIRM option to \textsl{OMI{\$}POPUP}
 \item Automatic numbering of items and inputs
 \item Allow tag- and selectlist values to be set by a module
+\item Allow default values for input items to be set by a module
 \item Cosmetic: fix \textsl{\%DCL-W-UNDSYM} on exit in batchmode
 \item Cosmetic: Don't messup the screen when a message is too long
 \end{itemize}

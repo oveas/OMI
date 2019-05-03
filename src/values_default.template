@@ -4,26 +4,21 @@ $!******************************************************************************
 $!*                                                                            *
 $!*    MODULE NAME:                                                            *
 $!*    ============                                                            *
-$!*      values_module.Omi                                                     *
+$!*      values_default.Omi                                                    *
 $!*                                                                            *
 $!*    USAGE:                                                                  *
 $!*    ======                                                                  *
-$!*      This module is called by OMI when a tag- or select list has a         *
-$!*      module name in the list description, e.g.:                            *
+$!*      This module is called by OMI when the default value of an input       *
+$!*      item should be set by a module, e.g.                                  *
 $!*                                                                            *
 $!*      [MENU_MYMENU]                                                         *
 $!*         ...                                                                *
-$!*         input = Select something here#{TAG|tagblock}my_variable            *
-$!*                                                                            *
-$!*      [TAGBLOCK]                                                            *
-$!*         delimiter = /                                                      *
-$!*         module    = values_module                                          *
+$!*         input = Give me some input#my_variable#call:get_default [params]   *
 $!*                                                                            *
 $!*    DESCRIPTION:                                                            *
 $!*    ============                                                            *
-$!*      Set the variables <blockname>$VALUEx for a tag or selectlist          *
-$!*      The blockname is passed as the first parameter.                       *
-$!*      All symbols must be global!                                           *
+$!*      The default value must be returned as a global symbol                 *
+$!*      OMI$DEFAULT_VALUE                                                     *
 $!*                                                                            *
 $!*    HISTORY:                                                                *
 $!*    ========                                                                *
@@ -37,19 +32,12 @@ $ start$:
 $!
 $	_status = omi$_ok
 $!
-$	_blockname = P1 ! Additional parameters from the menu file start at P2
-$	_valuecounter = 1
-$!
-$ set_values:
+$	_variable_name = P1 ! Additional parameters from the menu file start at P2
 $!
 
 	Write your code here
 
-$!	'_blockname'$value'_valuecounter' == "<Your value>"
-$!	if <done> then $ goto done
-$!
-$	_valuecounter = _valuecounter + 1
-$	goto set_values
+$	omi$default_value == <value>
 $!
 $ done:
 $!

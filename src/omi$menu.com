@@ -4070,29 +4070,44 @@ $!
 $ init$_defaults:
 $!
 $	read /end_of_file=init$end_defaults omi$setup_defaults omi$value
+$!
+$	if f$extract(0, 1, f$element(1,"#",omi$value)) .eqs. "{"
+$	   then $ _varname = "''f$extract(f$locate("}",f$element(1,"#",omi$value))+1, f$length(f$element(1,"#",omi$value)), f$element(1,"#",omi$value))'"
+$	   else $ _varname = "''f$element(1, "#", omi$value)'"
+$	endif
+$!
 $	if f$element(2, "#", f$extract(0,f$length(omi$value)-1,omi$value)) -
 	   .eqs. "#" .or. f$element(2, "#", f$extract(0,f$length(omi$value)-1,-
 	   omi$value)) .eqs. ""
 $	   then
 $		if f$type (varreset$) .nes. ""
 $		   then
-$			if f$extract(0, 1, f$element(1,"#",omi$value)) .eqs. "{"
-$			   then $ _value = "''f$extract(f$locate("}",f$element(1,"#",omi$value))+1, f$length(f$element(1,"#",omi$value)), f$element(1,"#",omi$value))'"
-$			   else $ _value = "''f$element(1, "#", omi$value)'"
-$			endif
-$			_value = _value - """
+$			_varname = _varname - """
 $			varreset$ = varreset$ + 1
 $			set message /nofacility /noseverity /noidentification /notext
-$			if f$type ('_value') .nes. "" then -
-			   $ delete\ /symbol /local '_value'
+$			if f$type ('_varname') .nes. "" then -
+			   $ delete\ /symbol /local '_varname'
 $			set message 'omi$_message
 $		endif
 $		goto init$_defaults
 $	endif
 $!
-$	if f$extract(0, 1, f$element(1,"#",omi$value)) .eqs. "{"
+$	default_value = f$element(2, "#", omi$value) - """
+$!
+$	if f$edit(f$extract(0, 5, default_value),"upcase") .eqs. "CALL:"
 $	   then
-$		_value = "''f$extract(f$locate("}",f$element(1,"#",omi$value))+1, f$length(f$element(1,"#",omi$value)), f$element(1,"#",omi$value))'"
+$		_def_module = f$extract(5, f$length(f$element(0," ", default_value))-5, default_value)
+$		_params = f$extract(5+f$length(def_module)+1,f$length(default_value)-(5+f$length(def_module)+1),default_value)
+$		omi$call '_def_module' '_varname' '_params'
+$		default_value = OMI$DEFAULT_VALUE
+$		delete\ /symbol /global OMI$DEFAULT_VALUE
+$		_translate_from_block = 0
+$	   else
+$		_translate_from_block = 1
+$	endif
+$!
+$	if f$extract(0, 1, f$element(1,"#",omi$value)) .eqs. "{" .and. f$edit(f$element(0,"}",f$element(1,"#",omi$value)),"upcase") .nes. "{HIDDEN"
+$	   then
 $		_block = f$extract(1, f$locate("}", f$element(1,"#",omi$value))-1, f$element(1,"#", omi$value))
 $		_block = f$edit(_block,"upcase") - "SEL|"
 $!
@@ -4100,33 +4115,40 @@ $		if f$type (varreset$) .nes. ""
 $		   then
 $			varreset$ = varreset$ + 1
 $			set message /nofacility /noseverity /noidentification /notext
-$			if f$type('_value') .nes. "" then -
-			   $ delete\ /symbol /local '_value'  ! RESET VARIABLES
+$			if f$type('_varname') .nes. "" then -
+			   $ delete\ /symbol /local '_varname'  ! RESET VARIABLES
 $			set message 'omi$_message
 $		endif
 $!
-$		if f$type('_block'$filename) .nes. ""
+$		if _translate_from_block .eq. 1
 $		   then
-$			_blockname = _block
-$			gosub input$_from_file
-$			_status = $status
-$			if _status .ne. omi$_ok then $ omi$wait
-$		   else $ _status = omi$_ok
-$		endif
+$			if f$type('_block'$filename) .nes. ""
+$			   then
+$				_blockname = _block
+$				gosub input$_from_file
+$				_status = $status
+$				if _status .ne. omi$_ok then $ omi$wait
+$			   else $ _status = omi$_ok
+$			endif
 $!
-$		if f$extract(0,4,_block) .nes. "TAG|" .and. _status .eq. omi$_ok -
-		   then $ '_value' = '_block'$'f$element(2,"#",omi$value)'
+$			if f$extract(0,4,_block) .nes. "TAG|" .and. _status .eq. omi$_ok
+$			   then
+$				'_varname' = '_block'$'f$element(2,"#",omi$value)'
+$			endif
+$		   else
+$			'_varname' = default_value
+$		endif
 $	   else
 $		_default_value = f$element(2, "#", omi$value) - """
-$		_variable = "_default_value"
+$		_variable = "default_value"
 $		_format = f$element(3, "#",omi$value) - """
 $!
 $		if f$type (varreset$) .nes. ""
 $		   then
 $			varreset$ = varreset$ + 1
 $			set message /nofacility /noseverity /noidentification /notext
-$			if f$type('f$element(1, "#", omi$value)') .nes. "" then -
-			   $ delete\ /symbol /local 'f$element(1, "#", omi$value)'  ! RESET VARIABLES
+$			if f$type('_varname') .nes. "" then -
+			   $ delete\ /symbol /local '_varname'  ! RESET VARIABLES
 $			set message 'omi$_message
 $		endif
 $!
@@ -4134,10 +4156,10 @@ $		if _format .nes. "" .and. _format .nes. "#" .and. '_variable' .nes. ""
 $		   then
 $			gosub input$_format
 $			if $status .eq. omi$_warning
-$			   then $ 'f$element(1, "#", omi$value) = "Invalid default value"
-$			   else $ 'f$element(1, "#", omi$value) = '_variable'
+$			   then $ '_varname' = "Invalid default value"
+$			   else $ '_varname' = '_variable'
 $			endif
-$		   else $ 'f$element(1, "#", omi$value) = '_variable'
+$		   else $ '_varname' = '_variable'
 $		endif
 $	endif
 $	goto init$_defaults
