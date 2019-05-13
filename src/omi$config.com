@@ -218,6 +218,7 @@ $		if f$extract(0, 5, _section) .eqs. "MENU_"
 $		   then
 $			_item_counter  = 1
 $			_input_counter = 1
+$			_const_counter = 1
 $			_section = _section - "MENU_"
 $			block$type_menu = 1
 $		   else $ block$type_menu = 0
@@ -243,6 +244,11 @@ $	if _item .eqs. "INPUT" .and. block$type_menu
 $	   then
 $		_item = "INPUT''_input_counter'"
 $		_input_counter = _input_counter + 1
+$	endif
+$	if _item .eqs. "CONST" .and. block$type_menu
+$	   then
+$		_item = "CONST''_const_counter'"
+$		_const_counter = _const_counter + 1
 $	endif
 $!
 $	if p3 .eqs. "CLEANUP"

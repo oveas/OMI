@@ -4053,16 +4053,28 @@ $!	be local.
 $!
 $ main$default_values:
 $!
+$	if f$type(symbol_name) .eqs. ""
+$	   then $ symbol_name = "input"
+$	   else
+$		if symbol_name .eqs. "input"
+$		   then
+$			symbol_name = "const"
+$			init_def$search_string = "$const"
+$		   else
+$			delete\ /symbol /local symbol_name
+$			return omi$_ok
+$		endif
+$	endif
 $	assign sys$scratch:omi$setup_defaults._tmp1$ sys$output
-$	show symbol /global *$input*
+$	show symbol /global *$'symbol_name'*
 $	deassign sys$output
 $	search sys$scratch:omi$setup_defaults._tmp1$ 'init_def$search_string -
-	   /output=sys$scratch:omi$setup_defaults._tmp$
+	   /output=sys$scratch:omi$setup_defaults._tmp$ /nowarnings
 $	if $status .eq. omi$_nomatch
 $	   then
 $		delete\ /nolog /noconfirm sys$scratch:omi$setup_defaults._tmp1$;
 $		delete\ /nolog /noconfirm sys$scratch:omi$setup_defaults._tmp$;
-$		return omi$_ok
+$		goto main$default_values
 $	endif
 $	delete\ /nolog /noconfirm sys$scratch:omi$setup_defaults._tmp1$;
 $	open /read omi$setup_defaults sys$scratch:omi$setup_defaults._tmp$
@@ -4097,7 +4109,7 @@ $!
 $	if f$edit(f$extract(0, 5, default_value),"upcase") .eqs. "CALL:"
 $	   then
 $		_def_module = f$extract(5, f$length(f$element(0," ", default_value))-5, default_value)
-$		_params = f$extract(5+f$length(def_module)+1,f$length(default_value)-(5+f$length(def_module)+1),default_value)
+$		_params = f$extract(5+f$length(_def_module)+1,f$length(default_value)-(5+f$length(_def_module)+1),default_value)
 $		omi$call '_def_module' '_varname' '_params'
 $		default_value = OMI$DEFAULT_VALUE
 $		delete\ /symbol /global OMI$DEFAULT_VALUE
@@ -4168,7 +4180,7 @@ $ init$end_defaults:
 $!
 $	close omi$setup_defaults
 $	delete/noconfirm/nolog sys$scratch:omi$setup_defaults._tmp$;
-$	return omi$_ok
+$	goto main$default_values
 $!
 $!******************************************************************************
 

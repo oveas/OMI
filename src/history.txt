@@ -6,6 +6,7 @@
 * Automatic numbering of items and inputs
 * Allow tag- and selectlist values to be set by a module
 * Allow default values for input items to be set by a module
+* Introduced the CONST element
 * Cosmetic: fix %DCL-W-UNDSYM on exit in batchmode
 * Cosmetic: Don't messup the screen when a message is too long
 
