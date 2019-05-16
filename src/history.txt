@@ -1,4 +1,4 @@
-2.6   Released: xx-xx-20xx
+2.6   Released: 12-05-2019
 
 * Fix: OMI$CALCULATOR did not pass the full calculation
 * Calculator results are now rounded

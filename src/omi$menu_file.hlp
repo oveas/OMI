@@ -96,8 +96,8 @@ menu is allowed.
 
   [MENU_MENU]
     counter = mycounter
-    item1  = New value#command#increase refresh
-    input1 = Enter a value#var'counter$mycounter
+    item  = New value#command#increase refresh
+    input = Enter a value#var'counter$mycounter
 
   [COUNTER]
     mycounter = 0
@@ -134,10 +134,10 @@ refresh is disabled.
 
 3 All_inputs
 
-By default, OMI will display an option that can be selected to enter
-all input elements without selecting them separately. This can be
-disabled by adding the ALL_INPUTS element to a menu section with
-value '0' or FALSE.
+By default, when a submenu contains 2 or more INPUT items, OMI will
+display an option that can be selected to enter all input elements
+without selecting them separately. This can be disabled by adding the
+ALL_INPUTS element to a menu section with value '0' or FALSE.
 
 This ement will be disabled by default when the REQUIRED_ORDER element
 is specified for this menu.
@@ -280,14 +280,16 @@ This last prompt will always be used if it is protected.
 
 
 3 Item
- Format: ITEMn = Text on display#item type#value for type
+ Format: ITEM = Text on display#item type#value for type
 
 Items can be used to define the menu structure, and the actual
 actions being taken.
 
-The keyword ITEM has to be followed by an integer, starting with
+The keyword ITEM can be followed by an integer, starting with
 '1', and without gaps in the counting, so if a menu has three
 item elements, they have to be specified as ITEM1, ITEM2 and ITEM3.
+
+Since V2.6, the numbering can be omitted.
 
 The value of items consists of three arguments, separated by a hash (#).
 The first argument represents how the option will be displayed on the
@@ -356,7 +358,7 @@ More substitute string can be specified in the third argument.
 
 5 Example
 
-  ITEM1 = Type a file#COMMAND#DCL TYPE ~?{Filename:|FILE_FORMAT} /PAGE
+  ITEM = Type a file#COMMAND#DCL TYPE ~?{Filename:|FILE_FORMAT} /PAGE
 
   [FILE_FORMAT]
      TYPE     = FILESPEC
@@ -395,7 +397,7 @@ selecting a menu.
 4 Examples
 
   1. [MENU_MENU]
-      ITEM1  = Go to the second Menu#SUBMENU#SECOND_MENU
+      ITEM  = Go to the second Menu#SUBMENU#SECOND_MENU
 
      [MENU_SECOND_MENU]
 
@@ -405,7 +407,7 @@ selecting a menu.
    section called MENU_SECOND_MENU.
 
   2. [MENU_MENU]
-      ITEM1  = Dynamic Menu#SUBMENU#{Menu 1|SUB1}{Menu 2|SUB2}Which Menu:
+      ITEM  = Dynamic Menu#SUBMENU#{Menu 1|SUB1}{Menu 2|SUB2}Which Menu:
 
      [MENU_SUB1]
       ! Menu definitions...
@@ -431,9 +433,11 @@ selecting a menu.
 Inputs can be used to collect information from the used, that can
 be passed to OMI modules.
 
-The keyword INPUT has to be followed by an integer, starting with
+The keyword INPUT can be followed by an integer, starting with
 '1', and without gaps in the counting, so if a menu has three
 inputs, they have to be specified as INPUT1, INPUT2 and INPUT3.
+
+Since V2.6, the numbering can be omitted.
 
 The value of inputs consists of two to four arguments, separated by a
 hash (#). The first argument represents how the option will be
@@ -448,7 +452,7 @@ tag list), and for straight inputs, the fourth argument can
 point to a formatting section.
 
 4 Straight_input
- Format: INPUTn = Text on display#variable name[#default value][#format]
+ Format: INPUT = Text on display#variable name[#default value][#format]
 
 This input type just lets the user enter input, which will be stored
 in the variable name.
@@ -464,7 +468,7 @@ value has to be specified as empty, e.g.:
   Text on display#variable name##format
 
 4 Select_list
- Format: INPUTn = Text on display#{SEL|sellist}variable name[#default value]
+ Format: INPUT = Text on display#{SEL|sellist}variable name[#default value]
 
 If the user cannot freely enter any input, a list with choices
 can be presented, from which the user can make selections.
@@ -481,7 +485,7 @@ The optional third argument points to the default value.
 5 Example
 
      [MENU_MENU]
-      INPUT1  = Confirm#{SEL|CONF}confirm#VALUE2
+      INPUT  = Confirm#{SEL|CONF}confirm#VALUE2
 
      [CONF]
       VALUE1 = Yes
@@ -514,7 +518,7 @@ The optional third argument points to the default value.
                   +-----------+
 
 4 Tag_list
- Format: INPUTn = Text on display#{TAG|taglist}variable name
+ Format: INPUT = Text on display#{TAG|taglist}variable name
 
 If a variable needs to contain a list of values, that can be
 searched in a OMI module useing the F$ELEMENT lexical,
@@ -540,7 +544,7 @@ A tag list cannot have a default value.
 5 Example
 
      [MENU_MENU]
-      INPUT1  = Select days#{TAG|WEEKDAYS}daylist
+      INPUT  = Select days#{TAG|WEEKDAYS}daylist
 
      [WEEKDAYS]
       DELIMITER = /
@@ -559,6 +563,23 @@ A tag list cannot have a default value.
    If the user selects the numbers 1, 3 and 5 (one at a time), the
    value of the variable 'daylist' will be
    "Monday/Wednesday/Friday/"
+
+3 Const
+
+The CONST element is identical to the INPUT with the following
+differences:
+
+ * The first argument is ignored.
+ * Values can only be set by the default value.
+ * Constants will not be displayed.
+
+The second bullet implies tag-lists are not supported since they
+can't have a default value, and select-lists are useless.
+Values can be set either hardcoded in the menu file, or by calling
+a module.
+All formatting rules apply to constants too.
+
+Constants are not visible to the user but can be used in modules.
 
 2 Selectlist_section
 
@@ -616,7 +637,7 @@ if not found there.
 
   2. Menu file:
      [MENU_PLANNING]
-       INPUT1  = Select a weekend#{SEL|WEEKENDS}selected_weekend
+       INPUT  = Select a weekend#{SEL|WEEKENDS}selected_weekend
 
      [WEEKENDS]
        FILENAME  = ''F$EXTRACT(3,3,F$TIME())'.DAT
@@ -682,7 +703,7 @@ if not found there.
 
   2. Menu file:
      [MENU_PLANNING]
-       INPUT1  = Weekends to work#{TAG|WEEKENDS}work_weekends
+       INPUT  = Weekends to work#{TAG|WEEKENDS}work_weekends
 
      [WEEKENDS]
        MESSAGE   = Select the weekend day(s) you want to work this month
@@ -925,7 +946,7 @@ UPCASE		[TRUE or FALSE]
 3 Example
 
   [MENU_MENU]
-    input1 = Name of a .TXT file#FNAME#README#FNAME_FORMAT
+    input = Name of a .TXT file#FNAME#README#FNAME_FORMAT
 
   [FNAME_FORMAT]
    TYPE      = STRING
@@ -1050,7 +1071,7 @@ last one will be used.
 
   ! The menu file contains:
   [MENU_MENU]
-    INPUT1  = Select a TCP product#{SEL|TCPPRODS}TCP_PROD#VALUE1
+    INPUT  = Select a TCP product#{SEL|TCPPRODS}TCP_PROD#VALUE1
 
   [ANOTHER_SELECT]
     VALUE1#LEADING = Set in the menu file 
