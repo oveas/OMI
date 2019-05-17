@@ -30,9 +30,7 @@ support as possible via this forum.
 
 Installation instructions
 -------------------------
-To install OMI, download one of the distributions: either
-the ZIP file (download in BINary format) or the COM file
-(download in ASCII format).
+To install OMI, download the ZIP distribution in BINary format.
 Also, download OMI$INSTALL.COM in ASCII format.
 
 Next, set default to the directory where the installation

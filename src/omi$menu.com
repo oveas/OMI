@@ -4067,7 +4067,7 @@ $			return omi$_ok
 $		endif
 $	endif
 $	assign sys$scratch:omi$setup_defaults._tmp1$ sys$output
-$	assign /user nla0: sys$output
+$	assign /user nla0: sys$error
 $	show symbol /global *$'symbol_name'*
 $	deassign sys$output
 $	search sys$scratch:omi$setup_defaults._tmp1$ 'init_def$search_string -

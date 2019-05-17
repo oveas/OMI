@@ -2,7 +2,7 @@ $!
 $! Simple tool to help building the OMI version.
 $! Oscar van Eijk, October 4, 2018
 $!
-$! Note: The symbols or foreign commands ZIP and VMS_SHARE must exist!
+$! Note: The symbol or foreign command ZIP must exist!
 $!
 $	omiSource = F$Search("OMI-V*.DIR")
 $	if omiSource .eqs. ""
@@ -14,11 +14,9 @@ $	omiSource = F$Parse(omiSource,,,"NAME")
 $	omiVersion = omiSource - "OMI-"
 $	write sys$output "Start building distribution for OMI ''omiVersion'..."
 $!
-$	vms_share [.'omiSource']*.*;/exclude=omi$build_kit.com omi-'omiVersion' /part_size=1500
 $	zip "-V" OMI-'omiVersion'.ZIP [.'omiSource']*.* -x *build_kit.com
 $!
 $	create /directory [.omi_distro]
-$	rename /nolog omi-'omiVersion'.1-OF-1; [.omi_distro]omi-'omiVersion'.com
 $	rename /nolog omi-'omiVersion'.zip [.omi_distro]
 $	copy /nolog [.'omiSource']readme.txt [.omi_distro]
 $!	copy /nolog [.'omiSource']freeware_readme.txt [.omi_distro]

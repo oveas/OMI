@@ -20,9 +20,7 @@ $!*      user or systemwide (see documentation) to give users access to OMI.   *
 $!*                                                                            *
 $!*  FILES NEEDED:                                                             *
 $!*  =============                                                             *
-$!*     OMI-Vx_y.[ZIP|COM]    The OMI distribution kit, either as a ZIP file   *
-$!*                           or as a DCL script generated with Andy Harper's  *
-$!*                           VMS_SHARE.                                       *
+$!*     OMI-Vx_y.ZIP          The OMI distribution kit as a ZIP file           *
 $!*                                                                            *
 $!******************************************************************************
 $!
@@ -56,13 +54,12 @@ $ bye:
 $	exit 'exit_status'
 $!-----
 
-
 $!-----
-$! Find the distribution set. This must be a .ZIP or .COM file, named OMI-Vx_y,
+$! Find the distribution set. This must be a .ZIP, named OMI-Vx_y.ZIP,
 $! where x_y is the OMI version
 $!
 $ get_distribution_set:
-$	omi_set = f$search ("''i_am_here'omi-v*_*.*")
+$	omi_set = f$search ("''i_am_here'omi-v*_*.zip")
 $	if omi_set .eqs. ""
 $	   then
 $		write sys$error "%OMI-W-NOSET, distribution set not found"
@@ -70,30 +67,14 @@ $		read /end=bye /prompt="_Location [''i_am_here']: " sys$command _here
 $		if _here .nes. "" then $ i_am_here = _here
 $		goto get_distribution_set
 $	endif
-$	set_type = f$parse(omi_set,,,"type")
-$	if set_type .eqs. ".DIR" then $ goto get_distribution_set
-$	if set_type .eqs. ".ZIP"
-$	then
-$		on warning then $ goto nozip
-$		set message /nofacility /noseverity /noidentification /notext
-$		assign /user nla0: sys$output
-$		unzip
-$		set message 'omi$_message'
-$		on warning then $ continue
-$		write sys$error "%OMI-I-INS_ZIP, installing the ZIP distribution"
-$		omi_unpack = "unzip ""-X"" "
-$	   else
-$		if set_type .eqs. ".COM"
-$		   then
-$			write sys$error "%OMI-I-INS_SHARE, installing the SHARE distribution"
-$			omi_unpack = "@"
-$ 		   else
-$			write sys$error "%OMI-E-UNKNOWN_SET, distribution type unknown"
-$			write sys$error "  \''f$parse(omi_set,,,"name")'''set_type'\"
-$			exit_status = %x2a
-$			goto bye
-$ 		endif
-$	endif
+$	on warning then $ goto nozip
+$	set message /nofacility /noseverity /noidentification /notext
+$	assign /user nla0: sys$output
+$	unzip
+$	set message 'omi$_message'
+$	on warning then $ continue
+$	write sys$error "%OMI-I-INS_ZIP, installing the ZIP distribution"
+$	omi_unpack = "unzip ""-X"" "
 $	return
 $!-----
 
