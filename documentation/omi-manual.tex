@@ -4692,101 +4692,105 @@ This example is included in the distribution as \textsl{OMI{\$}EXAMPLE.MNU}.
   owner = system
   title = OMI Example Menu
   name  = Main                                  ! Menu name for shortcut
-  item1 = Print the menu file#command#silent_dcl print -
-	  /queue=~?{Printer queue:} /notify omi$:omi$example.mnu
+  item  = Print the menu file#command#silent_dcl print -
+          /queue=~?{Printer queue:} /notify omi$:omi$example.mnu
                                                 ! Print this menu file to read
                                                 ! on paper what's happening.
-  item2 = Exit#command#exit                     ! Command item, EXIT the menu
-  item3 = Protected Menu#submenu#pwdtest	! Submenu item, calls PWDTEST
-  item4 = Get some inputs#submenu#inptest	! Submenu item, calls INPTEST
-  item5 = Counter menu#submenu#cnttest		! Submenu item, calls CNTTEST
+  item  = Exit#command#exit                     ! Command item, EXIT the menu
+  item  = Protected Menu#submenu#pwdtest        ! Submenu item, calls PWDTEST
+  item  = Get some inputs#submenu#inptest       ! Submenu item, calls INPTEST
+  item  = Counter menu#submenu#cnttest          ! Submenu item, calls CNTTEST
 
 [MENU_PWDTEST]
-   password = �ˏ��ʍˌ������
-!  password_level = 2                           ! If not outcommented, nobody
+  password = <90>Ë<8f>¼<8e>Ê<8d>Ë<8c><88><8b><89><8a><8a>Õ
+! password_level = 2                            ! If not outcommented, nobody
                                                 ! can change the password.
   name  = Protected                             ! Menu name for shortcut
   comment = This menu is password protected     ! Put a comment line on screen
   security = grant_me_write                     ! Define authorisation
   title = Dummy Menu                            ! Give this one another title
-  item1 = Main Menu#command#back		! Command item, one level BACK
+  item = Main Menu#command#back                 ! Command item, one level BACK
 
 
 [MENU_INPTEST]
-  name  = Input                                 ! Menu name for shortcut
-  item1 = Main Menu#command#back		! Command item, one level BACK
-  item2 = Formatted inputs#submenu#frmtest	! Submenu item, calls FRMTEST
-  item3 = Display the inputs#call#omi$:omi$example
-						! Call a test procedure to
+  name = Input                                  ! Menu name for shortcut
+  on_exit = omi$example onexit                  ! Execute this module when
+                                                ! leaving this submenu
+  item = Main Menu#command#back                 ! Command item, one level BACK
+  item = Formatted inputs#submenu#frmtest       ! Submenu item, calls FRMTEST
+  item = Display the inputs#call#omi$example display
+                                                ! Call a test procedure to
                                                 ! display the inputs.
-  input1 = Select a weekday#{SEL|weekdays}inp_weekday#value1
-						! Select from a predefined
+  item = Reset inputs#command#reset variables   ! Reset everythinh to default
+  input = Select a weekday#{SEL|weekdays}inp_weekday#value1
+                                                ! Select from a predefined
                                                 ! list. Default is "Monday"
-  input2 = Select some months#{TAG|months}inp_months
+  input = Select some months#{TAG|months}inp_months
                                                 ! Select one ore more months.
-  input3 = Enter free input#{HIDDEN}inp_free    ! Free input, not shown on screen
+  input = Enter free input#{HIDDEN}inp_free     ! Free input, not shown on screen
 
 [MENU_FRMTEST]
   name  = Format                                ! Menu name for shortcut
-  item1 = Main Menu#command#main		! Command item, back to MAIN
-  item2 = Previous Menu#command#back		! Command item, one level BACK
-  input1 = Enter a date#inp_date#today#date_frm ! Input item, should be a date
-						! Default is "TODAY"
-  input2 = Enter a valid filename#inp_file##fname_frm
-					      ! Input item, should be a filename
-  input3 = Enter an int between 0 and 100#inp_int##int_frm
-					      ! Input item, should be an integer
+  item = Main Menu#command#main                 ! Command item, back to MAIN
+  item = Previous Menu#command#back             ! Command item, one level BACK
+  const = #const_session_start#call:omi$example set_const_value
+                                                ! Constant initiated at startup
+  input = Enter a date#inp_date#today#date_frm  ! Input item, should be a date
+                                                ! Default is "TODAY"
+  input = Enter a valid filename#inp_file##fname_frm
+                                                ! Input item, should be a filename
+  input = Enter an int between 0 and 100#inp_int##int_frm
+                                                ! Input item, should be an integer
 
 [MENU_CNTTEST]
-  counter = just_a_counter   		      ! Define a counter for this menu
+  counter = just_a_counter                      ! Define a counter for this menu
   comment = The counter is now {counter$just_a_counter}
-  name  = Counter1                            ! Menu name for shortcut
-  item1 = Main Menu#command#back	      ! Command item, one level BACK
-  item2 = More counters#submenu#cnttest2      ! Submenu item, calls CNTTEST2
+  name  = Counter1                              ! Menu name for shortcut
+  item = Main Menu#command#back                 ! Command item, one level BACK
+  item = More counters#submenu#cnttest2         ! Submenu item, calls CNTTEST2
 
 [MENU_CNTTEST2]
-  counter = another_counter	      	      ! Define a counter for this menu
+  counter = another_counter                     ! Define a counter for this menu
   comment = The counter is now {counter$another_counter}
-  name  = Counter2                            ! Menu name for shortcut
-  item1 = Main Menu#command#main	      ! Command item, back to MAIN
-  item2 = Previous Menu#command#back	      ! Command item, one level BACK
-  item3 = Reset the counter#command#reset counter
-                                              ! Command item, RESET counter
-  item4 = Increase the counter#command#increase refresh
-                                              ! Command item, INCREASE counter
-                                              ! followed by a screen refresh
-                                              ! to update the comment line
-  item5 = Display the arrays#command#dcl show symbol inp_array*
-                                              ! Command item, call to DCL
-                                              ! to display the inputs
-  input1 = Enter anything#inp_arraya'counter$another_counter
-  input2 = Select a day#{SEL|weekdays}inp_arrayb'counter$another_counter
-
+  name  = Counter2                              ! Menu name for shortcut
+  item = Main Menu#command#main                 ! Command item, back to MAIN
+  item = Previous Menu#command#back             ! Command item, one level BACK
+  item = Reset the counter#command#reset counter
+                                                ! Command item, RESET counter
+  item = Increase the counter#command#increase refresh
+                                                ! Command item, INCREASE counter
+                                                ! followed by a screen refresh
+                                                ! to update the comment line
+  item = Display the arrays#command#dcl show symbol inp_array*
+                                                ! Command item, call to DCL
+                                                ! to display the inputs
+  input = Enter anything#inp_arraya'counter$another_counter
+  input = Select a day#{SEL|weekdays}inp_arrayb'counter$another_counter
 
 [DATE_FRM]
-  type = date                                 ! Input should be a valid date
-  format = absolute                           ! Will be convert. to absolute
+  type = date                                   ! Input should be a valid date
+  format = absolute                             ! Will be convert. to absolute
 
 [FNAME_FRM]
-  type = filespec                             ! Input should be of FILESPEC type
-  wildcards = true                            ! Wildcards are allowed
-  required = false                            ! The file does not have to exist
+  type = filespec                               ! Input should be of FILESPEC type
+  wildcards = true                              ! Wildcards are allowed
+  required = false                              ! The file does not have to exist
 
 ! The arguments below are from version 1.0b2, the FILESPEC type was implemented
 ! later, but with the arguments below, used in the STRING type, almost
 ! the same result can be reached.
 ! The arguments are outcommented in stead of remove, so they can remain here
 ! as an extra example.
-! 
-!  upcase   = true                            ! String will be conver. to upcase
-!  collapse = false                           ! All blanks will be removed
-!  ivchars = @#$%^&*()'?/|\+`~{}[]<>          ! These characters are not allowed
+!
+!  upcase   = true                              ! String will be conver. to upcase
+!  collapse = false                             ! All blanks will be removed
+!  ivchars   = @#$%^&*()'?/|\+`~{}[]<>          ! These characters are not allowed
 
 
 [INT_FRM]
-  type = integer                              ! Input should be an integer
-  min = 0                                     ! Input value should be between
-  max = 100                                   !  '0' and '100'
+  type = integer                                ! Input should be an integer
+  min = 0                                       ! Input value should be between
+  max = 100                                     !  '0' and '100'
 
 
 [WEEKDAYS]
@@ -4804,7 +4808,7 @@ This example is included in the distribution as \textsl{OMI{\$}EXAMPLE.MNU}.
 
 [MONTHS]
 !
-! Define the months that can be tagged using the TAG input in the 
+! Define the months that can be tagged using the TAG input in the
 ! INPTEST menu (input2).
 !
   delimiter = /
@@ -4832,7 +4836,7 @@ This example is included in the distribution as \textsl{OMI{\$}EXAMPLE.MNU}.
 ! to enable me to set a password on the PWDTEST menu, without the need
 ! to log in as SYSTEM (the owner of the menu)
 !
-  OSCAR     = write
+  oscar     = write
   all_users = read, exec
 
 <EOF>
@@ -4848,14 +4852,26 @@ This example is included in the distribution as \textsl{OMI{\$}EXAMPLE.OMI}.
 
 \begin{verbatim}
 $!	set message 'omi$_message'	! Uncomment this for debugging
-$	omi$record1 = "The weekday you have selected was:
-$	omi$record2 = "  ''inp_weekday'"
-$	omi$record3 = "The month(s) you have tagged were:
+$!
+$!	Normally you'ld so some checking on the parameter...
+$	if p2 .eqs. "SET_CONST_VALUE"
+$	   then $ omi$default_value == f$cvtime(,"absolute", "time")
+$	   else $ gosub 'p1' ! Call the requested subroutine.
+$	endif
+$	exit $status
+
+$ display:
+$!
+$!	Setup the output records to show the inputs that were entered
+$	omi$record1 = "This session started at ''const_session_start'"
+$	omi$record2 = "The weekday you have selected was:"
+$	omi$record3 = "  ''inp_weekday'"
+$	omi$record4 = "The month(s) you have tagged were:"
 $	_counter = 0
 $	omi$check inp_months "" empty_allowed
 $	if $status .ge. omi$_warning
 $	   then 	! Month input was not yet selected
-$		omi$record4 = "  <None>"
+$		omi$record5 = "  <None>"
 $		goto month$end_loop
 $	endif
 $!
@@ -4864,7 +4880,7 @@ $!
 $	_month = f$element(_counter, months$delimiter, inp_months)
 $	if _month .eqs. "" .or. _month .eqs. months$delimiter then -
 	   $ goto month$end_loop
-$	_record = '_counter + 4
+$	_record = '_counter + 5
 $	omi$record'_record = "  ''_month'"
 $	_counter = _counter + 1
 $	goto month$_loop
@@ -4873,9 +4889,16 @@ $ month$end_loop:
 $!
 $	_counter = _counter + 4
 $	omi$record'_counter = "Your free input was: ''inp_free'"
+$!
+$!	We got all output records, now display them
 $	omi$display_info
+$!
+$!	Check if the user wants to see some more
 $	omi$confirm "More ? " 'questions$answer_yes
-$	if .not. omi$confirmed then $ goto end
+$	if .not. omi$confirmed then $ goto end_display
+$!
+$!	He/she does... considering the fact we got this far.
+$!	Fill some more records...
 $	omi$record1 = " The date you entered was     : ''inp_date'"
 $	omi$record2 = " The filename you entered was : ''inp_file'"
 $	omi$reverse "''inp_file'" "''inp_date'"
@@ -4883,17 +4906,35 @@ $	omi$record3 = " Reversing this results in    : ''omi$reversed'"
 $	omi$record4 = " The integer you entered was  : ''inp_int'"
 $	omi$record5 = " You called the Counter menu ''counter$another_counter' times"
 $!
-$! Make sure the list with months won't be redisplayed, starting with rec. 5
+$!	Make sure the list with months won't be redisplayed, starting with rec. 5
 $	if f$type(omi$record6) .nes. "" then -
 	   deletee/symbol/local omi$record5
 $!
+$!	... and display them
 $	omi$display_info
 $	omi$wait
 $	omi$refresh
 $!
-$ end:
+$ end_display:
 $!
-$	exit
+$	return omi$_ok
+
+$ onexit:
+$!
+$!	This routine is called when the user leaves the Inputs submenu
+$!	Here we check if all inputs that have been enteres were reset.
+$!	If not, we display a popup and confirm is the user wants to leave.
+$	if inp_weekday .eqs. weekdays$value1 - ! The default value
+	   .and. f$type(inp_months) .eqs. "" - ! Not set by default
+	   .and. f$type(inp_free) .eqs. ""   - ! Not set by default
+	   then $ return omi$_ok               ! Ok, everyhting was reset
+$!
+$	omi$popup "Please note the given input variables have not been reset" confirm
+$!
+$!	If "N" is answered we get an omi$_warning status, otherwise omi$_ok.
+$!	Just return the status; OMI will handle this and won't leave the menu
+$!	if the status is not omi$_ok.
+$	return $status
 \end{verbatim}
 
 \chapter{History}

@@ -12,7 +12,7 @@
   item  = Counter menu#submenu#cnttest          ! Submenu item, calls CNTTEST
 
 [MENU_PWDTEST]
-  password = ï¿½Ëï¿½ï¿½ÊËŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  password = Ë¼ÊËŒˆ‹‰ŠŠÕ
 ! password_level = 2                            ! If not outcommented, nobody
                                                 ! can change the password.
   name  = Protected                             ! Menu name for shortcut
@@ -43,6 +43,8 @@
   name  = Format                                ! Menu name for shortcut
   item = Main Menu#command#main                 ! Command item, back to MAIN
   item = Previous Menu#command#back             ! Command item, one level BACK
+  const = #const_session_start#call:omi$example set_const_value
+                                                ! Constant initiated at startup
   input = Enter a date#inp_date#today#date_frm  ! Input item, should be a date
                                                 ! Default is "TODAY"
   input = Enter a valid filename#inp_file##fname_frm
@@ -89,7 +91,7 @@
 ! the same result can be reached.
 ! The arguments are outcommented in stead of remove, so they can remain here
 ! as an extra example.
-! 
+!
 !  upcase   = true                              ! String will be conver. to upcase
 !  collapse = false                             ! All blanks will be removed
 !  ivchars   = @#$%^&*()'?/|\+`~{}[]<>          ! These characters are not allowed
@@ -116,7 +118,7 @@
 
 [MONTHS]
 !
-! Define the months that can be tagged using the TAG input in the 
+! Define the months that can be tagged using the TAG input in the
 ! INPTEST menu (input2).
 !
   delimiter = /

@@ -1815,7 +1815,7 @@ $!
 $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=setcommand$_cancelled sys$command _encr_sect -
-		   /prompt="''screen$prompt_position'_From section: " 
+		   /prompt="''screen$prompt_position'_From section: "
 $		omi$cmdline_clear
 $	   else $ _encr_sect = omi$_p1
 $	endif
@@ -1875,7 +1875,7 @@ $!
 $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=export_command$_cancelled sys$command omi$_p2 -
-			   /prompt="''screen$prompt_position'_Key name: " 
+			   /prompt="''screen$prompt_position'_Key name: "
 $			omi$cmdline_clear
 $			goto export_cmd$export_key
 $		endif
@@ -1940,7 +1940,7 @@ $!
 $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=import_command$_cancelled sys$command omi$_p2 -
-			   /prompt="''screen$prompt_position'_Key name: " 
+			   /prompt="''screen$prompt_position'_Key name: "
 $			omi$cmdline_clear
 $			goto import_cmd$import_key
 $		endif
@@ -2596,7 +2596,7 @@ $			return omi$_warning
 $		endif
 $		if omi$_p2 .eqs. ""
 $		   then $ read /end_of_file=setcommand$_cancelled sys$command _new_name -
-			   /prompt="''screen$prompt_position'_New name : " 
+			   /prompt="''screen$prompt_position'_New name : "
 $		   else $ _new_name = omi$_p2
 $		endif
 $		omi$cmdline_clear
@@ -4067,6 +4067,7 @@ $			return omi$_ok
 $		endif
 $	endif
 $	assign sys$scratch:omi$setup_defaults._tmp1$ sys$output
+$	assign /user nla0: sys$output
 $	show symbol /global *$'symbol_name'*
 $	deassign sys$output
 $	search sys$scratch:omi$setup_defaults._tmp1$ 'init_def$search_string -

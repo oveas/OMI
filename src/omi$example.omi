@@ -1,22 +1,24 @@
 $!	set message 'omi$_message'	! Uncomment this for debugging
 $!
-$!	Call the requested subroutine. Normally you'ld so some checking
-$!	on the parameter...
-$!
-$	gosub 'p1'
+$!	Normally you'ld so some checking on the parameter...
+$	if p2 .eqs. "SET_CONST_VALUE"
+$	   then $ omi$default_value == f$cvtime(,"absolute", "time")
+$	   else $ gosub 'p1' ! Call the requested subroutine.
+$	endif
 $	exit $status
 
 $ display:
 $!
 $!	Setup the output records to show the inputs that were entered
-$	omi$record1 = "The weekday you have selected was:
-$	omi$record2 = "  ''inp_weekday'"
-$	omi$record3 = "The month(s) you have tagged were:
+$	omi$record1 = "This session started at ''const_session_start'"
+$	omi$record2 = "The weekday you have selected was:"
+$	omi$record3 = "  ''inp_weekday'"
+$	omi$record4 = "The month(s) you have tagged were:"
 $	_counter = 0
 $	omi$check inp_months "" empty_allowed
 $	if $status .ge. omi$_warning
 $	   then 	! Month input was not yet selected
-$		omi$record4 = "  <None>"
+$		omi$record5 = "  <None>"
 $		goto month$end_loop
 $	endif
 $!
@@ -25,7 +27,7 @@ $!
 $	_month = f$element(_counter, months$delimiter, inp_months)
 $	if _month .eqs. "" .or. _month .eqs. months$delimiter then -
 	   $ goto month$end_loop
-$	_record = '_counter + 4
+$	_record = '_counter + 5
 $	omi$record'_record = "  ''_month'"
 $	_counter = _counter + 1
 $	goto month$_loop
