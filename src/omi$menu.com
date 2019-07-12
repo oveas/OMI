@@ -784,7 +784,7 @@ $	omi$call '_val_module' '_blockname' '_params'
 $	_status = $status
 $	if _status .ne. omi$_ok
 $	   then
-$		omi$signal omi valmoderr,_status,'_val_module'
+$		omi$signal omi valmoderr,'_val_module',_status
 $		return $status
 $	endif
 $!
@@ -4147,7 +4147,19 @@ $			endif
 $!
 $			if f$extract(0,4,_block) .nes. "TAG|" .and. _status .eq. omi$_ok
 $			   then
-$				'_varname' = '_block'$'f$element(2,"#",omi$value)'
+$!				When the actual value is given i.s.o. "VALUEn", this signals the warning:
+$!				%DCL-W-UNDSYM, undefined symbol - check validity and spelling
+$!				 \<blockname>$<actual_value>\
+$!				so we need to check if the value == "VALUE<int>"
+$!				NOTE: This will fail if the SELECT/TAGlist contains something
+$!				      like:
+$!				  VALUE1  = VALUE2
+$!				But then.... 
+$				value_pointer = f$edit(f$element(2,"#",omi$value),"upcase") = """
+$				vcount_pointer = f$extract(5,f$length(value_pointer)-5,value_pointer)
+$				if f$extract(0,5,value_pointer) .eqs. "VALUE" .and. -
+				    f$type(vcount_pointer) .eqs. "INTEGER" -
+				    then $ '_varname' = '_block'$'value_pointer'
 $			endif
 $		   else
 $			'_varname' = default_value
