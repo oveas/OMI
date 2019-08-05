@@ -670,6 +670,66 @@ $	if (f$extract(0,1,f$edit(screen$scrollregion_autodisable,"upcase")) -
 	   .and. screen$width_margin .ne. 0 then -
 	   $ screen$scroll_region == "disabled"
 $!
+$	screen$text_bold           == "''ESC$'[1m"
+$	screen$text_faded          == "''ESC$'[2m"
+$	screen$text_italic         == "''ESC$'[3m"
+$	screen$text_underline      == "''ESC$'[4m"
+$	screen$text_blink          == "''ESC$'[5m"
+$	screen$text_inverse        == "''ESC$'[7m"
+$	screen$text_hidden         == "''ESC$'[8m"
+$	screen$text_striketrhough  == "''ESC$'[9m"
+$!
+$	screen$reset_bold          == "''ESC$'[21m"
+$	screen$reset_faded         == "''ESC$'[22m"
+$	screen$reset_italic        == "''ESC$'[23m"
+$	screen$reset_underline     == "''ESC$'[24m"
+$	screen$reset_blink         == "''ESC$'[25m"
+$	screen$reset_inverse       == "''ESC$'[27m"
+$	screen$reset_hidden        == "''ESC$'[28m"
+$	screen$reset_striketrhough == "''ESC$'[29m"
+$!
+$	screen$reset_all           == "''ESC$'[0m"
+$!
+$	screen$fg_black            == "''ESC$'[38;5;0m"
+$	screen$fg_maroon           == "''ESC$'[38;5;1m"
+$	screen$fg_green            == "''ESC$'[38;5;2m"
+$	screen$fg_olive            == "''ESC$'[38;5;3m"
+$	screen$fg_navy             == "''ESC$'[38;5;4m"
+$	screen$fg_purple           == "''ESC$'[38;5;5m"
+$	screen$fg_teal             == "''ESC$'[38;5;6m"
+$	screen$fg_silver           == "''ESC$'[38;5;7m"
+$	screen$fg_grey             == "''ESC$'[38;5;8m"
+$	screen$fg_red              == "''ESC$'[38;5;9m"
+$	screen$fg_lime             == "''ESC$'[38;5;10m"
+$	screen$fg_yellow           == "''ESC$'[38;5;11m"
+$	screen$fg_blue             == "''ESC$'[38;5;12m"
+$	screen$fg_fuchsia          == "''ESC$'[38;5;13m"
+$	screen$fg_aqua             == "''ESC$'[38;5;14m"
+$	screen$fg_white            == "''ESC$'[38;5;15m"
+$!
+$	screen$bg_black            == "''ESC$'[48;5;0m"
+$	screen$bg_maroon           == "''ESC$'[48;5;1m"
+$	screen$bg_green            == "''ESC$'[48;5;2m"
+$	screen$bg_olive            == "''ESC$'[48;5;3m"
+$	screen$bg_navy             == "''ESC$'[48;5;4m"
+$	screen$bg_purple           == "''ESC$'[48;5;5m"
+$	screen$bg_teal             == "''ESC$'[48;5;6m"
+$	screen$bg_silver           == "''ESC$'[48;5;7m"
+$	screen$bg_grey             == "''ESC$'[48;5;8m"
+$	screen$bg_red              == "''ESC$'[48;5;9m"
+$	screen$bg_lime             == "''ESC$'[48;5;10m"
+$	screen$bg_yellow           == "''ESC$'[48;5;11m"
+$	screen$bg_blue             == "''ESC$'[48;5;12m"
+$	screen$bg_fuchsia          == "''ESC$'[48;5;13m"
+$	screen$bg_aqua             == "''ESC$'[48;5;14m"
+$	screen$bg_white            == "''ESC$'[48;5;15m"
+$!
+$	screen$fg_reset            == "''ESC$'[39m"
+$	screen$bg_reset            == "''ESC$'[49m"
+$!
+$	screen$line_mode           == "''ESC$'(0"
+$	screen$normal_mode         == "''ESC$'(B"
+$!
 $	return
 $!
 $!******************************************************************************
@@ -829,6 +889,66 @@ $	delete\/symbol/global screen$line_length
 $	delete\/symbol/global screen$msgline_length
 $	delete\/symbol/global screen$default_position
 $	delete\/symbol/global screen$prompt_position
+$!
+$	delete\/symbol/global screen$text_bold
+$	delete\/symbol/global screen$text_faded
+$	delete\/symbol/global screen$text_italic
+$	delete\/symbol/global screen$text_underline
+$	delete\/symbol/global screen$text_blink
+$	delete\/symbol/global screen$text_inverse
+$	delete\/symbol/global screen$text_hidden
+$	delete\/symbol/global screen$text_striketrhough
+$!
+$	delete\/symbol/global screen$reset_bold
+$	delete\/symbol/global screen$reset_faded
+$	delete\/symbol/global screen$reset_italic
+$	delete\/symbol/global screen$reset_underline
+$	delete\/symbol/global screen$reset_blink
+$	delete\/symbol/global screen$reset_inverse
+$	delete\/symbol/global screen$reset_hidden
+$	delete\/symbol/global screen$reset_striketrhough
+$!
+$	delete\/symbol/global screen$reset_all
+$!
+$	delete\/symbol/global screen$fg_black
+$	delete\/symbol/global screen$fg_maroon
+$	delete\/symbol/global screen$fg_green
+$	delete\/symbol/global screen$fg_olive
+$	delete\/symbol/global screen$fg_navy
+$	delete\/symbol/global screen$fg_purple
+$	delete\/symbol/global screen$fg_teal
+$	delete\/symbol/global screen$fg_silver
+$	delete\/symbol/global screen$fg_grey
+$	delete\/symbol/global screen$fg_red
+$	delete\/symbol/global screen$fg_lime
+$	delete\/symbol/global screen$fg_yellow
+$	delete\/symbol/global screen$fg_blue
+$	delete\/symbol/global screen$fg_fuchsia
+$	delete\/symbol/global screen$fg_aqua
+$	delete\/symbol/global screen$fg_white
+$!
+$	delete\/symbol/global screen$bg_black
+$	delete\/symbol/global screen$bg_maroon
+$	delete\/symbol/global screen$bg_green
+$	delete\/symbol/global screen$bg_olive
+$	delete\/symbol/global screen$bg_navy
+$	delete\/symbol/global screen$bg_purple
+$	delete\/symbol/global screen$bg_teal
+$	delete\/symbol/global screen$bg_silver
+$	delete\/symbol/global screen$bg_grey
+$	delete\/symbol/global screen$bg_red
+$	delete\/symbol/global screen$bg_lime
+$	delete\/symbol/global screen$bg_yellow
+$	delete\/symbol/global screen$bg_blue
+$	delete\/symbol/global screen$bg_fuchsia
+$	delete\/symbol/global screen$bg_aqua
+$	delete\/symbol/global screen$bg_white
+$!
+$	delete\/symbol/global screen$fg_reset
+$	delete\/symbol/global screen$bg_reset
+$!
+$	delete\/symbol/global screen$line_mode
+$	delete\/symbol/global screen$normal_mode
 $!
 $	if f$type(inputs$first_line) .nes. "" then -
 	   $ delete\/symbol/global inputs$first_line

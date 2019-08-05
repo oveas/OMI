@@ -107,7 +107,7 @@ $!
 $	ws f$fao("''ESC$'[''_t_loc';''_m_loc'H''ESC$'(0m!''_t_width'*qj''ESC$'(B")
 $	_refresh = 1
 $	_wait    = 1
-$	_conf    = 0
+$	_confirm = 0
 $	_cnt = 0
 $!
 $ popup$check_options:

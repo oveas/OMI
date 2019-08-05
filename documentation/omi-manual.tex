@@ -3662,6 +3662,72 @@ the user. This can be \textsl{SUBMENU}, \textsl{COMMAND} or \textsl{CALL}. \\
 \end{minipage}
 \end{table}
 
+\subsection{Symbols for font- and color selection}\label{subsection:fontcolors}\index{fonts}\index{colors}\index{background color|see{colors}}
+
+OMI provides several symbols that controls how text is displayed in the terminal. The symbols are based on the ANSI escape codes. \\
+The full list of symbols provided by OMI are givben in table \ref{tab:fontsymbols}.
+
+\vs
+
+All symbols symbols can be specified in any combination as the following example shows:\\
+\\
+\textsf{\scriptsize{{\$} OMI{\$}DISPLAY{\_}MESSAGE "''SCREEN{\$}BG{\_}RED'''SCREEN{\$}FG{\_}BLACK'This is an " + - \\ \hspace*{5mm}"''SCREEN{\$}TEXT{\_}BOLD'important''SCREEN{\$}RESET{\_}BOLD' message!''SCREEN{\$}RESET{\_}ALL'"}}
+
+\begin{table}[h!tb]
+\begin{minipage}[h!tb]{\textwidth}
+\begin{tabular}{lp{60mm}l} \hline
+\textbf{Symbol}   & \textbf{Description}  & \textbf{Reset symbol} \\ \hline
+\multicolumn{3}{l}{\textit{Font selection}\footnote{ Not all font variants are supported by all terminals and emulators}} \\ \hline
+\scriptsize{\textsl{SCREEN{\$}TEXT{\_}BOLD}         }   & Select a bold font variant (increased density) & \scriptsize{\textsl{SCREEN{\$}RESET{\_}BOLD}         } \\
+\scriptsize{\textsl{SCREEN{\$}TEXT{\_}FADED}        }   & Select a faded font variant (decreased density) & \scriptsize{\textsl{SCREEN{\$}RESET{\_}FADED}        } \\
+\scriptsize{\textsl{SCREEN{\$}TEXT{\_}ITALIC}       }   & Select an italic font variant & \scriptsize{\textsl{SCREEN{\$}RESET{\_}ITALIC}       } \\
+\scriptsize{\textsl{SCREEN{\$}TEXT{\_}UNDERLINE}    }   & Select an undelined font variant & \scriptsize{\textsl{SCREEN{\$}RESET{\_}UNDERLINE}    } \\
+\scriptsize{\textsl{SCREEN{\$}TEXT{\_}BLINK}        }   & Select a font variant & \scriptsize{\textsl{SCREEN{\$}RESET{\_}BLINK}        } \\
+\scriptsize{\textsl{SCREEN{\$}TEXT{\_}INVERSE}      }   & Inverse foreground- and background color & \scriptsize{\textsl{SCREEN{\$}RESET{\_}INVERSE}      } \\
+\scriptsize{\textsl{SCREEN{\$}TEXT{\_}HIDDEN}       }   & Hide the foreground & \scriptsize{\textsl{SCREEN{\$}RESET{\_}HIDDEN}       } \\
+\scriptsize{\textsl{SCREEN{\$}TEXT{\_}STRIKETRHOUGH}}   & Select a struck-out font variant & \scriptsize{\textsl{SCREEN{\$}RESET{\_}STRIKETRHOUGH}} \\
+\hline\multicolumn{3}{l}{\textit{Foreground color selection}} \\ \hline
+\scriptsize{\textsl{SCREEN{\$}FG{\_}BLACK}  }           & Set the foreground color to black   & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}MAROON} }           & Set the foreground color to maroon  & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}GREEN}  }           & Set the foreground color to green   & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}OLIVE}  }           & Set the foreground color to olive   & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}NAVY}   }           & Set the foreground color to navy    & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}PURPLE} }           & Set the foreground color to purple  & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}TEAL}   }           & Set the foreground color to teal    & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}SILVER} }           & Set the foreground color to silver  & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}GREY}   }           & Set the foreground color to grey    & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}RED}    }           & Set the foreground color to red	  & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}LIME}   }           & Set the foreground color to lime    & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}YELLOW} }           & Set the foreground color to yellow  & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}BLUE}   }           & Set the foreground color to blue    & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}FUCHSIA}}           & Set the foreground color to fuchsia & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}AQUA}   }           & Set the foreground color to aqua    & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}FG{\_}WHITE}  }           & Set the foreground color to white   & \scriptsize{\textsl{SCREEN{\$}FG{\_}RESET}} \\
+\hline\multicolumn{3}{l}{\textit{Background color selection}} \\ \hline
+\scriptsize{\textsl{SCREEN{\$}BG{\_}BLACK}  }           & Set the background color to black   & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}MAROON} }           & Set the background color to maroon  & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}GREEN}  }           & Set the background color to green   & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}OLIVE}  }           & Set the background color to olive   & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}NAVY}   }           & Set the background color to navy    & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}PURPLE} }           & Set the background color to purple  & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}TEAL}   }           & Set the background color to teal    & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}SILVER} }           & Set the background color to silver  & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}GREY}   }           & Set the background color to grey    & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}RED}    }           & Set the background color to red	  & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}LIME}   }           & Set the background color to lime    & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}YELLOW} }           & Set the background color to yellow  & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}BLUE}   }           & Set the background color to blue    & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}FUCHSIA}}           & Set the background color to fuchsia & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}AQUA}   }           & Set the background color to aqua    & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\scriptsize{\textsl{SCREEN{\$}BG{\_}WHITE}  }           & Set the background color to white   & \scriptsize{\textsl{SCREEN{\$}BG{\_}RESET}} \\
+\hline\multicolumn{3}{l}{\textit{Other symbols}} \\ \hline
+\scriptsize{\textsl{SCREEN{\$}LINE{\_}MODE}}            & Switch to linemode where some characters represent symbols from the extended ascii table & \scriptsize{\textsl{SCREEN{\$}NORMAL{\_}MODE}} \\
+\scriptsize{\textsl{SCREEN{\$}RESET{\_}ALL}}            & Reset all foreground and background attributes---except linemode---to the terminal default & \textit{n/a} \\
+\end{tabular}
+\caption{Symbol for font- and color selection}\index{OMI symbols!fonts and colors}\label{tab:fontsymbols}
+\end{minipage}
+\end{table}
+
 
 \subsection{Global symbols set by OMI commands}
 \index{OMI commands in modules!return values}
@@ -4937,6 +5003,12 @@ $	return $status
 
 \chapter{History}
 \index{history}
+
+\section*{Version x.x, Released: xx-xx-xxxx}
+
+\begin{itemize}
+\item Introduced symbols for font- and color section (section \ref{subsection:fontcolors}).
+\end{itemize}
 
 
 \section*{Version 2.6, Released: 16-05-2019}
