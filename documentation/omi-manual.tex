@@ -4999,7 +4999,7 @@ $	if inp_weekday .eqs. weekdays$value1 - ! The default value
 	   .and. f$type(inp_free) .eqs. ""   - ! Not set by default
 	   then $ return omi$_ok               ! Ok, everyhting was reset
 $!
-$	omi$popup "Please note the given input variables have not been reset" confirm
+$	omi$popup "Please note the given input variables have not been reset" confirm,colorscheme=alert
 $!
 $!	If "N" is answered we get an omi$_warning status, otherwise omi$_ok.
 $!	Just return the status; OMI will handle this and won't leave the menu
