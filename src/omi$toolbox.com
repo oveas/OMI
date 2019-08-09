@@ -61,7 +61,52 @@ $	_maxlen = screen$menu_width / 2
 $	_widest = 0
 $	_lc = 1
 $	_ec = 0
+$	_refresh = 1
+$	_wait    = 1
+$	_confirm = 0
+$	_cnt = 0
+$	_setcolor = ""
+$	_resetcolor = ""
 $!
+$ popup$check_options:
+$!
+$	_opt = f$element(_cnt, ",", p3)
+$	if _opt .eqs. "," .or. _opt .eqs. "" then $ goto popup$checked_options
+$	if f$extract(0,5,_opt) .eqs. "NOREF" then $ _refresh = 0
+$	if f$extract(0,5,_opt) .eqs. "NOWAI" then $ _wait    = 0
+$	if f$extract(0,5,_opt) .eqs. "CONFI"
+$	   then
+$		_confirm = 1
+$		_wait    = 0
+$	endif
+$	if f$extract(0,5,f$element(0,"=",_opt)) .eqs. "COLOR"
+$	   then
+$		_scheme = f$extract(0,5,f$element(1,"=",_opt))
+$		if _scheme .eqs. ""
+$		   then
+$			omi$signal omi noscheme
+$			return $status
+$		endif
+$!
+$		if _scheme .eqs. "ALERT" then -
+		   $ _setcolor = screen$text_inverse
+$		if _scheme .eqs. "WARNI" then -
+		   $ _setcolor = screen$bg_yellow + screen$fg_black
+$		if _scheme .eqs. "ERROR" then -
+		   $ _setcolor = screen$bg_red + screen$fg_white + screen$text_bold
+$!
+$		if _setcolor .eqs. ""
+$		   then
+$			omi$signal omi ivscheme,"''_scheme'"
+$			return $status
+$		endif
+$	endif
+$	_cnt = _cnt + 1
+$	goto popup$check_options
+$!
+$ popup$checked_options:
+$!
+$	if _setcolor .nes. "" then $ _resetcolor = screen$reset_all
 $	_msg_string'_lc' = f$element(_ec, " ", p2)
 $!
 $ popup$_nextword:
@@ -91,40 +136,20 @@ $	_lc = 1
 $	_t_loc = screen$line_header + -
 	   ((screen$line_command - screen$line_header - _ln_count) / 2)
 $	_m_loc = screen$default_position + (screen$menu_width / 4)
-$	ws f$fao("''BELL$'''BELL$'''ESC$'[''_t_loc';''_m_loc'H''ESC$'(0l!''_t_width'*qk''ESC$'(B")
+$	ws f$fao("''BELL$'''BELL$'''_setcolor'''ESC$'[''_t_loc';''_m_loc'H''ESC$'(0l!''_t_width'*qk''ESC$'(B''_resetcolor'")
 $!
 $ popup$_write:
 $!
 $	_t_loc = _t_loc + 1
 $	if _lc .gt. _ln_count then $ goto popup$end_write
 $	_blank_fill = _t_width - f$length(_msg_string'_lc') - 2
-$	ws f$fao("''ESC$'[''_t_loc';''_m_loc'H''ESC$'(0x''ESC$'(B !AS!''_blank_fill'*  ''ESC$'(0x''ESC$'(B", _msg_string'_lc')
+$	ws f$fao("''_setcolor'''ESC$'[''_t_loc';''_m_loc'H''ESC$'(0x''ESC$'(B !AS!''_blank_fill'*  ''ESC$'(0x''ESC$'(B''_resetcolor'", _msg_string'_lc')
 $	_lc = _lc + 1
 $	goto popup$_write
 $!
 $ popup$end_write:
 $!
-$	ws f$fao("''ESC$'[''_t_loc';''_m_loc'H''ESC$'(0m!''_t_width'*qj''ESC$'(B")
-$	_refresh = 1
-$	_wait    = 1
-$	_confirm = 0
-$	_cnt = 0
-$!
-$ popup$check_options:
-$!
-$	_opt = f$element(_cnt, ",", p3)
-$	if _opt .eqs. "," .or. _opt .eqs. "" then $ goto popup$checked_options
-$	if f$extract(0,5,_opt) .eqs. "NOREF" then $ _refresh = 0
-$	if f$extract(0,5,_opt) .eqs. "NOWAI" then $ _wait    = 0
-$	if f$extract(0,5,_opt) .eqs. "CONFI"
-$	   then
-$		_confirm = 1
-$		_wait    = 0
-$	endif
-$	_cnt = _cnt + 1
-$	goto popup$check_options
-$!
-$ popup$checked_options:
+$	ws f$fao("''_setcolor'''ESC$'[''_t_loc';''_m_loc'H''ESC$'(0m!''_t_width'*qj''ESC$'(B''_resetcolor'")
 $!
 $	if _confirm
 $	   then

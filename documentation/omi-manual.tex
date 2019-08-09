@@ -3446,6 +3446,12 @@ when the popup has a \textit{please wait...} function.
 If \textsl{YES} is answered, \textsl{OMI{\$}POPUP} returns status \textsl{OMI{\$}{\_}OK}, otherwise \textsl{OMI{\$}{\_}WARNING}. This can be used to prevent leaving a submenu with an \textsl{ON{\_}EXIT} module.\\
 The \textsl{CONFIRM} option implies \textsl{NOWAIT}.
 
+\item \textsl{COLORSCHEME=\textit{\lt scheme\gt }} Select one of the following predefined colorschemes:\\
+{\begin{description}
+\item[\textsl{ALERT}] The popup will be displayed with inversed colors.
+\item[\textsl{WARNING}] The popup will be displayed with black text on a yellow background.
+\item[\textsl{ERROR}] The popup will be displayed with white text on a red background.
+\end{description}}
 \end{itemize}
 
 Multiple options can be specified comma-seperated, but make sure there are \textit{no}
@@ -5008,6 +5014,7 @@ $	return $status
 
 \begin{itemize}
 \item Introduced symbols for font- and color section (section \ref{subsection:fontcolors}).
+\item Added  the \textsl{COLORSCHEME} option to \textsl{OMI{\$}POPUP}
 \end{itemize}
 
 
