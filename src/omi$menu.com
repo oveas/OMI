@@ -2079,7 +2079,13 @@ $	   then
 $		omi$signal omi nohlpfil
 $		return $status
 $	endif
-$	search '_hlp_file "[''omi$current_menu']" /output=nla0:
+$	_info_key = f$edit(omi$current_menu,"upcase")
+$	if _info_key .eqs. "OTF_MENU"
+$	   then
+$		if f$type(otf_menu$info_key) .nes. "" then -
+		   $ _info_key = f$edit(otf_menu$info_key, "upcase")
+$	endif
+$	search '_hlp_file "[''_info_key']" /output=nla0:
 $	if $status .eq. omi$_nomatch
 $	   then
 $		omi$signal omi nohlp,'omi$current_menu
@@ -2092,8 +2098,8 @@ $ info$_find:
 $!
 $	read /end_of_file=info$_notfound omi$hlp _mnu_info
 $	if _mnu_info .eqs. "<EOF>" then $ goto info$_notfound
-$	if f$edit(_mnu_info, "collapse,upcase") .nes. -
-	   "[''f$edit(omi$current_menu,"upcase")']" then -
+$	if f$edit(_mnu_info, "uncomment,collapse,upcase") .nes. -
+	   "[''_info_key']" then -
 	   $ goto info$_find
 $	available_lines = screen$line_command - screen$line_header - -
 	   screen$window_topmargin - 2
@@ -2104,7 +2110,7 @@ $!
 $	read /end_of_file=info$end_read omi$hlp omi$record'rec_counter'
 $	if omi$record'rec_counter' .eqs. "" then -
 	   $ omi$record'rec_counter' = " " ! Workaround for a known bug
-$	if f$extract(0,1,omi$record'rec_counter') .eqs. "[" then -
+$	if f$extract(0,1,f$edit(omi$record'rec_counter',"trim")) .eqs. "[" then -
 	   $ goto info$end_read
 $	if omi$record'rec_counter' .eqs. "<EOF>" then $ goto info$end_read
 $	if omi$record'rec_counter' .eqs. "<FF>" then $ goto info$_display
@@ -4037,7 +4043,7 @@ $! is available in Otf- menus
 $!
 $	omi$valid_commands = -
 	   "#ADD,0#ALL,1#BACK,1#CALC,1#CLS,1#DCL,1#DELETE,1#EDIT,1#ENCRYPT,0#" + -
-	   "EXIT,0#EXPORT,1#HELP,1#IMPORT,1#INCREASE,1#INFO,0#JUMP,0#" + -
+	   "EXIT,0#EXPORT,1#HELP,1#IMPORT,1#INCREASE,1#INFO,1#JUMP,0#" + -
 	   "MAIN,0#MANAGE,0#MENU,0#MODIFY,0#QUIT,0#REFRESH,1#RENAME,0#" + -
 	   "REMOVE,0#RESET,1#SET,1#SILENT_DCL,1#SHOW,1#SPAWN,1#SUBMIT,1#"
 $!
@@ -4155,7 +4161,7 @@ $!				NOTE: This will fail if the SELECT/TAGlist contains something
 $!				      like:
 $!				  VALUE1  = VALUE2
 $!				But then.... 
-$				value_pointer = f$edit(f$element(2,"#",omi$value),"upcase") = """
+$				value_pointer = f$edit(f$element(2,"#",omi$value),"upcase") - """
 $				vcount_pointer = f$extract(5,f$length(value_pointer)-5,value_pointer)
 $				if f$extract(0,5,value_pointer) .eqs. "VALUE" .and. -
 				    f$type(vcount_pointer) .eqs. "INTEGER" -

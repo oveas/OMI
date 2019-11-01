@@ -2933,6 +2933,12 @@ at the line where it occured.
 
 \vs
 
+If a menu contains an on-the-fly menu (see chapter \ref{sec:mylabel2}), it can be documented in the section \texttt{[OTF{\_}MENU]}.\index{on-the-fly menus!in helpfiles}
+
+If a menu contains more on-the-menus that have to be documented in different sections, the key in the help file can be specified when defining the on-the-fly menu with the symbol \textsl{OTF{\_}MENU{\$}INFO{\_}KEY} (see also section \ref{subsec:otfhelp}).
+
+\vs
+
 Helpfiles are read with the \texttt{INFO}\index{OMI commands!INFO} command. For
 more information on this command, refer to section~\ref{subsec:cmdinfo}.
 
@@ -3934,6 +3940,22 @@ on-the-fly menus, except those listed in table \ref{tab:elmotf}.
 \end{minipage}
 \end{table}
 
+\subsection{OTF menus in help files}
+\label{subsec:otfhelp}\index{on-the-fly menus!in helpfiles}
+
+The name of an on-the-fly menu by default is \textsl{OTF{\_}MENU}, which can be used to describe the menu in the helpfile (see also section \ref{sec:mnhelp}).
+
+The symbol \textsl{OTF{\_}MENU{\$}INFO{\_}KEY} can be used to let the \textsl{INFO} command read a named section, e.g.: \\
+\begin{small}
+\begin{textsf}
+\indent{\$} OTF{\_}MENU{\$}INFO{\_}KEY == OTFMNU{\_}1 \\
+\indent{\$} OTF{\_}MENU{\$}ITEM1 == "Exit without changes{\#}COMMAND{\#}BACK NOEXIT{\_}MODULE" \\
+\indent{\$} OTF{\_}MENU{\$}ITEM2 == "Write changes and exit{\#}COMMAND{\#}BACK" \\
+\end{textsf}
+\end{small}
+
+In this example, the help file should contain a section \textsl{[OTFMNU{\_}1]}.
+
 \subsection{OMI Commands}
 \label{subsubsec:mylabel66}
 
@@ -4369,7 +4391,7 @@ should be updated.
 \index{OMI commands!INFO}
 \label{subsec:cmdinfo}
 
-\indent Format: \textbf{INFO}\dag\\*[3mm]
+\indent Format: \textbf{INFO}\\*[3mm]
 If the current menu has an info section in the menu specific help
 file\footnote{ \textsl{OMI\$MENU\_DIRECTORY:\textit{menu-file-name}.OMH}, 
 where \textit{menu-file-name} is the same as the filename of the current menu file}, the
@@ -5014,7 +5036,8 @@ $	return $status
 
 \begin{itemize}
 \item Introduced symbols for font- and color section (section \ref{subsection:fontcolors}).
-\item Added  the \textsl{COLORSCHEME} option to \textsl{OMI{\$}POPUP}
+\item Added the \textsl{COLORSCHEME} option to \textsl{OMI{\$}POPUP}
+\item Added support for the \textsl{INFO} command in \textsl{OTF} menus
 \end{itemize}
 
 
