@@ -3,6 +3,7 @@ x.x   Released: xx-xx-xxxx
 * Introduced symbols for font- and color section
 * Added the COLORSCHEME option to OMI$POPUP
 * Added support for the INFO command in OTF menus
+* Configurable prompt for Tag- and Selectlists
 
 2.6   Released: 12-05-2019
 

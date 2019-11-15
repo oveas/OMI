@@ -507,6 +507,8 @@ $	if f$type(questions$input) .eqs. ""
 $	   then $ _prompt = f$element(0, "#", 'omi$current_menu'$input'_input')
 $	   else $ _prompt = questions$input
 $	endif
+$	if _sel_list .and. f$type(questions$sellist_input) .nes. "" then -
+	   $ _prompt = questions$sellist_input
 $!
 $	if f$type(_saved_value) .nes. "" then $ delete\ /symbol _saved_value
 $	if omi$_jumping
@@ -1594,14 +1596,14 @@ $		_tag_sel = f$element(options$_jumpcounter,",",options$_jumps)
 $		if _tag_sel .eqs. "" .or. _tag_sel .eqs. ","
 $		   then
 $			read /end_of_file=main$end_taglist sys$command _tag_sel -
-			   /prompt="''screen$prompt_position'Select, <Ctrl/Z> when done: "
+			   /prompt="''screen$prompt_position'''questions$taglist_input' "
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
 $		   else $ options$_jumpcounter = options$_jumpcounter + 1
 $		endif
 $	   else $ read /end_of_file=main$end_taglist sys$command _tag_sel -
-		   /prompt="''screen$prompt_position'Select, <Ctrl/Z> when done: "
+		   /prompt="''screen$prompt_position'''questions$taglist_input' "
 $	endif
 $	if f$edit(_tag_sel,"upcase") .eqs. "^Z" then $ goto main$end_taglist
 $	omi$cmdline_clear

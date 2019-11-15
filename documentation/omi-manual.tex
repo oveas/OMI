@@ -1032,14 +1032,14 @@ element specifies how this choice is represented on the screen.
 In tag screens, the last option will reverse the current selection. This 
 element specifies how this choice is represented on the screen.
 
-\paragraph{OPTION}
+\paragraph{OPTION}\index{prompt!OMI commandline}
 \label{para:option}
 
 This element represents the OMI prompt. This can be overwritten by a 
 \textsl{PROMPT} element in a menu file, unless the \textsl{PROTECT{\_}PROMPT} (see section 
 \ref{para:protect}) is set to \textsl{TRUE}.
 
-\paragraph{INPUT}
+\paragraph{INPUT}\index{prompt!inputs}
 \label{para:input}
 
 Represents how the user will be prompted to enter input when an input option 
@@ -1047,6 +1047,21 @@ is selected.
 
 If the \textsl{INPUT} item doesn't exist in the configuration file, the first part of the \textsl{INPUT}
 item from the menu file is used as prompt (see also section \ref{subsec:mylabel5}).
+
+\paragraph{SELLIST{\_}INPUT}\index{prompt!select lists}
+\label{para:sellistinput}
+
+Represents how the user will be prompted to make a selection from a select options in a taglist (section \ref{subsubsec:mylabel39}).
+
+If the \textsl{SELLIST{\_}INPUT} item doesn't exist in the configuration file, the \textsl{INPUT} prompt will be used.
+
+\paragraph{TAGLIST{\_}INPUT}\index{prompt!tag lists}
+\label{para:taglistinput}
+
+Represents how the user will be prompted to select multiple options in a taglist (section \ref{subsubsec:mylabel40}).
+
+If the \textsl{TAGLIST{\_}INPUT} item doesn't exist in the configuration file, the default ``\textsl{Select, press \lt\Ctrl/Z\gt\ when done}'' will be used.
+
 
 \paragraph{DCL{\_}COMMAND}
 
@@ -5038,8 +5053,8 @@ $	return $status
 \item Introduced symbols for font- and color section (section \ref{subsection:fontcolors}).
 \item Added the \textsl{COLORSCHEME} option to \textsl{OMI{\$}POPUP}
 \item Added support for the \textsl{INFO} command in \textsl{OTF} menus
+\item Configurable prompt for Tag- and Selectlists
 \end{itemize}
-
 
 \section*{Version 2.6, Released: 16-05-2019}
 
