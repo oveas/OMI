@@ -998,7 +998,7 @@ $!
 $ create_otf$:
 $!
 $	assign sys$scratch:omi$check_otf_menu._tmp$ sys$output
-$	show symbol otf_menu$*                      
+$	show symbol otf_menu$*
 $	deassign sys$output
 $	purge /nolog /noconfirm /keep=1 sys$scratch:omi$check_otf_menu._tmp$
 $!

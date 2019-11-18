@@ -4166,8 +4166,10 @@ $!				But then....
 $				value_pointer = f$edit(f$element(2,"#",omi$value),"upcase") - """
 $				vcount_pointer = f$extract(5,f$length(value_pointer)-5,value_pointer)
 $				if f$extract(0,5,value_pointer) .eqs. "VALUE" .and. -
-				    f$type(vcount_pointer) .eqs. "INTEGER" -
-				    then $ '_varname' = '_block'$'value_pointer'
+				    f$type(vcount_pointer) .eqs. "INTEGER"
+$				    then $ '_varname' = '_block'$'value_pointer'
+$				    else $ '_varname' = value_pointer
+$				endif
 $			endif
 $		   else
 $			'_varname' = default_value
