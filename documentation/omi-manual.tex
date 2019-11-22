@@ -1010,6 +1010,13 @@ It specifies the number of blanks between the two columns.
 A second column is used to display the values of input options on the menu 
 screen, and for tag and select lists if they don't fit in one column.
 
+\paragraph{CENTER{\_}SELECT{\_}LISTS}\index{select lists!subwindow position}
+
+Set this value to \textsl{TRUE} in order to position the subwindow for select lists (see section \ref{subsubsec:select}) in the center of the menu-window.\\
+By default, all selectlist subwindows will be displayed at the upper left corner.
+
+This option is ignored when the selectlist has multiple columns or scrolling is enabled.
+
 \subsection{[QUESTIONS]}
 \index{configuration file!change the language}
 \label{subsubsec:mylabel18}
@@ -1060,7 +1067,7 @@ If the \textsl{SELLIST{\_}INPUT} item doesn't exist in the configuration file, t
 
 Represents how the user will be prompted to select multiple options in a taglist (section \ref{subsubsec:mylabel40}).
 
-If the \textsl{TAGLIST{\_}INPUT} item doesn't exist in the configuration file, the default ``\textsl{Select, press \lt\Ctrl/Z\gt\ when done}'' will be used.
+If the \textsl{TAGLIST{\_}INPUT} item doesn't exist in the configuration file, the default ``\textsl{Select, press \lt Ctrl/Z\gt\ when done}'' will be used.
 
 
 \paragraph{DCL{\_}COMMAND}
@@ -5051,10 +5058,12 @@ $	return $status
 
 \begin{itemize}
 \item Fix: set default values for \textsl{SELECT} lists in \textsl{OTF} menus properly
+\item Fix: \textsl{\textbf{P}revious}/\textsl{\textbf{N}ext} labels where not displayed when scrolling through a \textsl{SELECT} list with multiple columns
 \item Introduced symbols for font- and color section (section \ref{subsection:fontcolors}).
 \item Added the \textsl{COLORSCHEME} option to \textsl{OMI{\$}POPUP}
 \item Added support for the \textsl{INFO} command in \textsl{OTF} menus
 \item Configurable prompt for Tag- and Selectlists
+\item Added the configion option \textsl{CENTER{\_}SELECT{\_}LISTS} in the \textsl{[SCREEN]} section to allow the \textsl{SELECT} subwindows to be positioned in the center.
 \end{itemize}
 
 \section*{Version 2.6, Released: 16-05-2019}

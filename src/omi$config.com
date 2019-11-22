@@ -818,6 +818,7 @@ $	call config$_set_defaults screen$display_names		"false"
 $	call config$_set_defaults screen$tab			"15"
 $	call config$_set_defaults screen$width_inquired		"false"
 $	call config$_set_defaults screen$height_inquired	"false"
+$	call config$_set_defaults screen$center_select_lists	"false"
 $!
 $	call config$_set_defaults questions$all_inputs		"All Inputs"
 $	call config$_set_defaults questions$option		"OMI>"

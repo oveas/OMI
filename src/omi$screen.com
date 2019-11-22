@@ -355,22 +355,39 @@ $	goto sellst$_find_longest
 $!
 $ sellst$end_find_longest:
 $!
+$	_number_of_options = _sel_opt - 1
 $	_columns = ((_sel_opt - 2) / _available_lines) + 1
+$	_max_columns = _columns
 $	if f$type(scroll$_start_at) .eqs. ""
 $	   then $ _sel_opt = 1
 $	   else $ _sel_opt = scroll$_start_at
 $	endif
+$!
 $	scroll$this_page == _sel_opt
 $	_sel_size = _sel_size + 4
 $	_longest = _sel_size
 $	_sel_size = _sel_size + 6
 $	if _columns .ne. 1 then $ _sel_size = ((_columns * _sel_size) + -
 	   ((_columns - 1) * screen$tab)) - 6
+$!	If there's enough room, center the box
+$	_center_lines = 0
+$	if _columns .eq. 1 .and. screen$center_select_lists
+$	   then
+$		if (_number_of_options + 2) .lt. _available_lines then -
+		   $ _center_lines = (((_available_lines / 2) - ((_number_of_options + 2) / 2)))
+$		_subwin_pos = (screen$line_length / 2) - (_sel_size / 2)
+$	endif
 $	_sel_loc = _subwin_pos + 2
-$	if (_sel_size + _sel_loc) .ge. (screen$line_length + -
-	   screen$default_position) then $ _sel_size = screen$line_length - -
-	   (_sel_loc - screen$default_position) 
-$	_line = screen$line_header + screen$window_topmargin + 1
+$	if (_sel_size + _sel_loc) .ge. (screen$line_length + screen$default_position)
+$	then
+$		_sel_size = screen$line_length - (_sel_loc - screen$default_position)
+$!		FIXME
+$!		_max_columns is not properly calculated, so when there are multiple columns
+$!		and scrolling is on, the "Next>" below is still shown when
+$!		on the last page the rightmost columns is displayed.
+$		_max_columns = _sel_size / (_longest + screen$tab + 6)
+$	endif
+$	_line = screen$line_header + screen$window_topmargin + 1 + _center_lines
 $!	_first_line = _line
 $	ws f$fao("''ESC$'[''_line';''_subwin_pos'H''ESC$'(0l!''_sel_size'*qk''ESC$'(B")
 $	_cur_col = 1
@@ -379,7 +396,7 @@ $ sellst$_setup:
 $!
 $	if f$type('_select_list'$value'_sel_opt') .eqs. "" then $ goto sellst$end_setup
 $	_this_col = _sel_loc + ((_cur_col - 1) * (screen$tab + _longest))
-$	_line = (screen$line_header + screen$window_topmargin + (_sel_opt - -
+$	_line = (screen$line_header + screen$window_topmargin + _center_lines + (_sel_opt - -
 	   scroll$this_page + 1)) - ((_cur_col - 1) * _available_lines) + 1
 $	if _cur_col .eq. 1 then -
 	   $ ws f$fao("''ESC$'[''_line';''_subwin_pos'H''ESC$'(0x''ESC$'(B!''_sel_size'* ''ESC$'(0x''ESC$'(B")
@@ -406,8 +423,8 @@ $		   then
 $			_line = _line + 1
 $			__closing_line_written__ = 1
 $			_line_size = _sel_size
-$			_check_next = _sel_opt + 1
-$ 			if f$type('_select_list'$value'_sel_opt') .eqs. ""
+$			_check_next = _sel_opt + ((_max_columns - _cur_col) * _sel_opt) + 1
+$			if f$type('_select_list'$value'_check_next') .eqs. ""
 $			   then $ _show_next = ""
 $			   else
 $				_line_size = _line_size - 6

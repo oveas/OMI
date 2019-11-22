@@ -1,10 +1,15 @@
 x.x   Released: xx-xx-xxxx
 
 * Fix: set default values for SELECT lists in OTF menus properly
+* Fix: Previous/Next labels where not displayed when scrolling through
+  a SELECT list with multiple columns
+* Fix: Refresh when a SELECT list value is not changed in ALL_INPUTS
 * Introduced symbols for font- and color section
 * Added the COLORSCHEME option to OMI$POPUP
 * Added support for the INFO command in OTF menus
 * Configurable prompt for Tag- and Selectlists
+* Added the configion option CENTER_SELECT_LISTS in the [SCREEN] section
+  to allow the SELECT subwindows to be positioned in the center.
 
 2.6   Released: 12-05-2019
 

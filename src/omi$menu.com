@@ -2997,7 +2997,6 @@ $			if f$type(scroll$next_page) .nes. "" then -
 			   $ delete\/symbol/global scroll$next_page
 $			if f$type(scroll$max_on_page) .nes. "" then -
 			   $ delete\/symbol/global scroll$max_on_page
-$				omi$refresh
 $			'_variable' = '_select_list'$value'_selected'
 $		   else
 $			'_variable' = _value
@@ -3025,6 +3024,7 @@ $		_display_value = f$fao("!''_astrlen'**")
 $	   else $ _display_value = _value
 $	endif
 $!
+$	if _sel_list then $ omi$refresh
 $	if f$length(_value) .le. inputs$max_size
 $	   then $ ws f$fao("''ESC$'[''_line';''inputs$value_location'H''_display_value'!''_blanks'* ")
 $	   else $ ws "''ESC$'[''_line';''inputs$value_location'H''f$extract(0,inputs$max_size,_display_value)'''ESC$'(0`''ESC$'(B"
