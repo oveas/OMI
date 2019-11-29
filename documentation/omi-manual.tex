@@ -60,10 +60,10 @@ as OMI modules. Several OMI commands have been created for use in OMI
 modules, and with the expandable Toolbox, it's easy to add your own 
 commands.
 
-\section*{Known Bugs}\addcontentsline{toc}{section}{Known Bugs}
+\section*{Known Issues}\addcontentsline{toc}{section}{Known Issues}
 \label{subsec:known}
 
-The following bugs have not been solved yet: \\
+The following issues have not been solved yet: \\
 \begin{itemize}
 \item When \textsl{OMI{\$}DISPLAY{\_}INFO}\index{OMI commands in 
 modules!OMI{\$}DISPLAY{\_}INFO} needs to display a blank line between two 
@@ -85,6 +85,9 @@ displayed if the first item of two duplicate item names was specified as
 leading. During run-time this is handled properly.
 \item Switching menus using the \textsl{MENU} command causes \texttt{\%OMI-W-DUPL}
 messages. After this, OMI can crash at random moments without warning.
+\item When the last input item of a (sub)menu is a SELECT list and all inputs are entered
+using \text{ALL{\_}INPUTS}, the screen is refreshed twice after the last item.
+\item When logging a session, the \textsl{/SUBMENU} and \textsl{/JUMPS} values are not logged.
 \end{itemize}
 
 \section*{About this document}\addcontentsline{toc}{section}{About this document}
@@ -917,6 +920,15 @@ The setting can always be overwritten by specifying the \textsl{/[NO]PROGRESS}
 qualifier when starting OMI from the DCL command line (see section
 \ref{subsubsec:mylabel6}).
 
+\paragraph{SESSION{\_}LOG{\_}LOCATION}\label{para:sessionlogfile}
+
+When session logging is enabled (see section \ref{subsec:logsession}), a logfile per session is created in \textsl{OMI{\$}MENU{\_}DIRECTORY:}. \\
+Users who don't have write acces to that directory will get \textsl{\%OMI-E-SESLOGFAIL} errors and their sessions will not be logged.
+
+This configuration item should be used to point to a writeable location.\\
+Note the path value should ens with a colon for non-concealed logicals!
+
+
 \subsection{[SCREEN]}
 \index{configuration file!modify the layout of OMI}
 \label{subsubsec:mylabel17}
@@ -1303,6 +1315,14 @@ Each menu can have unique characteristics, which can make the navigation
 easier. These elements are all optional. Every menu can have it's own 
 prompt, title, name and comment line. Title and comment lines will be 
 displayed by default.
+
+\subsection{The LOG{\_}SESSION element}\label{subsec:logsession}\index{log sessions}\index{sessionlog}
+
+When all user actions should be logged to a session logfile, this element must be set in the main menu (section \textsl{[MENU{\_}MENU]}) with value \textsl{TRUE} or \textsl{1}.\\
+By default, a logfile is created for each session is \textsl{OMI{\$}MENU{\_}DIRECTORY:}.
+
+If the location of the logfile shouls be changed for all or some users, it can bve changed in the configuration file for those users (see section \ref{para:sessionlogfile}).
+
 
 \subsection{The ON{\_}INIT and ON{\_}EXIT elements}
 \label{subsubsec:mylabel22}
@@ -5064,6 +5084,7 @@ $	return $status
 \item Added support for the \textsl{INFO} command in \textsl{OTF} menus
 \item Configurable prompt for Tag- and Selectlists
 \item Added the configion option \textsl{CENTER{\_}SELECT{\_}LISTS} in the \textsl{[SCREEN]} section to allow the \textsl{SELECT} subwindows to be positioned in the center.
+\item Added an option to log sessions using the \textsl{LOG{\_}SESSION} element in the main menu.
 \end{itemize}
 
 \section*{Version 2.6, Released: 16-05-2019}
@@ -5086,8 +5107,8 @@ $	return $status
 \item Fix: Modules where not found if not located in the first index when \textsl{OMI{\$}MENU{\_}DIRECTORY} is a searchpath.
 \item Fix: Find a given menu when the menu name is also a logical pointing somewhere else
 \item Fix: Clear input when a format block returns an error or warning.
-\item Dont't show \textsl{All input} when a menu has only one input-item
-\item Use input descriptiont as prompt when \textsl{QUESTIONS{\$}INPUT} is not set
+\item Don't show \textsl{All input} when a menu has only one input-item
+\item Use input description as prompt when \textsl{QUESTIONS{\$}INPUT} is not set
 \item Moved the project to GitHub.
 \end{itemize}
 
@@ -5295,7 +5316,7 @@ The old \textsl{OMI{\$}INSTALL.COM} is now called \textsl{OMI{\$}USER{\_}INSTALL
 \begin{itemize}
 \item Bugfix for the \texttt{\%DCL-W-UNDSYM} error on password protected menus.
 \item Implemented the \textsl{ASK} command.
-\item Implemented the \textsl{OMI{\$}INPUT{\_}VALIDATE} command, that fixes a possible bug when a user enteres \textsl{''F{\$}PID(GOTO)'} as input.\\
+\item Implemented the \textsl{OMI{\$}INPUT{\_}VALIDATE} command, that fixes a possible bug when a user enters \textsl{''F{\$}PID(GOTO)'} as input.\\
 Thanks to Henry Juengst (juengst@saph1.iskp.uni-bonn.de) for making me aware of this.
 \end{itemize}
 

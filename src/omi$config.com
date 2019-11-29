@@ -803,6 +803,7 @@ $	call config$_set_defaults main$protect_prompt		"0"
 $	call config$_set_defaults main$show_progress 		"1"
 $	call config$_set_defaults main$time_format   		"12"
 $	call config$_set_defaults main$float_point   		"."
+$	call config$_set_defaults main$session_log_location	"OMI$MENU_DIRECTORY:"
 $!
 $	call config$_set_defaults screen$width_margin		"4"
 $	call config$_set_defaults screen$height_margin		"1"

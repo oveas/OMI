@@ -214,6 +214,10 @@ $		omi$menu_file = "''omi$startmenu'"
 $		goto main$_startmenu
 $	endif
 $	if omi$status .eq. omi$_error then $ goto main$_fatal
+$	if f$type(menu$log_session) .nes. ""
+$	   then
+$		if menu$log_session then $ omi$log_session "INIT_SESSIONLOG"
+$	endif
 $	omi$current_menu = "menu"
 $	'omi$current_menu'$previous = ""
 $	init_def$search_string = "$input"
@@ -322,12 +326,14 @@ $			read /end_of_file=option$cancel_input 'omi$prompt_timeout' -
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
+$			omi$log_session "''omi$option'"
 $		   else $ options$_jumpcounter = options$_jumpcounter + 1
 $		endif
 $	   else
 $		read /end_of_file=option$cancel_input 'omi$prompt_timeout' -
 		   /prompt="''screen$prompt_position'''_current_prompt' " -
 		   sys$command omi$option
+$		omi$log_session "''omi$option'"
 $	endif
 $	omi$variable = "omi$option"
 $	omi$input_validate
@@ -378,6 +384,7 @@ $	goto main$get_option
 $!
 $ option$cancel_input:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	gosub main$perf_onexit
 $	if $status .eq. omi$_warning then $ goto main$get_option
 $	if omi$otf_menu then $ goto main$otf_exit
@@ -519,6 +526,7 @@ $		   then
 $			if _hidden then $ set terminal /noecho
 $			if f$type('_variable') .nes. "" then $ _saved_value = '_variable'
 $			read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''_prompt': " sys$command '_variable'
+$			omi$log_session '_variable'
 $			if _hidden then $ set terminal /echo
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
@@ -530,6 +538,7 @@ $	   else
 $		if _hidden then $ set terminal /noecho
 $		if f$type('_variable') .nes. "" then $ _saved_value = '_variable'
 $		read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''_prompt': " sys$command '_variable'
+$		omi$log_session '_variable'
 $		if _hidden then $ set terminal /echo
 $		omi$msgline_clear
 $	endif
@@ -610,6 +619,7 @@ $		 sellist$get_free_input:
 $!
 $			omi$cmdline_clear
 $			read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''_prompt': " sys$command '_variable'
+$			omi$log_session '_variable'
 $			omi$variable = "''_variable'"
 $			omi$input_validate
 $			if $status .ge. omi$_warning
@@ -698,6 +708,7 @@ $	return $status
 $!
 $ input$cancel_input:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	if _hidden then $ set terminal /echo
 $	if f$type(_remember_work_order_list) .nes. ""
 $	   then
@@ -1457,12 +1468,15 @@ $		_selected_menu = f$element(options$_jumpcounter,",",options$_jumps)
 $		if _selected_menu .eqs. "" .or. _selected_menu .eqs. ","
 $		   then
 $			read /end_of_file=dynmnu$cancel_input /prompt="''screen$prompt_position'''_menu_list' " sys$command _selected_menu
+$			omi$log_session "''_selected_menu'"
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
 $		   else $ options$_jumpcounter = options$_jumpcounter + 1
 $		endif
-$	   else $ read /end_of_file=dynmnu$cancel_input /prompt="''screen$prompt_position'''_menu_list' " sys$command _selected_menu
+$	   else
+$		read /end_of_file=dynmnu$cancel_input /prompt="''screen$prompt_position'''_menu_list' " sys$command _selected_menu
+$		omi$log_session "''_selected_menu'"
 $	endif
 $	omi$variable = "_selected_menu"
 $	omi$input_validate
@@ -1485,6 +1499,7 @@ $	omi$current_menu = "''_selected_menu'"
 $!
 $ dynmnu$cancel_input:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	omi$cmdline_clear
 $	return omi$_cancelled
 $!
@@ -1520,6 +1535,7 @@ $ main$input_to_subst:
 $!
 $	read /end_of_file=main$subst_cancelled sys$command _value -
 	   /prompt="''screen$prompt_position'''_prompt' "
+$	omi$log_session "''_value'"
 $	omi$msgline_clear
 $	omi$variable = "_value"
 $	omi$input_validate
@@ -1551,6 +1567,7 @@ $	return omi$_ok
 $!
 $ main$subst_cancelled:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	omi$msgline_clear
 $	omi$cmdline_clear
 $	return omi$_cancelled
@@ -1597,13 +1614,16 @@ $		if _tag_sel .eqs. "" .or. _tag_sel .eqs. ","
 $		   then
 $			read /end_of_file=main$end_taglist sys$command _tag_sel -
 			   /prompt="''screen$prompt_position'''questions$taglist_input' "
+$			omi$log_session "''_tag_sel'"
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
 $		   else $ options$_jumpcounter = options$_jumpcounter + 1
 $		endif
-$	   else $ read /end_of_file=main$end_taglist sys$command _tag_sel -
+$	   else
+$		read /end_of_file=main$end_taglist sys$command _tag_sel -
 		   /prompt="''screen$prompt_position'''questions$taglist_input' "
+$		omi$log_session "''_tag_sel'"
 $	endif
 $	if f$edit(_tag_sel,"upcase") .eqs. "^Z" then $ goto main$end_taglist
 $	omi$cmdline_clear
@@ -1667,6 +1687,7 @@ $	goto taglist$_prompt
 $!
 $ main$end_taglist:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	omi$refresh
 $	return omi$_ok
 $!
@@ -1816,16 +1837,18 @@ $	endif
 $!
 $	if omi$_p1 .eqs. ""
 $	   then
-$		read /end_of_file=setcommand$_cancelled sys$command _encr_sect -
+$		read /end_of_file=encrypt_command$_cancelled sys$command _encr_sect -
 		   /prompt="''screen$prompt_position'_From section: "
+$		omi$log_session "''_encr_secr'"
 $		omi$cmdline_clear
 $	   else $ _encr_sect = omi$_p1
 $	endif
 $	_encr_sect = _encr_sect - "[" - "]"
 $	if omi$_p2 .eqs. ""
 $	   then
-		$ read /end_of_file=setcommand$_cancelled sys$command _encr_item -
+$		read /end_of_file=encrypt_command$_cancelled sys$command _encr_item -
 		   /prompt="''screen$prompt_position'_Item: "
+$		omi$log_session "''_encr_item'"
 $		omi$cmdline_clear
 $	   else $ _encr_item = omi$_p2
 $	endif
@@ -1854,6 +1877,12 @@ $	if $status .eq. omi$_ok then -
 	   $ omi$signal omi encrypt
 $	return omi$_ok
 $!
+$ encrypt_command$_cancelled:
+$!
+$	omi$log_session "<Ctrl/Z>"
+$	omi$cmdline_clear
+$	return omi$_ok
+$!
 $!******************************************************************************
 $!
 $ main$execcmd_export:
@@ -1864,6 +1893,7 @@ $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=export_command$_cancelled sys$command omi$_p1 -
 		   /prompt="''screen$prompt_position'_What: "
+$		omi$log_session "''omi$_p1'"
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_export
@@ -1878,6 +1908,7 @@ $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=export_command$_cancelled sys$command omi$_p2 -
 			   /prompt="''screen$prompt_position'_Key name: "
+$			omi$log_session "''omi$_p2'"
 $			omi$cmdline_clear
 $			goto export_cmd$export_key
 $		endif
@@ -1911,6 +1942,7 @@ $	omi$signal omi ivopt,export
 $!
 $ export_command$_cancelled:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	omi$cmdline_clear
 $	return omi$_ok
 $!
@@ -1929,6 +1961,7 @@ $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=import_command$_cancelled sys$command omi$_p1 -
 		   /prompt="''screen$prompt_position'_What: "
+$		omi$log_session "''omi$_p1'"
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_import
@@ -1943,6 +1976,7 @@ $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=import_command$_cancelled sys$command omi$_p2 -
 			   /prompt="''screen$prompt_position'_Key name: "
+$			omi$log_session "''omi$_p2'"
 $			omi$cmdline_clear
 $			goto import_cmd$import_key
 $		endif
@@ -2024,6 +2058,7 @@ $	omi$signal omi ivopt,import
 $!
 $ import_command$_cancelled:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	omi$cmdline_clear
 $	return omi$_ok
 $!
@@ -2167,6 +2202,7 @@ $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=jump$_ignored sys$command omi$_p1 -
 		   /prompt="''screen$prompt_position'_Submenu: "
+$		omi$log_session "''omi$_p1'"
 $		omi$cmdline_clear
 $		omi$msgline_clear
 $		goto main$execcmd_jump
@@ -2261,6 +2297,7 @@ $	return omi$_ok
 $!
 $ jump$_ignored:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	return omi$_ok
 $!
 $!******************************************************************************
@@ -2273,6 +2310,7 @@ $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=resetcommand$_cancelled sys$command omi$_p1 -
 		   /prompt="''screen$prompt_position'_What: "
+$		omi$log_session "''omi$_p1'"
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_reset
@@ -2376,6 +2414,7 @@ $	omi$signal omi ivopt,reset
 $!
 $ resetcommand$_cancelled:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	omi$cmdline_clear
 $	return omi$_ok
 $!
@@ -2389,6 +2428,7 @@ $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=setcommand$_cancelled sys$command omi$_p1 -
 		   /prompt="''screen$prompt_position'_What: "
+$		omi$log_session "''omi$_p1'"
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_set
@@ -2399,6 +2439,7 @@ $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p2 -
 			   /prompt="''screen$prompt_position'_Value: "
+$			omi$log_session "''omi$_p2'"
 $			omi$_p2 = f$edit(omi$_p2,"uncomment,trim,compress")
 $			omi$cmdline_clear
 $			goto main$execcmd_set
@@ -2422,6 +2463,7 @@ $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p2 -
 			   /prompt="''screen$prompt_position'_Value: "
+$			omi$log_session "''omi$_p2'"
 $			omi$_p2 = f$edit(omi$_p2,"uncomment,trim,compress")
 $			omi$cmdline_clear
 $			goto main$execcmd_set
@@ -2447,6 +2489,7 @@ $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p2 -
 			   /prompt="''screen$prompt_position'_Value: "
+$			omi$log_session "''omi$_p2'"
 $			omi$_p2 = f$edit(omi$_p2,"uncomment,trim,compress")
 $			omi$cmdline_clear
 $			goto main$execcmd_set
@@ -2527,6 +2570,7 @@ $		if omi$_p3 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p3 -
 			   /prompt="''screen$prompt_position'_Key: "
+$			omi$log_session "''omi$_p3'"
 $			omi$_p3 = f$edit(omi$_p3,"uncomment,trim,compress")
 $			omi$msgline_clear
 $			omi$cmdline_clear
@@ -2589,6 +2633,8 @@ $		set terminal /echo
 $		omi$encrypt "''_pwd_1'" p$_key
 $		_new_password = omi$encrypted
 $		delete\/symbol/global omi$encrypted
+$		omi$log_session "''_new_password'"
+$		omi$log_session "''_new_password'" ! Yeah I'm cheeting here ;)
 $		omi$config 'omi$menu_file' setcmd password "''_new_password'"
 $		if $status .eq. omi$_ok then $ omi$signal omi setpwd
 $		omi$cmdline_clear
@@ -2603,8 +2649,10 @@ $			omi$signal omi nopriv
 $			return omi$_warning
 $		endif
 $		if omi$_p2 .eqs. ""
-$		   then $ read /end_of_file=setcommand$_cancelled sys$command _new_name -
+$		   then
+$			read /end_of_file=setcommand$_cancelled sys$command _new_name -
 			   /prompt="''screen$prompt_position'_New name : "
+$			omi$log_session "''_new_name'"
 $		   else $ _new_name = omi$_p2
 $		endif
 $		omi$cmdline_clear
@@ -2619,6 +2667,7 @@ $	omi$signal omi ivopt,set
 $!
 $ setcommand$_cancelled:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	omi$cmdline_clear
 $	return omi$_ok
 $!
@@ -2638,6 +2687,7 @@ $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=showcommand$_cancelled sys$command omi$_p1 -
 		   /prompt="''screen$prompt_position'_What: "
+$		omi$log_session "''omi$_p1'"
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_show
@@ -2720,6 +2770,7 @@ $		if omi$_p2 .eqs. ""
 $		   then
 $			read /end_of_file=setcommand$_cancelled sys$command omi$_p2 -
 			   /prompt="''screen$prompt_position'_Status code: "
+$			omi$log_session "''omi$_p2'"
 $			omi$_p2 = f$edit(omi$_p2,"uncomment,trim,compress")
 $			omi$msgline_clear
 $			omi$cmdline_clear
@@ -2771,6 +2822,7 @@ $	omi$signal omi ivopt,show
 $!
 $ showcommand$_cancelled:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	omi$cmdline_clear
 $	return omi$_ok
 $!
@@ -2858,6 +2910,7 @@ $		omi$_p1 = ""
 $	   else
 $		read /end_of_file=submit$_ignore sys$command omi$background_module -
 		   /prompt="''screen$prompt_position'Module: "
+$		omi$log_session "''omi$background_module'"
 $		omi$cmdline_clear
 $		omi$msgline_clear
 $	endif
@@ -2867,6 +2920,7 @@ $	return $status
 $!
 $ submit$_ignore:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	return omi$_ok
 $!
 $!******************************************************************************
@@ -2928,10 +2982,12 @@ $	if f$type(list$_scroll) .nes. "" then $ delete\/symbol/local list$_scroll
 $	if _sel_list
 $	   then
 $		_prompt = f$element(0, "#",'omi$current_menu'$input'_input')
-$		read /end_of_file=main$end_getall_inputs /prompt="''screen$prompt_position'''_prompt': " sys$command _value
+$		read /end_of_file=main$cancel_getall_inputs /prompt="''screen$prompt_position'''_prompt': " sys$command _value
+$		omi$log_session "''_value'"
 $	   else
 $		if _hidden then $ set terminal /noecho
-$		read /end_of_file=main$end_getall_inputs /prompt="''ESC$'[''_line';''inputs$value_location'H" sys$command _value
+$		read /end_of_file=main$cancel_getall_inputs /prompt="''ESC$'[''_line';''inputs$value_location'H" sys$command _value
+$		omi$log_session "''_value'"
 $		if _hidden
 $		   then
 $			set terminal /echo
@@ -3033,10 +3089,14 @@ $	_input = _input + 1
 $	if f$type('omi$current_menu'$input'_input') .nes. "" then -
 	   $ goto main$_getall_inputs
 $!
+$ main$cancel_getall_inputs:
+$!
+$	omi$log_session "<Ctrl/Z>"
+$	omi$refresh
+$! fallthru
 $ main$end_getall_inputs:
 $!
 $	if _hidden then $ set terminal /echo
-$	if _sel_list then $ omi$refresh
 $	return omi$_ok
 $!
 $!******************************************************************************
@@ -3071,6 +3131,7 @@ $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=dclcommand$_cancelled sys$command omi$_p1 -
 		   /prompt="''screen$prompt_position'''questions$dcl_command': "
+$		omi$log_session "''omi$_p1'"
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress")
 $		if omi$_p1 .eqs. "" then $ goto  main$execcmd_dcl
 $		omi$_p2 = f$edit(f$element(1," ",omi$_p1),"trim")
@@ -3128,6 +3189,7 @@ $	endif
 $!
 $ dclcommand$_cancelled:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	if .not. omi$_debug then -
 	   $ set message /nofacility /noseverity /noidentification /notext
 $	omi$cmdline_clear
@@ -3143,6 +3205,7 @@ $	if omi$_p1 .eqs. ""
 $	   then
 $		read /end_of_file=deletecommand$_cancelled sys$command omi$_p1 -
 		   /prompt="''screen$prompt_position'_What: "
+$		omi$log_session "''omi$_p1'"
 $		omi$_p1 = f$edit(omi$_p1,"uncomment,trim,compress,upcase")
 $		omi$cmdline_clear
 $		goto main$execcmd_delete
@@ -3204,6 +3267,7 @@ $	omi$signal omi ivopt,delete
 $!
 $ deletecommand$_cancelled:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	omi$cmdline_clear
 $	return omi$_ok
 $!
@@ -3256,6 +3320,7 @@ $		omi$_p1 = ""
 $	   else
 $		read /end_of_file=newmenu$_ignored sys$command omi$new_menu_file -
 		   /prompt="''screen$prompt_position'Menu file: "
+$		omi$log_session "''omi$new_menu_file'"
 $		omi$cmdline_clear
 $		omi$msgline_clear
 $	endif
@@ -3288,6 +3353,7 @@ $	return omi$_ok
 $!
 $ newmenu$_ignored:
 $!
+$	omi$log_session "<Ctrl/Z>"
 $	if _ref_on_cancel
 $	   then $ omi$refresh
 $	   else
@@ -3432,11 +3498,13 @@ $!
 $		on control_y then $ goto password$cancel_input
 $		set terminal /noecho
 $		read /end_of_file=password$cancel_input /prompt="''screen$prompt_position'Password: " sys$command _password
+$		omi$log_session f$fao("!''f$length(_password)'**")
 $		omi$msgline_clear
 $		goto password$_decrypt
 $!
 $	   password$cancel_input:
 $!
+$		omi$log_session "<Ctrl/Z>"
 $		'omi$current_menu'$security_level = -1
 $		on control_y then $ goto main$_interrupt
 $		omi$cmdline_clear
@@ -3609,6 +3677,7 @@ $	exit %X2c
 $!
 $ main$_exit:
 $!
+$	omi$log_session "END_SESSIONLOG"
 $	omi$_cls = "CLS"
 $	gosub main$_cleanup
 $	ws "%OMI-S-BYEBYE, done!"

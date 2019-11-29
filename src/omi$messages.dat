@@ -120,6 +120,7 @@ REQSELECTED    I all required options have been selected
 RESETVAR       S variables reset to default
 RESTMNU        I restoring previous menu
 SCROVERFL      E screen overflow - too many menu items or window too small
+SESLOGFAIL     E cannot log session - no write access to ~S
 SETKEY         S succesfully set the personal key
 SETNAME        S succesfully changed the menu name
 SETPWD         S succesfully changed the password

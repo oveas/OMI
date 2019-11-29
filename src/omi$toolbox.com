@@ -968,6 +968,55 @@ $!******************************************************************************
 
 $!******************************************************************************
 $!
+$!==>	Handle the OMI$LOG_SESSION command, logs all actions in a session
+$!
+$ log_session$:
+$!
+$	if p2 .eqs. "INIT_SESSIONLOG"
+$	   then
+$		if f$type(omi$log_sessions) .nes. "" -
+		   then $ return omi$_ok ! We switched menu's, keep everything as it was
+$		omi$log_sessions == "true"
+$		omi$log_session_file == main$session_log_location + f$parse(omi$menu_file,,,"name") + -
+		   "_" + (f$cvtime() - "-"-"-"-" "-":"-":"-".") + ".log"
+$		open /write/error=logsession$_writefail sessionlog 'omi$log_session_file'
+$		write sessionlog "Session started at " + f$time() + -
+		   " by " + f$edit(f$getjpi(0,"username"),"collapse") + -
+		   " (" + f$user() + ")"
+$		write sessionlog "-----"
+$		close sessionlog
+$		return omi$_ok
+$	endif
+$!
+$	if f$type(omi$log_sessions) .eqs. "" then $ omi$log_sessions == "false"
+$	if .not. omi$log_sessions then $ return omi$_ok
+$!
+$	if p2 .eqs. "END_SESSIONLOG"
+$	   then
+$		open /append sessionlog 'omi$log_session_file'
+$		write sessionlog "-----"
+$		write sessionlog "Session finished at " + f$time()
+$		close sessionlog
+$		return omi$_ok
+$	endif
+$!
+$	open /append sessionlog 'omi$log_session_file'
+$	if p2 .eqs. ""
+$	   then $ write sessionlog f$cvtime(,,"time") + ": <empty>"
+$	   else $ write sessionlog f$cvtime(,,"time") + ": ''p2' ''p3' ''p4' ''p5' ''p6' ''p7' ''p8'"
+$	endif
+$	close sessionlog
+$	return omi$_ok
+$!
+$ logsession$_writefail:
+$	omi$log_sessions == "false"
+$	omi$signal omi seslogfile,'main$session_log_location'
+$	return $status
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
 $!==>	Handle the OMI$WAIT command, where OMI waits for the user to press
 $!	<Return>.
 $!
@@ -1292,6 +1341,10 @@ $	if f$type(omi$substituted) .nes. "" then -
 	   $ delete\ /symbol /global omi$substituted
 $	if f$type(omi$vms_message) .nes. "" then -
 	   $ delete\ /symbol /global omi$vms_message
+$	if f$type(omi$log_sessions) .nes. "" then -
+	   $ delete\ /symbol /global omi$log_sessions
+$	if f$type(omi$log_session_file) .nes. "" then -
+	   $ delete\ /symbol /global omi$log_session_file
 $!
 $	if f$type(Omi$Open_Mailbox_List) .eqs. "" then -
 	   $ goto cleanup$end_mailboxes
