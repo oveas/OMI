@@ -832,13 +832,13 @@ are NOT allowed\index{special characters}.
 
 This section defines some generally used values.
 
-\paragraph{EMPTY{\_}VALUE}
+\subsubsection{EMPTY{\_}VALUE}
 
 In menus where input values are displayed, \linebreak\textsl{EMPTY{\_}VALUE} represents the 
 way an unspecified value will be displayed. If it shouldn't display 
 anything, just remove any value (`\textsl{EMPTY{\_}VALUE =} ').
 
-\paragraph{KEY}
+\subsubsection{KEY}
 
 If a key was set using the \textsl{SET KEY}\index{OMI commands!SET KEY} command 
 before version 1.3, it will be stored here in the configuration file. The 
@@ -851,7 +851,7 @@ stored in the user specific keyring (see section \ref{subsubsec:mylabel20}). \ne
 Decryption of strings that were encrypted  with this key before version 1.3 is
 still supported.
 
-\paragraph{SILENT{\_}OUTPUT}
+\subsubsection{SILENT{\_}OUTPUT}
 
 If DCL commands are executed in silent mode (using the OMI command 
 \textsl{SILENT{\_}DCL}\index{OMI commands!SILENT{\_}DCL}), the output, if any, 
@@ -859,14 +859,14 @@ including errors, will be written to the NULL device (\textsl{NLA0:}),
 or any file name specified by this element. \\
 The final return status of the command will always be displayed.
 
-\paragraph{TIME{\_}FORMAT}
+\subsubsection{TIME{\_}FORMAT}
 \label{para:mylabel1}
 
 This element can have the values 12 or 24. It specifies the default time 
 format for the TIME format type (see section \ref{para:mylabel6}). The
 default value is 12.
 
-\paragraph{EDITOR}
+\subsubsection{EDITOR}
 \label{para:editorlement}
 
 When you need to use an editor somewhere in an OMI procedure, this symbol 
@@ -874,18 +874,18 @@ will be used. Specify any (foreign) command. \\
 This setting can be used in OMI modules as: \\
 \indent\textsf{{\$} 'MAIN'{\$}EDITOR filename}
 
-\paragraph{FLOAT{\_}POINT}
+\subsubsection{FLOAT{\_}POINT}
 \index{floating point}
 \label{para:float}
 
 Specifies the default character (``.'' or ``,'') that will be used for the 
 floating point INTEGER format type (see section \ref{para:mylabel4}).
 
-\paragraph*{VERSION{\_}ID}
+\subsubsection*{VERSION{\_}ID}
 
 This element is obsolete since v1.2.
 
-\paragraph{PROTECT{\_}PROMPT}
+\subsubsection{PROTECT{\_}PROMPT}
 \label{para:protect}
 
 When an own prompt is defined (see section \ref{para:option}),
@@ -893,7 +893,7 @@ this can be overwritten by a prompt in a chosen menu. Setting
 \linebreak\textsl{PROTECT{\_}PROMPT} to \textsl{1} or \textsl{TRUE}, will tell OMI to use the prompt from 
 the configuration file in all menus.
 
-\paragraph{PRINTER}
+\subsubsection{PRINTER}
 \index{printer queue}
 \index{configuration!printer queue}
 \index{queue!printer}
@@ -902,7 +902,7 @@ This element can be used to define a user specific printer queue. By
 default, this will be \textsl{SYS{\$}PRINT}. The installation procedure will prompt 
 for a default printer (see section \ref{subsec:mylabel1}).
 
-\paragraph{SHOW{\_}PROGRESS}
+\subsubsection{SHOW{\_}PROGRESS}
 \label{para:mylabel2}
 
 By default, OMI display the percentage of the menu file that was read during 
@@ -920,7 +920,7 @@ The setting can always be overwritten by specifying the \textsl{/[NO]PROGRESS}
 qualifier when starting OMI from the DCL command line (see section
 \ref{subsubsec:mylabel6}).
 
-\paragraph{SESSION{\_}LOG{\_}LOCATION}\label{para:sessionlogfile}
+\subsubsection{SESSION{\_}LOG{\_}LOCATION}\label{para:sessionlogfile}
 
 When session logging is enabled (see section \ref{subsec:logsession}), a logfile per session is created in \textsl{OMI{\$}MENU{\_}DIRECTORY:}. \\
 Users who don't have write acces to that directory will get \textsl{\%OMI-E-SESLOGFAIL} errors and their sessions will not be logged.
@@ -936,19 +936,19 @@ Note the path value should ens with a colon for non-concealed logicals!
 This section contains all elements that define the layout of the menu 
 screen.
 
-\paragraph{WIDTH{\_}MARGIN}
+\subsubsection{WIDTH{\_}MARGIN}
 
 You can use the full width of the screen (without borderlines at both 
 sides), by setting this margin to \textsl{0}. If you do want borders, any value 
 (\textit{n}) will cause the leftmost and rightmost \textit{n} columns not to be used.
 
-\paragraph{HEIGHT{\_}MARGIN}
+\subsubsection{HEIGHT{\_}MARGIN}
 
 You can use the full height of the screen by setting this margin to \textsl{0}. If 
 you do want smaller windows, any value (\textit{n}) will cause the uppermost and 
 lowermost \textit{n} lines not to be used.
 
-\paragraph{WIDTH}
+\subsubsection{WIDTH}
 
 The symbol \textsl{WIDTH} allows two values: 80 and 132. Values up to 80 will be 
 changed to 80. All values greater than 80 will be changed to 132. It defines 
@@ -956,45 +956,45 @@ the screen width of the menu window.
 
 Specify 0 to leave the current screen width unchanged.
 
-\paragraph{HEIGHT}
+\subsubsection{HEIGHT}
 
 Define the number of lines the menu should use. It is not recommended to 
 change the default value of 24.
 
 Specify 0 to leave the current screen height unchanged.
 
-\paragraph{EXIT{\_}WIDTH}
+\subsubsection{EXIT{\_}WIDTH}
 
 When leaving the menu, \textsl{EXIT{\_}WIDTH} is the screenwidth that is set on 
 exit.
 
 The value '0' can be used to restore to the original value before OMI started.
 
-\paragraph{EXIT{\_}WIDTH}
+\subsubsection{EXIT{\_}WIDTH}
 
 When leaving the menu, \textsl{EXIT{\_}WIDTH} is the number of lines that the terminal will be set to on exit.
 
 The value '0' can be used to restore to the original value before OMI started.
 
-\paragraph{WINDOW{\_}TOPMARGIN}
+\subsubsection{WINDOW{\_}TOPMARGIN}
 
 Specify the number of lines that should be left blank at the top of the 
 window. This is inside the menu window, so is specifies the number of blank 
 lines between the menu header and the first line being used.
 
-\paragraph{SCROLL{\_}REGION}
+\subsubsection{SCROLL{\_}REGION}
 
 You can enable or disable a \textsl{SCROLL{\_}REGION}. When enabled, a scroll region 
 is created, leaving the menu screen intact, for the output of DCL commands.
 
-\paragraph{SCROLLREGION{\_}AUTODISABLE}
+\subsubsection{SCROLLREGION{\_}AUTODISABLE}
 
 Using a scroll region might screw up the menu window when a width margin is 
 used, since it does overwrite the left and right borderlines. By setting 
 \textsl{SCROLLREGION{\_}AUTODISABLE} to \textsl{1} or \textsl{YES}, the use of a scroll region is 
 automatically disabled in this case.
 
-\paragraph{SEPARATE{\_}INPUTS}
+\subsubsection{SEPARATE{\_}INPUTS}
 
 This is a boolean, which can be set to \textsl{TRUE} or \textsl{FALSE} (or \textsl{1} or \textsl{0}), that 
 specifies whether or not the menu screen should be split in two separate 
@@ -1004,7 +1004,7 @@ part of the screen for the input values.
 If set to \textsl{FALSE}, all items and inputs will be displayed as one long list, 
 which spares the use of two extra lines for separating items and inputs.
 
-\paragraph{DISPLAY{\_}NAMES}
+\subsubsection{DISPLAY{\_}NAMES}
 
 This element, which can be \textsl{TRUE} or \textsl{FALSE}, specifies if menu names should be 
 displayed. If set to \textsl{TRUE}, the name of the submenus, if they are set, will 
@@ -1014,7 +1014,7 @@ When set to \textsl{FALSE}, the only way to find the names of menus, is using th
 \textsl{SHOW NAME}\index{OMI commands!SHOW NAME}\index{name}\index{menu!name} command 
 when inside the menu.
 
-\paragraph{TAB}
+\subsubsection{TAB}
 
 The \textsl{TAB} setting is used when more columns are displayed on the menu screen. 
 It specifies the number of blanks between the two columns.
@@ -1022,7 +1022,7 @@ It specifies the number of blanks between the two columns.
 A second column is used to display the values of input options on the menu 
 screen, and for tag and select lists if they don't fit in one column.
 
-\paragraph{CENTER{\_}SELECT{\_}LISTS}\index{select lists!subwindow position}
+\subsubsection{CENTER{\_}SELECT{\_}LISTS}\index{select lists!subwindow position}
 
 Set this value to \textsl{TRUE} in order to position the subwindow for select lists (see section \ref{subsubsec:select}) in the center of the menu-window.\\
 By default, all selectlist subwindows will be displayed at the upper left corner.
@@ -1038,7 +1038,7 @@ OMI or the menu needs input. \\
 These strings can be used to translate all questions in your native 
 language.
 
-\paragraph{ALL{\_}INPUTS}
+\subsubsection{ALL{\_}INPUTS}
 \index{OMI commands!ALL}
 \label{para:mylabel3}
 
@@ -1046,19 +1046,19 @@ When a menu contains input options, the last option will be to enter all
 values without the need to make the choice for all options separately. This 
 element specifies how this choice is represented on the screen.
 
-\paragraph{REVERSE{\_}TAGS}
+\subsubsection{REVERSE{\_}TAGS}
 
 In tag screens, the last option will reverse the current selection. This 
 element specifies how this choice is represented on the screen.
 
-\paragraph{OPTION}\index{prompt!OMI commandline}
+\subsubsection{OPTION}\index{prompt!OMI commandline}
 \label{para:option}
 
 This element represents the OMI prompt. This can be overwritten by a 
 \textsl{PROMPT} element in a menu file, unless the \textsl{PROTECT{\_}PROMPT} (see section 
 \ref{para:protect}) is set to \textsl{TRUE}.
 
-\paragraph{INPUT}\index{prompt!inputs}
+\subsubsection{INPUT}\index{prompt!inputs}
 \label{para:input}
 
 Represents how the user will be prompted to enter input when an input option 
@@ -1067,14 +1067,14 @@ is selected.
 If the \textsl{INPUT} item doesn't exist in the configuration file, the first part of the \textsl{INPUT}
 item from the menu file is used as prompt (see also section \ref{subsec:mylabel5}).
 
-\paragraph{SELLIST{\_}INPUT}\index{prompt!select lists}
+\subsubsection{SELLIST{\_}INPUT}\index{prompt!select lists}
 \label{para:sellistinput}
 
 Represents how the user will be prompted to make a selection from a select options in a taglist (section \ref{subsubsec:mylabel39}).
 
 If the \textsl{SELLIST{\_}INPUT} item doesn't exist in the configuration file, the \textsl{INPUT} prompt will be used.
 
-\paragraph{TAGLIST{\_}INPUT}\index{prompt!tag lists}
+\subsubsection{TAGLIST{\_}INPUT}\index{prompt!tag lists}
 \label{para:taglistinput}
 
 Represents how the user will be prompted to select multiple options in a taglist (section \ref{subsubsec:mylabel40}).
@@ -1082,35 +1082,35 @@ Represents how the user will be prompted to select multiple options in a taglist
 If the \textsl{TAGLIST{\_}INPUT} item doesn't exist in the configuration file, the default ``\textsl{Select, press \lt Ctrl/Z\gt\ when done}'' will be used.
 
 
-\paragraph{DCL{\_}COMMAND}
+\subsubsection{DCL{\_}COMMAND}
 
 Represents how the user will be prompted to enter a DCL\index{OMI 
 commands!DCL} command.
 
-\paragraph{DEFAULT{\_}CONFIRM}\label{para:defconfirm}
+\subsubsection{DEFAULT{\_}CONFIRM}\label{para:defconfirm}
 
 When \textsl{OMI{\$}POPUP} is called with the \textsl{CONFIM} option (see section \ref{subsubsec:mylabel59}, this specifies the question asked for confirmation.
 
-\paragraph{DEFAULT{\_}INPUT}
+\subsubsection{DEFAULT{\_}INPUT}
 
 When input is required for dynamic input (specified by the string \textsl{\~{}?} in the item 
 element---see also section \ref{para:dyninput} on page \pageref{para:dyninput}),
 this option specifies the default prompt if none is specified in 
 the item element (this can by done by adding \textsl{{\{}\textit{prompt}{\}}} to the input string).
 
-\paragraph{CONFIRM}
+\subsubsection{CONFIRM}
 \label{para:confirmput}
 
 Several commands ask for a confirmation\index{OMI commands!confirmation}
 before executing by default. Setting this element to \textsl{FALSE} can change this.
 
-\paragraph{WAIT{\_}PROMPT}
+\subsubsection{WAIT{\_}PROMPT}
 
 When OMI waits until the user hits return (or any called procedure using the 
 \textsl{OMI{\$}WAIT}\index{OMI commands in modules!OMI{\$}WAIT} command), this 
 represents the prompt.
 
-\paragraph{ANSWER{\_}YES\\ANSWER{\_}NO}\index{OMI commands!confirmation}
+\subsubsection{ANSWER{\_}YES\\ANSWER{\_}NO}\index{OMI commands!confirmation}
 
 By default, the \textsf{OMI{\$}CONFIRM} command asks the user to enter `Y(es)' or `N(o)' by
 default (see section~\ref{subsubsec:mylabel46}. If you want your users to be able tp
@@ -1128,12 +1128,12 @@ for `Ja' (Yes) and `Nee' (no).
 This section contains all elements that define how background processes 
 should be started.
 
-\paragraph{BATCH{\_}QUEUE}
+\subsubsection{BATCH{\_}QUEUE}
 
 Define which queue should be used when OMI modules are started in a batch. 
 Default is \textsl{SYS{\$}BATCH}.\index{batch queue}\index{queue!batch}
 
-\paragraph{DETACHED{\_}LGICMD}
+\subsubsection{DETACHED{\_}LGICMD}
 
 When starting processes in DETACHED mode, the user's \textsl{LOGIN.COM} is 
 not executed. Therefore, several logicals, symbols etc. might not be 
@@ -1143,19 +1143,19 @@ This element specifies a command procedure which sets up the proper user
 environment. Default is \textsl{SYS{\$}LOGIN:LOGIN.COM}. \\
 The file \textsl{OMI{\$}SETUP.COM} will be executed automatically.
 
-\paragraph{LOGFILE}
+\subsubsection{LOGFILE}
 
 Specifies the name of the logfile that will be written by the background 
 process. Default is 
 \textsl{SYS{\$}LOGIN:OMI{\$}BACKGROUND{\_}\textit{\lt identifier\gt }.LOG}.
 
-\paragraph{OPTIONS{\_}BAT}
+\subsubsection{OPTIONS{\_}BAT}
 
 Used to add extra qualifiers to the \textsl{SUBMIT} command, eg:\\
 \indent\textsf{OPTIONS{\_}BAT = /NOTIFY} \\
 For more information, refer to the OpenVMS documentation.
 
-\paragraph{OPTIONS{\_}DET}
+\subsubsection{OPTIONS{\_}DET}
 
 Used to add extra qualifiers to the \textsl{RUN /DETACH} command, eg:\\
 \indent\textsf{OPTIONS{\_}DET = /JOB{\_}TABLE{\_}QUOTA=8192} \\
@@ -1920,7 +1920,7 @@ in the top of the procedure, or start OMI with the qualifier
 
 For a further description of OMI modules, refer to chapter \ref{sec:writing}.
 
-\paragraph{Dynamic input}\label{para:dyninput}
+\subsubsection{Dynamic input}\label{para:dyninput}
 
 If the procedure should be called with parameters, they can be specified in 
 the third argument. These parameters, or a part of it, can be 
@@ -2147,7 +2147,7 @@ keyword.
 
 Section \ref{subsubsec:mylabel38} shows an example of the use format sections.
 
-\paragraph{The FILESPEC type}
+\subsubsection{The FILESPEC type}
 \index{filename}
 \index{format input!filename}
 
@@ -2171,7 +2171,7 @@ Valid keywords are listed in table \ref{tab:filespec}.
 \end{minipage}
 \end{table}
 
-\paragraph{The STRING type}
+\subsubsection{The STRING type}
 \index{string}
 \index{format input!string}
 
@@ -2208,7 +2208,7 @@ only accepts all characters (`A'-`Z'), numbers (0-9) and the underline (\_) as v
 \end{minipage}
 \end{table}
 
-\paragraph{The INTEGER type}
+\subsubsection{The INTEGER type}
 \index{integer}
 \index{format input!integer}
 \label{para:mylabel4}
@@ -2235,7 +2235,7 @@ character!}.\\ \hline
 \end{minipage}
 \end{table}
 
-\paragraph{The DATE type}
+\subsubsection{The DATE type}
 \index{date}
 \index{format input!date}
 
@@ -2253,7 +2253,7 @@ Valid keywords are listed in table \ref{tab:date}.
 \end{minipage}
 \end{table}
 
-\paragraph{The TEXTAREA type}
+\subsubsection{The TEXTAREA type}
 \index{textarea}
 \index{format input!textarea}
 \label{para:mylabel5}
@@ -2305,7 +2305,7 @@ the temporary file. \\ \hline
 \end{minipage}
 \end{table}
 
-\paragraph{The TIME element}
+\subsubsection{The TIME element}
 \index{time}
 \index{format input!time}
 \label{para:mylabel6}
