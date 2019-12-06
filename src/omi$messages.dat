@@ -88,6 +88,7 @@ NOPRIV         W you are not authorized for this menu or function
 NOPWD          W no password set on this menu
 NOROUTINE      W no routine found for the command ~S
 NOSCHEME       E no colorscheme given in OMI$POPUP
+NOSUCHFRM      E no such format type - ~S is not implemented
 NOSUCHITM      W cannot find item \~S\ or section \[~S]\
 NOSUCHNAME     W no submenu found with name ~S
 NOSUCHTA       W invalid parameter - no such text area

@@ -856,6 +856,13 @@ $	if .not. omi$_debug then -
 	   $ set message /nofacility /noseverity /noidentification /notext
 $	_req_format = f$edit('_format'$type,"collapse,upcase")
 $!
+$	assign /user nla0: sys$output
+$	search 'f$environment("procedure")' "input$''_req_format'_format:"
+$	if $status .eq. omi$_nomatch
+$	   then
+$		omi$signal omi nosuchfrm,'_req_format'
+$		return $status
+$	endif
 $	gosub input$'_req_format'_format
 $	_status = $status
 $	if _status .ge. omi$_warning
