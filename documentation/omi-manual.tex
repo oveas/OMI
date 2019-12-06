@@ -879,7 +879,7 @@ This setting can be used in OMI modules as: \\
 \label{para:float}
 
 Specifies the default character (``.'' or ``,'') that will be used for the 
-floating point INTEGER format type (see section \ref{para:mylabel4}).
+floating point format type (see section \ref{para:floatingpoint}).
 
 \subsubsection*{VERSION{\_}ID}
 
@@ -2216,22 +2216,38 @@ only accepts all characters (`A'-`Z'), numbers (0-9) and the underline (\_) as v
 This indicates the input should be of the \textsl{INTEGER} 
 type\index{integer}\index{format input!integer}. An invalid response will 
 result in a warning message. \\
-Valid keywords are listed in table \ref{tab:integer}.
+Valid keywords are listed in table \ref{tab:integer}\footnote{ Up till OMI v2.6, the keywords \textsl{FLOAT} could be used in the \textsl{INTEGER} format block to indicate the integer can also be a floating point value, but the MIN and MAX values still had to be integers.\\
+In OMI v2.7, the \textsl{FLOAT} format type is introduced with full floating point support. Although the \textsl{FLOAT} keyword is still supported, it's recommended to change this to a \textsl{FLOAT} type (see section \ref{para:floatingpoint}).}
 
 \begin{table}[h!tb]
 \begin{minipage}[h!tb]{\textwidth}
 \begin{tabular}{llp{6cm}} \hline
 \textsl{MIN} & [\textit{integer value}] & The lowest value allowed. \\
 \textsl{MAX} & [\textit{integer value}] & The highest value allowed. \\
-\textsl{FLOAT} & [\textsf{TRUE} or \textsf{FALSE}] & Specifies the input value can be a floating point\footnote{ When an integer can have a floating point, the \textsl{MIN} and 
-\textsl{MAX} values will still be regular integers; they can never have 
-floating point values.}. \\
+\end{tabular}
+\caption{Keywords for the INTEGER format type}\label{tab:integer}
+\end{minipage}
+\end{table}
+
+\subsubsection{The FLOAT type}
+\index{floating point}
+\index{format input!float}
+\label{para:floatingpoint}
+
+This indicates the input should be of the floating point type. The default seperating character is taken from the configuration file (see section \ref{para:float}, but can be overruled with the \textsl{FLOAT{\_}POINT} keyword. \\
+All valid keywords are listed in table \ref{tab:float}.
+
+\begin{table}[h!tb]
+\begin{minipage}[h!tb]{\textwidth}
+\begin{tabular}{llp{6cm}} \hline
+\textsl{MIN} & [\textit{floating point value}] & The lowest value allowed. \\
+\textsl{MAX} & [\textit{floating point value}] & The highest value allowed. \\
 \textsl{FLOAT\_POINT} & [\textsf{.} or \textsf{,}]&  Specifies which character will be used as the floating-point 
 character. It overwrites the default value from the configuration 
 file (see section \ref{para:float})\footnote{ Input entered by the user, must contain the same floating-point 
 character!}.\\ \hline
 \end{tabular}
-\caption{Keywords for the INTEGER format type}\label{tab:integer}
+\caption{Keywords for the FLOAT format type}\label{tab:float}
 \end{minipage}
 \end{table}
 
@@ -5085,6 +5101,7 @@ $	return $status
 \item Configurable prompt for Tag- and Selectlists
 \item Added the configion option \textsl{CENTER{\_}SELECT{\_}LISTS} in the \textsl{[SCREEN]} section to allow the \textsl{SELECT} subwindows to be positioned in the center.
 \item Added an option to log sessions using the \textsl{LOG{\_}SESSION} element in the main menu.
+\item Added the \textsl{FLOAT} format type. The \textsl{FLOAT} keyword in \textsl{INTEGER}-type format blocks is still supported, but now undocumented and discouraged.
 \end{itemize}
 
 \section*{Version 2.6, Released: 16-05-2019}

@@ -1117,6 +1117,63 @@ $	goto input$end_format
 $!
 $!******************************************************************************
 $!
+$!==>	Validate the FLOAT type
+$!
+$ input$float_format:
+$!
+$	if f$type('_format'$float_point) .eqs. ""
+$	   then $ _float_point = main$float_point
+$	   else $ _float_point = '_format'$float_point
+$	endif
+$!
+$	_var_int = f$element(0, "''_float_point'", '_variable')
+$	if _var_int .eqs. "" then $ _var_int = 0
+$	_var_dec = f$element(1, "''_float_point'", '_variable')
+$	if _var_dec .eqs. "" .or. _var_dec .eqs. _float_point then $ _var_dec = 0
+$	if f$type(_var_int) .nes. "INTEGER" .or. f$type(_var_dec) .nes. "INTEGER" -
+	   then $ goto input$invalid_format
+$!
+$	if f$type('_format'$min) .nes. ""
+$	   then
+$		_min_int = f$element(0, "''_float_point'", '_format'$min)
+$		if _min_int .eqs. "" then $ _min_int = 0
+$		_min_dec = f$element(1, "''_float_point'", '_format'$min)
+$		if _min_dec .eqs. "" .or. _min_dec .eqs. _float_point then $ _min_dec = 0
+$		if _var_int .lt. _min_int .or. -
+		   (_var_int .ge. 0 .and. (_var_int .eq. _min_int .and. _var_dec .lt. _min_dec)) .or. -
+		   (_var_int .lt. 0 .and. (_var_int .eq. _min_int .and. _var_dec .gt. _min_dec))
+$		   then
+$			on warning then $ continue
+$			set message 'omi$_message'
+$			omi$signal omi lowval,'_format'$min
+$			return omi$_warning
+$		endif
+$	endif
+$!
+$	if f$type('_format'$max) .nes. ""
+$	   then
+$		_max_int = f$element(0, "''_float_point'", '_format'$max)
+$		if _max_int .eqs. "" then $ _max_int = 0
+$		_max_dec = f$element(1, "''_float_point'", '_format'$max)
+$		if _max_dec .eqs. "" .or. _max_dec .eqs. _float_point then $ _max_dec = 0
+$		if _var_int .gt. _max_int .or. -
+		   (_var_int .ge. 0 .and. (_var_int .eq. _max_int .and. _var_dec .gt. _max_dec)) .or. -
+		   (_var_int .lt. 0 .and. (_var_int .eq. _max_int .and. _var_dec .lt. _max_dec))
+$		   then
+$			on warning then $ continue
+$			set message 'omi$_message'
+$			omi$signal omi hival,'_format'$max
+$			return omi$_warning
+$		endif
+$	endif
+$!
+$	if f$locate(_float_point, '_variable') .eq. f$length('_variable') -
+	   then $ '_variable' = '_variable' + "''_float_point'0"
+$!
+$	goto input$end_format
+$!
+$!******************************************************************************
+$!
 $!==>	Validate the DATETIME type
 $!
 $ input$datetime_format:

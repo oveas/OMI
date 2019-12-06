@@ -11,6 +11,7 @@ x.x   Released: xx-xx-xxxx
 * Added the configion option CENTER_SELECT_LISTS in the [SCREEN] section
   to allow the SELECT subwindows to be positioned in the center.
 * Added an option to log sessions using the LOG_SESSION element in the main menu
+* Added the FLOAT format type
 
 2.6   Released: 12-05-2019
 
