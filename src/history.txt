@@ -4,6 +4,7 @@ x.x   Released: xx-xx-xxxx
 * Fix: Previous/Next labels where not displayed when scrolling through
   a SELECT list with multiple columns
 * Fix: Refresh when a SELECT list value is not changed in ALL_INPUTS
+* Fix: Issue introduced with rounding in the calculator in v2.6
 * Introduced symbols for font- and color section
 * Added the COLORSCHEME option to OMI$POPUP
 * Added support for the INFO command in OTF menus

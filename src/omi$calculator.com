@@ -415,8 +415,16 @@ $ calc$_round_result:
 $!
 $	if f$integer(f$element(1, ".", _result)) .eq. 0
 $	   then $ _result = f$element(0, ".", _result)
-$	   else $ _result = f$element(0, ".", _result) + -
-		   "." + f$integer(f$element(1, ".", _result))
+$	   else
+$		_dec = f$element(1, ".", _result)
+$		_result = "''f$element(0, ".", _result)'" + "."
+$	 calc_round$remove_zeros:
+$		if f$extract(f$length(_dec)-1, 1, _dec) .eqs. "0"
+$		   then
+$			_dec = _dec / 10
+$			goto calc_round$remove_zeros
+$		endif
+$		_result = _result + "''_dec'"
 $	endif
 $	return
 $!
