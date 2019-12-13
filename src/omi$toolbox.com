@@ -113,17 +113,57 @@ $ popup$_nextword:
 $!
 $	_ec = _ec + 1
 $	_next_word = f$element(_ec, " ", p2)
+$!
 $	if _next_word .eqs. " " .or. _next_word .eqs. "" then -
 	   $ goto popup$end_nextword
+$!
+$	if f$locate("\n", _next_word) .lt. f$length(_next_word)
+$	   then
+$		_newline_pos = f$locate("\n", _next_word)
+$		if _newline_pos .eq. 0
+$		   then
+$			if f$length(_msg_string'_lc') .gt. _widest then -
+			   $ _widest = f$length(_msg_string'_lc')
+$			_lc = _lc + 1
+$			if f$length(_next_word) .gt. 2
+$			   then $ _msg_string'_lc' = _next_word - "\n"
+$			   else $ _msg_string'_lc' = ""
+$			endif
+$			goto popup$_nextword
+$		endif
+$!
+$		if f$extract(_newline_pos - 1, 1, _next_word) .nes. "\"
+$		   then
+$			_saved_next_word = f$extract(_newline_pos + 2, f$length(_next_word) - _newline_pos - 2, _next_word)
+$			_next_word = f$extract(0, _newline_pos, _next_word)
+$			_forced_newline = 1
+$		endif
+$	endif
+$!
 $	if (f$length(_msg_string'_lc') + f$length(_next_word) + 1) -
 	   .lt. _maxlen
-$	   then $ _msg_string'_lc' = _msg_string'_lc' + " " + _next_word
+$	   then
+$		_msg_string'_lc' = _msg_string'_lc' + " " + _next_word
+$		if f$type(_forced_newline) .nes. ""
+$		then
+$			_lc = _lc + 1
+$			_msg_string'_lc' = _saved_next_word
+$			delete\ /symbol /local _forced_newline
+$			delete\ /symbol /local _saved_next_word
+$		endif
 $	   else
 $		if f$length(_msg_string'_lc') .gt. _widest then -
 		   $ _widest = f$length(_msg_string'_lc')
 $		_lc = _lc + 1
 $		_msg_string'_lc' = _next_word
+$		if f$type(_forced_newline) .nes. ""
+$		then
+$			_msg_string'_lc' =  _msg_string'_lc' + " " + _saved_next_word
+$			delete\ /symbol /local _forced_newline
+$			delete\ /symbol /local _saved_next_word
+$		endif
 $	endif
+$!
 $	goto popup$_nextword
 $!
 $ popup$end_nextword:

@@ -3492,7 +3492,8 @@ This command displays a popup- message box on top of the menu screen. The
 user then has to press return to acknowledge the message.\\[3mm]
 \textbf{Parameter}\\*[3mm]
 The first parameter should be enclosed by double quotes. It contains the 
-message that will be displayed in the popup box.\\[3mm]
+message that will be displayed in the popup box.\\
+The message can contain newlines using ``\texttt{\ensuremath{\backslash}n}''. To force an empty line, 2 newlines can be added, but they \textit{must} contain a whitespace: ``\texttt{\ensuremath{\backslash}n\textvisiblespace\ensuremath{\backslash}n}''\\[3mm]
 
 \textbf{Options}\\*[3mm]
 
@@ -5093,15 +5094,16 @@ $	return $status
 \section*{Version x.x, Released: xx-xx-xxxx}
 
 \begin{itemize}
-\item Fix: set default values for \textsl{SELECT} lists in \textsl{OTF} menus properly
-\item Fix: \textsl{\textbf{P}revious}/\textsl{\textbf{N}ext} labels where not displayed when scrolling through a \textsl{SELECT} list with multiple columns
-\item Fix: Refresh when a \textsl{SELECT} list value is not changed in \select{ALL{\_}INPUTS}
-\item Fix: Issue introduced with rounding in the calculator in v2.6
+\item Fix: set default values for \textsl{SELECT} lists in \textsl{OTF} menus properly.
+\item Fix: \textsl{\textbf{P}revious}/\textsl{\textbf{N}ext} labels where not displayed when scrolling through a \textsl{SELECT} list with multiple columns.
+\item Fix: Refresh when a \textsl{SELECT} list value is not changed in \textsl{ALL{\_}INPUTS}.
+\item Fix: Issue introduced with rounding in the calculator in v2.6.
 \item Introduced symbols for font- and color section (section \ref{subsection:fontcolors}).
-\item Added the \textsl{COLORSCHEME} option to \textsl{OMI{\$}POPUP}
-\item Added support for the \textsl{INFO} command in \textsl{OTF} menus
-\item Configurable prompt for Tag- and Selectlists
-\item Added the configion option \textsl{CENTER{\_}SELECT{\_}LISTS} in the \textsl{[SCREEN]} section to allow the \textsl{SELECT} subwindows to be positioned in the center.
+\item Added the \textsl{COLORSCHEME} option to \textsl{OMI{\$}POPUP}.
+\item Added support for forced newlines (\texttt{\ensuremath{\backslash}n}) in \textsl{OMI{\$}POPUP}.
+\item Added support for the \textsl{INFO} command in \textsl{OTF} menus.
+\item Configurable prompt for Tag- and Selectlists.
+\item Added the configion option \textsl{CENTER{\_}SELECT{\_}LISTS} in the \textsl{[SCREEN]} section to allow the \textsl{SELECT} subwindows to be positioned in the center..
 \item Added an option to log sessions using the \textsl{LOG{\_}SESSION} element in the main menu.
 \item Added the \textsl{FLOAT} format type. The \textsl{FLOAT} keyword in \textsl{INTEGER}-type format blocks is still supported, but now undocumented and discouraged.
 \end{itemize}
