@@ -229,7 +229,7 @@ $	otf_menu_sellst$value3 = "Tag list"
 $!
 $	otf_menu_intname$type        = "string"
 $	otf_menu_intnames$ivchars    = "@#$%^&*()'?/|\+`~{}[]<>"
-$	otf_menu_intnames$collapse   = "true" 
+$	otf_menu_intnames$collapse   = omi$_true 
 $	otf_menu_intnames$minlength  = 2
 $!
 $	return

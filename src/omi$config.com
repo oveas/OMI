@@ -263,10 +263,10 @@ $		   then
 $			if _item .eqs. "HEIGHT" .or. _item .eqs. "EXIT_HEIGHT"
 $			   then
 $				_value = f$getdvi("tt:", "tt_page")
-$				if _item .eqs. "HEIGHT" then $ screen$height_inquired == "true"
+$				if _item .eqs. "HEIGHT" then $ screen$height_inquired == omi$_true
 $			   else
 $				_value = f$getdvi("tt:", "devbufsiz")
-$				if _item .eqs. "WIDTH" then $ screen$width_inquired == "true"
+$				if _item .eqs. "WIDTH" then $ screen$width_inquired == omi$_true
 $			endif
 $		endif
 $		if f$type('_section'$'_item') .nes. "" .and. p3 .nes. -
@@ -814,12 +814,12 @@ $	call config$_set_defaults screen$exit_height		"0"
 $	call config$_set_defaults screen$window_topmargin	"1"
 $	call config$_set_defaults screen$scroll_region		"enabled"
 $	call config$_set_defaults screen$scrollregion_autodisable	"y"
-$	call config$_set_defaults screen$separate_inputs	"true"
-$	call config$_set_defaults screen$display_names		"false"
+$	call config$_set_defaults screen$separate_inputs	omi$_true
+$	call config$_set_defaults screen$display_names		omi$_false
 $	call config$_set_defaults screen$tab			"15"
-$	call config$_set_defaults screen$width_inquired		"false"
-$	call config$_set_defaults screen$height_inquired	"false"
-$	call config$_set_defaults screen$center_select_lists	"false"
+$	call config$_set_defaults screen$width_inquired		omi$_false
+$	call config$_set_defaults screen$height_inquired	omi$_false
+$	call config$_set_defaults screen$center_select_lists	omi$_false
 $!
 $	call config$_set_defaults questions$all_inputs		"All Inputs"
 $	call config$_set_defaults questions$option		"OMI>"

@@ -196,12 +196,12 @@ $	   then
 $		omi$confirm "''questions$default_confirm'"
 $		if .not. omi$confirmed
 $		   then
-$			if _refresh then $ omi$refresh
+$			if _refresh then $ omi$refresh inside_only
 $			return omi$_warning
 $		endif
 $	endif
 $	if _wait    then $ omi$wait
-$	if _refresh then $ omi$refresh
+$	if _refresh then $ omi$refresh inside_only
 $	return omi$_ok
 $!
 $!******************************************************************************
@@ -870,7 +870,7 @@ $!******************************************************************************
 $!
 $!==>	Handle the OMI$CONFIRM command that is defined for use in additional
 $!	procedures. This routines returnes the value OMI$CONFIRMED, which can
-$!	be true (1) or false (0).
+$!	be OMI$_TRUE or OMI$_FALSE.
 $!
 $ confirm$:
 $!
@@ -911,22 +911,22 @@ $		goto confirm$_ask
 $	endif
 $	if _answer .eqs. ""
 $	   then
-$		if p3 .eqs. "Y" then $ omi$confirmed == 1
-$		if p3 .eqs. "N" then $ omi$confirmed == 0
+$		if p3 .eqs. "Y" then $ omi$confirmed == omi$_true
+$		if p3 .eqs. "N" then $ omi$confirmed == omi$_false
 $		if p3 .eqs. ""
 $		   then
 $			omi$signal omi nodef
 $			goto confirm$_ask
 $		endif
-$		return
+$		return omi$confirmed
 $	   else
 $		if f$edit(f$extract(0,f$length(questions$answer_yes),_answer), -
 	   	   "upcase") .eqs. f$edit(questions$answer_yes,"upcase") then -
-		   $ omi$confirmed == 1
+		   $ omi$confirmed == omi$_true
 $		if f$edit(f$extract(0,f$length(questions$answer_no),_answer), -
 	   	   "upcase") .eqs. f$edit(questions$answer_no,"upcase") then -
-		   $ omi$confirmed == 0
-$		return omi$_ok
+		   $ omi$confirmed == omi$_false
+$		return omi$confirmed
 $	endif
 $	
 $ confirm$_cancelled:
@@ -1016,7 +1016,7 @@ $	if p2 .eqs. "INIT_SESSIONLOG"
 $	   then
 $		if f$type(omi$log_sessions) .nes. "" -
 		   then $ return omi$_ok ! We switched menu's, keep everything as it was
-$		omi$log_sessions == "true"
+$		omi$log_sessions == omi$_true
 $		omi$log_session_file == main$session_log_location + f$parse(omi$menu_file,,,"name") + -
 		   "_" + (f$cvtime() - "-"-"-"-" "-":"-":"-".") + ".log"
 $		open /write/error=logsession$_writefail sessionlog 'omi$log_session_file'
@@ -1028,7 +1028,7 @@ $		close sessionlog
 $		return omi$_ok
 $	endif
 $!
-$	if f$type(omi$log_sessions) .eqs. "" then $ omi$log_sessions == "false"
+$	if f$type(omi$log_sessions) .eqs. "" then $ omi$log_sessions == omi$_false
 $	if .not. omi$log_sessions then $ return omi$_ok
 $!
 $	if p2 .eqs. "END_SESSIONLOG"
@@ -1049,7 +1049,7 @@ $	close sessionlog
 $	return omi$_ok
 $!
 $ logsession$_writefail:
-$	omi$log_sessions == "false"
+$	omi$log_sessions == omi$_false
 $	omi$signal omi seslogfile,'main$session_log_location'
 $	return $status
 $!

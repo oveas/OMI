@@ -7,6 +7,8 @@ x.x   Released: xx-xx-xxxx
 * Fix: Issue introduced with rounding in the calculator in v2.6.
 * Introduced symbols for font- and color section.
 * Added the COLORSCHEME option to OMI$POPUP.
+* Added the symbols OMI$_TRUE and OMI$_FALSE
+* Added keywords INSIDE_ONLY for OMI$REFRESH and OVERWRITE for OMI$DISPLAY_INFO
 * Added support for forced newlines (\n) in OMI$POPUP.
 * Added support for the INFO command in OTF menus.
 * Configurable prompt for Tag- and Selectlists.

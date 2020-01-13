@@ -60,7 +60,7 @@ $!
 $!	... and display them
 $	omi$display_info
 $	omi$wait
-$	omi$refresh
+$	omi$refresh inside_only
 $!
 $ end_display:
 $!

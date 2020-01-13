@@ -636,7 +636,7 @@ $		if f$type(scroll$next_page) .nes. "" then -
 		   $ delete\/symbol/global scroll$next_page
 $		if f$type(scroll$max_on_page) .nes. "" then -
 		   $ delete\/symbol/global scroll$max_on_page
-$		omi$refresh
+$		omi$refresh inside_only
 $	endif
 $	_line = inputs$first_line - 1 + '_input'
 $	_value = '_variable'
@@ -717,7 +717,7 @@ $		delete\ /symbol /global _remember_work_order_list
 $	endif
 $!
 $	if _sel_list
-$	   then $ omi$refresh
+$	   then $ omi$refresh inside_only
 $	   else
 $		omi$cmdline_clear
 $		omi$msgline_clear
@@ -885,20 +885,20 @@ $	if f$type('_variable') .nes. "STRING" .and. -
 	   $ goto input$invalid_format
 $!
 $	if f$type('_format'$upcase) .eqs. ""
-$	   then $ _upcase = "false"
+$	   then $ _upcase = omi$_false
 $	   else
 $		if '_format'$upcase
-$		   then $ _upcase = "true"
-$		   else $ _upcase = "false"
+$		   then $ _upcase = omi$_true
+$		   else $ _upcase = omi$_false
 $		endif
 $	endif
 $!
 $	if f$type('_format'$lowercase) .eqs. ""
-$	   then $ _lowercase = "false"
+$	   then $ _lowercase = omi$_false
 $	   else
 $		if '_format'$lowercase
-$		   then $ _lowercase = "true"
-$		   else $ _lowercase = "false"
+$		   then $ _lowercase = omi$_true
+$		   else $ _lowercase = omi$_false
 $		endif
 $	endif
 $!
@@ -908,11 +908,11 @@ $!	This one will remain in here for backwards compatibility, but
 $!	the keyword will be replaced (and overwritten!!) by COLLAPSE
 $!
 $	if f$type('_format'$blanks) .eqs. ""
-$	   then $ _collapse = "false"
+$	   then $ _collapse = omi$_false
 $	   else
 $		if '_format'$blanks
-$		   then $ _collapse = "true"
-$		   else $ _collapse = "false"
+$		   then $ _collapse = omi$_true
+$		   else $ _collapse = omi$_false
 $		endif
 $	endif
 $!
@@ -922,11 +922,11 @@ $	if f$type('_format'$collapse) .eqs. ""
 $	   then
 $		! Only overwrite if the obsolete keyword BLANKS was not used
 $		if f$type('_format'$blanks) .eqs. "" then -
-			$ _collapse = "false"
+			$ _collapse = omi$_false
 $	   else
 $		if '_format'$collapse
-$		   then $ _collapse = "true"
-$		   else $ _collapse = "false"
+$		   then $ _collapse = omi$_true
+$		   else $ _collapse = omi$_false
 $		endif
 $	endif
 $!
@@ -989,11 +989,11 @@ $!
 $	if f$type('_variable') .nes. "STRING" then $ goto input$invalid_format
 $!
 $	if f$type('_format'$wildcards) .eqs. ""
-$	   then $ _allow_wc = "false"
+$	   then $ _allow_wc = omi$_false
 $	   else
 $		if '_format'$wildcards
-$		   then $ _allow_wc = "true"
-$		   else $ _allow_wc = "false"
+$		   then $ _allow_wc = omi$_true
+$		   else $ _allow_wc = omi$_false
 $		endif
 $	endif
 $!
@@ -1036,11 +1036,11 @@ $		return omi$_warning
 $	endif
 $!
 $	if f$type('_format'$required) .eqs. ""
-$	   then $ _existreq = "false"
+$	   then $ _existreq = omi$_false
 $	   else
 $		if '_format'$required
-$		   then $ _existreq = "true"
-$		   else $ _existreq = "false"
+$		   then $ _existreq = omi$_true
+$		   else $ _existreq = omi$_false
 $		endif
 $	endif
 $!
@@ -1243,7 +1243,7 @@ $		assign /user TT: sys$input
 $		'main$editor' '_ta_file
 $		if .not. _ta_keep_history then -
 		   $ purgee /nolog /keep=1 /noconfirm 'f$element(0, ";", _ta_file)
-$		omi$refresh
+$		omi$refresh inside_only
 $		gosub textarea$_readfile
 $	endif
 $	goto input$end_format
@@ -1752,7 +1752,7 @@ $!
 $ main$end_taglist:
 $!
 $	omi$log_session "<Ctrl/Z>"
-$	omi$refresh
+$	omi$refresh inside_only
 $	return omi$_ok
 $!
 $!******************************************************************************
@@ -2160,7 +2160,7 @@ $	init_def$search_string = "''omi$current_menu'$input,counter$ /match=and"
 $	gosub main$default_values
 $!
 $	if f$length(omi$_p1) .ge. 3 .and. omi$_p1 .eqs. f$extract(0, f$length(omi$_p1), "REFRESH") -
-	   then $ omi$refresh
+	   then $ omi$refresh inside_only
 $!
 $	return omi$_ok
 $!
@@ -2253,7 +2253,7 @@ $!
 $ info$_done:
 $!
 $	close omi$hlp
-$	omi$refresh
+$	omi$refresh inside_only
 $	return omi$_ok
 $!
 $!******************************************************************************
@@ -2428,7 +2428,7 @@ $		endif
 $		delete\ /symbol /local varreset$
 $		if f$extract(0, 3, f$edit(omi$_p2, "upcase")) .nes. "BAC" !Background
 $		   then
-$			omi$refresh
+$			omi$refresh inside_only
 $			omi$signal omi resetvar
 $		endif
 $		return $status
@@ -3144,7 +3144,7 @@ $		_display_value = f$fao("!''_astrlen'**")
 $	   else $ _display_value = _value
 $	endif
 $!
-$	if _sel_list then $ omi$refresh
+$	if _sel_list then $ omi$refresh inside_only
 $	if f$length(_value) .le. inputs$max_size
 $	   then $ ws f$fao("''ESC$'[''_line';''inputs$value_location'H''_display_value'!''_blanks'* ")
 $	   else $ ws "''ESC$'[''_line';''inputs$value_location'H''f$extract(0,inputs$max_size,_display_value)'''ESC$'(0`''ESC$'(B"
@@ -3156,7 +3156,7 @@ $!
 $ main$cancel_getall_inputs:
 $!
 $	omi$log_session "<Ctrl/Z>"
-$	omi$refresh
+$	omi$refresh inside_only
 $! fallthru
 $ main$end_getall_inputs:
 $!
@@ -4076,10 +4076,14 @@ $		define /nolog Omi$ "''_thisfile_location'"
 $	endif
 $	omi$nodename = f$edit(f$getsyi("scsnode"),"collapse")
 $	omi$current_user = f$edit(f$getjpi(0,"username"),"collapse")
-$	omi$_ok	= %X1fff3001
+$	omi$_ok        = %X1fff3001
 $	omi$_cancelled = %X1fff30ad
 $	omi$_warning   = %X1fff30af
 $	omi$_error     = %X1fff30b5
+$!
+$	omi$_true      = %X1fff3007
+$	omi$_false     = %X1fff3008
+$!
 $	ESC$[0,8]  = %X1b
 $	BELL$[0,8] = %X7
 $	LF$[0,8]   = %Xa

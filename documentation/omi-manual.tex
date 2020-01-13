@@ -27,7 +27,7 @@ Reference Guide}
 Oscar van Eijk\\
 Oveas Functionality Provider\\
 oscar.van.eijk@oveas.com\\
-https://github.com/oveas/OMI}
+\url{https://github.com/oveas/OMI}}
 
 \date{Belgium, May 16, 2019}
 
@@ -118,12 +118,12 @@ This tool is delivered ``as is''. No warranty, express or implied, is
 offered as to the suitability of the software for any purpose. Any errors 
 arising from the use of this software, is the responsibility of the user.\\*[3mm]
 Support and the latest version is available at \\
-\indent\textbf{https://github.com/oveas/OMI/releases} \\
+\indent\url{https://github.com/oveas/OMI/releases} \\
 %To stay informed about the changes and fixes, subscribe to the OMI mailing 
 %list by sending an email to \textsl{omi-request@oveas.com} with the word 
 %\textsl{subscribe} on the subject line. \\
 For questions, bug reports, feature requests etc., please use the tracket at GitHub: \\
-\indent\textbf{https://github.com/oveas/OMI/issues}
+\indent\url{https://github.com/oveas/OMI/issues}
 
 \section*{Acknowledgements}\addcontentsline{toc}{section}{Acknowledgements}
 
@@ -147,7 +147,7 @@ Edward Vlak did some debugging and fixed a possible loop in \texttt{REQUIRED\_OR
 \label{subsec:system}
 
 To install OMI, download the distribution ZIP file\footnote{ This requires UNZIP for VMS, available from
-ftp://www.process.com/vms-freeware/} in BINary format.
+\url{ftp://www.process.com/vms-freeware/}} in BINary format.
 Also, download \textsl{OMI{\$}INSTALL.COM} in ASCII format.
  
 Next, set default to the directory where the installation
@@ -3292,7 +3292,7 @@ The decrypted result will be returned in the global symbol \textsl{OMI{\$}DECRYP
 \index{OMI commands in modules!OMI{\$}DISPLAY{\_}INFO}
 \label{subsubsec:mylabel51}
 
-\indent Format: \textbf{OMI{\$}DISPLAY{\_}INFO}\\*[3mm]
+\indent Format: \textbf{OMI{\$}DISPLAY{\_}INFO} [\textit{OVERWRITE}]\\*[3mm]
 Writes specified information to the menu screen. The information has to be 
 specified as separate records, named \textsl{OMI{\$}RECORD1}, \textsl{OMI{\$}RECORD2}, ... 
 \textsl{OMI{\$}RECORD\textit{n}}.
@@ -3311,6 +3311,7 @@ The older fifth record should be removed using:\\
 \indent\textsl{{\$} DELETE /SYMBOL /LOCAL OMI{\$}RECORD5} \\
 or by specifying it as empty: \\
 \indent\textsl{{\$} OMI{\$}RECORD5 = ""}\\[3mm]
+\textbf{Parameter}\\*[3mm]The optional keyword \textsl{OVERWRITE} prevents a screen refresh before the output is written. This can be used if consecutive calls to \textsl{OMI{\$}DISPLAY{\_}INFO} are made, each  with additional records, without refreshing records that already have been written to the screen.\\[3mm]
 \textbf{Example}\\*[3mm]
 \begin{textsf}
 \indent{\$} OMI{\$}RECORD1 = "Username : " + USR{\$}NAME \newline
@@ -3478,9 +3479,11 @@ This command erases the contents of the message line of the OMI menu window.
 \index{refresh the screen}
 \label{subsubsec:mylabel58}
 
-\indent Format: \textbf{OMI{\$}REFRESH}\\*[3mm]
+\indent Format: \textbf{OMI{\$}REFRESH} [\textit{INSIDE{\_}ONLY}]\\*[3mm]
 Rebuilds the menu window with the current menu options. This option is 
-especially useful after the \textsl{OMI{\$}DISPLAY{\_}INFO} command.
+especially useful after the \textsl{OMI{\$}DISPLAY{\_}INFO} command (see section \ref{subsubsec:mylabel51}).\\[3mm]
+\textbf{Parameter}\\*[3mm]
+The optional keyword \textsl{INSIDE{\_}ONLY} can be used to prevent redrawing the outline of the menu screen.
 
 \subsection{OMI{\$}POPUP}
 \index{OMI commands in modules!OMI{\$}POPUP}
@@ -3697,6 +3700,10 @@ module exits with an error, OMI takes no action, but it
 might be useful when OMI modules call other procedures. \\
 \textsl{OMI{\$}{\_}CANCELLED}\index{return values}\index{OMI{\$}{\_}CANCELLED}\index{OMI symbols!local symbols!OMI{\$}{\_}CANCELLED} & 
 This is an exit status that can be used for special purposes. \\
+\textsl{OMI{\$}{\_}TRUE}\index{OMI{\$}{\_}TRUE}\index{OMI symbols!local symbols!OMI{\$}{\_}TRUE} & 
+This symbol can be used as return value, and as a value for boolean variables. \\
+\textsl{OMI{\$}{\_}FALSE}\index{OMI{\$}{\_}FALSE}\index{OMI symbols!local symbols!OMI{\$}{\_}FALSE} & 
+This symbol can be used as return value, and as a value for boolean variables. \\
 \textsl{OMI{\$}NODENAME}\index{nodename}\index{OMI{\$}NODENAME}\index{OMI{\$}NODENAME} & 
 The nodename on which OMI is currently running. \\
 \textsl{OMI{\$}CURRENT{\_}USER}\index{username}\index{OMI{\$}CURRENT{\_}USER}\index{OMI symbols!local symbols!OMI{\$}CURRENT{\_}USER} & 
@@ -3736,7 +3743,7 @@ the user. This can be \textsl{SUBMENU}, \textsl{COMMAND} or \textsl{CALL}. \\
 \subsection{Symbols for font- and color selection}\label{subsection:fontcolors}\index{fonts}\index{colors}\index{background color|see{colors}}
 
 OMI provides several symbols that controls how text is displayed in the terminal. The symbols are based on the ANSI escape codes. \\
-The full list of symbols provided by OMI are givben in table \ref{tab:fontsymbols}.
+The full list of symbols provided by OMI are given in table \ref{tab:fontsymbols}.
 
 \vs
 
@@ -5100,6 +5107,8 @@ $	return $status
 \item Fix: Issue introduced with rounding in the calculator in v2.6.
 \item Introduced symbols for font- and color section (section \ref{subsection:fontcolors}).
 \item Added the \textsl{COLORSCHEME} option to \textsl{OMI{\$}POPUP}.
+\item Added the symbols \textsl{OMI{\$}{\_}TRUE} and \textsl{OMI{\$}{\_}FALSE}
+\item Added keywords \textsl{INSIDE{\_}ONLY} for \textsl{OMI{\$}REFRESH} and \textsl{OVERWRITE} for \textsl{OMI{\$}DISPLAY{\_}INFO}
 \item Added support for forced newlines (\texttt{\ensuremath{\backslash}n}) in \textsl{OMI{\$}POPUP}.
 \item Added support for the \textsl{INFO} command in \textsl{OTF} menus.
 \item Configurable prompt for Tag- and Selectlists.

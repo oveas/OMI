@@ -47,7 +47,8 @@ $	if omi$batch_mode then $ goto screen$_exit
 $!
 $	if p1 .eqs. "REFRESH"
 $	   then
-$		gosub screen$_initialize 
+$		if f$length(p2) .lt. 3 .or. f$extract(0, f$length(f$edit(p2, "upcase")), "INSIDE_ONLY") .nes. p2 -
+		   then $ gosub screen$_initialize 
 $		gosub screen$setup_window
 $	endif
 $	if p1 .eqs. "SETUP_SCROLL_REGION"
@@ -621,7 +622,8 @@ $!	The records are presented as 'omi$record1, omi$record2 ....'
 $!
 $ screen$display_information:
 $!
-$	gosub screen$erase_window
+$	if f$length(p2) .lt. 3 .or. f$extract(0, f$length(f$edit(p2, "upcase")), "OVERWRITE") .nes. p2 -
+	   then $ gosub screen$erase_window
 $	_record_cnt = 1
 $!
 $ displ_info$records:
@@ -986,9 +988,6 @@ $	if f$type(scroll$next_page) .nes. "" then -
 	   $ delete\/symbol/global scroll$next_page
 $	if f$type(scroll$previous_page) .nes. "" then -
 	   $ delete\/symbol/global scroll$previous_page
-$!
-$	if f$type(omi$confirmed) .nes. "" then -
-	   $ delete\/symbol/global omi$confirmed
 $!
 $	if p2 .nes. "NOCLS" .and. .not. omi$batch_mode
 $	   then
