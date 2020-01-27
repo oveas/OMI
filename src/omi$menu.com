@@ -384,20 +384,25 @@ $	goto main$get_option
 $!
 $ option$cancel_input:
 $!
-$	omi$log_session "<Ctrl/Z>"
+$	if f$type(omi$option) .nes. ""
+$	   then
+$		if omi$option .eq. 0
+$		   then
+$			if f$type(omi$option) .eqs. "INTEGER" .and. omi$option .eq. 0
+$			   then
+$				delete\ /symbol /local omi$option
+$				omi$signal omi toplevel
+$				goto main$get_option
+$			endif
+$		   else $ omi$log_session "<Ctrl/Z>"
+$		endif
+$	   else $ omi$log_session "<Ctrl/Z>"
+$	endif
+$!
 $	gosub main$perf_onexit
 $	if $status .eq. omi$_warning then $ goto main$get_option
 $	if omi$otf_menu then $ goto main$otf_exit
-$!
-$	if 'omi$current_menu'$previous .eqs. ""
-$	   then
-$		if f$type(omi$option) .eqs. "INTEGER" .and. omi$option .eq. 0
-$		   then
-$			omi$signal omi toplevel
-$			goto main$get_option
-$		endif
-$		goto main$_exit
-$	endif
+$	if 'omi$current_menu'$previous .eqs. "" then $ goto main$_exit
 $!
 $	omi$current_menu = 'omi$current_menu'$previous
 $	omi$cmdline_clear
