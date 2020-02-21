@@ -1017,14 +1017,26 @@ $	   then
 $		if f$type(omi$log_sessions) .nes. "" -
 		   then $ return omi$_ok ! We switched menu's, keep everything as it was
 $		omi$log_sessions == omi$_true
-$		omi$log_session_file == main$session_log_location + f$parse(omi$menu_file,,,"name") + -
-		   "_" + (f$cvtime() - "-"-"-"-" "-":"-":"-".") + ".log"
+$		_logfileName = main$session_log_location + f$parse(omi$menu_file,,,"name") + "_"
+$		omi$log_session_file == _logfileName + (f$cvtime() - "-"-"-"-" "-":"-":"-".") + ".log"
 $		open /write/error=logsession$_writefail sessionlog 'omi$log_session_file'
 $		write sessionlog "Session started at " + f$time() + -
 		   " by " + f$edit(f$getjpi(0,"username"),"collapse") + -
 		   " (" + f$user() + ")"
 $		write sessionlog "-----"
 $		close sessionlog
+$!
+$!		Now clean up old logs
+$		_keepDays = 30
+$		if f$type(menu$keep_slog_days) .eqs. "INTEGER" then -
+			$ _keepDays = menu$keep_slog_days
+$		if _keepDays .ge. 0
+$		   then
+$			_deletableLogs = "''_logfileName'%%%%%%%%%%%%%%%%.log;*"
+$			assign /user nla0: sys$error ! Failures? Probably not my file - ignore
+$			delete\ /nolog /noconfirm /before=("today=-''_keepDays'-") '_deletableLogs'
+$		endif
+$!
 $		return omi$_ok
 $	endif
 $!

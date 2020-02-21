@@ -926,8 +926,7 @@ When session logging is enabled (see section \ref{subsec:logsession}), a logfile
 Users who don't have write acces to that directory will get \textsl{\%OMI-E-SESLOGFAIL} errors and their sessions will not be logged.
 
 This configuration item should be used to point to a writeable location.\\
-Note the path value should ens with a colon for non-concealed logicals!
-
+Note the path value should end with a colon for non-concealed logicals!
 
 \subsection{[SCREEN]}
 \index{configuration file!modify the layout of OMI}
@@ -1319,10 +1318,23 @@ displayed by default.
 \subsection{The LOG{\_}SESSION element}\label{subsec:logsession}\index{log sessions}\index{sessionlog}
 
 When all user actions should be logged to a session logfile, this element must be set in the main menu (section \textsl{[MENU{\_}MENU]}) with value \textsl{TRUE} or \textsl{1}.\\
-By default, a logfile is created for each session is \textsl{OMI{\$}MENU{\_}DIRECTORY:}.
+By default, no sessions will be logged.
 
-If the location of the logfile shouls be changed for all or some users, it can bve changed in the configuration file for those users (see section \ref{para:sessionlogfile}).
+\vs
 
+The default location for session logfiles is \textsl{OMI{\$}MENU{\_}DIRECTORY:}. If that should be changed for all or some users, it can be changed in the configuration file for those users (see section \ref{para:sessionlogfile}).
+
+\subsection{The KEEP{\_}SLOG{\_}DAYS element}\label{subsec:cleansessionlog}\index{log sessions}\index{sessionlog!cleanup}
+
+Is session logging is enabled (see section \ref{subsec:logsession}), this setting can be used to specify the number of days the logfiles for this menu should be kept.\\
+This element must be set in the main menu (section \textsl{[MENU{\_}MENU]}), non-integer values will be ignored.\\
+To disble the cleaning of  logfiles for this menu, specify any negative value here\footnote{ with value 0, only the files of the current date will be kept.}.
+
+The default value is 30 days.
+
+\vs
+
+Note the files will only be cleaned if \textsl{LOG{\_}SESSION} is set to \textsl{TRUE}, so when logging is disabled at a certain point in time, no files will be removed anymore from that moment!
 
 \subsection{The ON{\_}INIT and ON{\_}EXIT elements}
 \label{subsubsec:mylabel22}
