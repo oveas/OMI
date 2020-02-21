@@ -13,7 +13,7 @@ $!*     Omi$Menu.Com       Oscar's Menu Interpreter                            *
 $!*                                                                            *
 $!* ************************************************************************** *
 $!* *                                                                        * *
-$!* * (c) 1997 - 2019, Oscar van Eijk - Oveas Funtionality Provider          * *
+$!* * (c) 1997 - 2020, Oscar van Eijk - Oveas Funtionality Provider          * *
 $!* *   This tool is delivered as is, and has no warranties whatsoever.      * *
 $!* *   It may be freely distributed as long as the distribution set is      * *
 $!* *   complete. It is not allowed to change any of the files, without      * *
@@ -128,6 +128,7 @@ $!*     2.3       25-06-2004  Oscar van Eijk, OVEAS                            *
 $!*     2.4       04-10-2018  Oscar van Eijk, OVEAS                            *
 $!*     2.5       17-03-2019  Oscar van Eijk, OVEAS                            *
 $!*     2.6       16-05-2019  Oscar van Eijk, OVEAS                            *
+$!*     2.7       21-02-2020  Oscar van Eijk, OVEAS                            *
 $!*                                                                            *
 $!******************************************************************************
 
@@ -173,7 +174,7 @@ $		omi$terminal_app_mode = f$getdvi("tt:", "tt_app_keypad")
 $!		recall /output=sys$scratch:omi$saved_recall_buffer._tmp$
 $!		recall /erase
 $	endif
-$	omi$version = "2.6"
+$	omi$version = "2.7"
 $	if f$trnlnm("omi$menu_directory") .eqs. "" then -
 	   $ define /nolog omi$menu_directory omi$
 $	gosub main$_initialize

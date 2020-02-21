@@ -7,6 +7,7 @@
 	,unicode]{hyperref}
 \usepackage{makeidx}
 \makeindex
+\usepackage[totoc]{idxlayout}
 \pagenumbering{roman}
 \newcommand{\vs}{\vspace{3mm}}
 \newcommand{\lt}{\texttt{<}}
@@ -19,7 +20,7 @@
 \begin{document}
 
 \title{
-OMI v2.6\\
+OMI v2.7\\
 Oscar's Menu Interpreter for VMS\\
 Reference Guide}
 
@@ -29,7 +30,7 @@ Oveas Functionality Provider\\
 oscar.van.eijk@oveas.com\\
 \url{https://github.com/oveas/OMI}}
 
-\date{Belgium, May 16, 2019}
+\date{Belgium, Februari 21, 2020}
 
 \maketitle
 
@@ -5110,7 +5111,7 @@ $	return $status
 \chapter{History}
 \index{history}
 
-\section*{Version x.x, Released: xx-xx-xxxx}
+\section*{Version 2.7, Released: 21-02-2020}
 
 \begin{itemize}
 \item Fix: set default values for \textsl{SELECT} lists in \textsl{OTF} menus properly.
@@ -5400,8 +5401,7 @@ Initial release, containing submenus, commands with input option, free inputs an
 
 OMB was OMI's predecessor I wrote and maintained in the early 90's. It was meant for private use only... and for the fun of it of course ;)
 
-\newpage
-\addcontentsline{toc}{chapter}{Index}
+\cleardoublepage
 \printindex
 
 \end{document}

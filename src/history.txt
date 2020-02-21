@@ -1,4 +1,4 @@
-2.7   Released: xx-xx-xxxx
+2.7   Released: 21-02-2020
 
 * Fix: set default values for SELECT lists in OTF menus properly.
 * Fix: Previous/Next labels where not displayed when scrolling through

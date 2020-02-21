@@ -23,7 +23,7 @@ $!
 $!==>	Evaluate the parameter.
 $!
 $	if f$type(menu$title) .eqs. "" then -
-	   $ menu$title = "Oscar's Menu Interpreter v''omi$version' - (c)1997-2019, Oveas"
+	   $ menu$title = "Oscar's Menu Interpreter v''omi$version' - (c)1997-2020, Oveas"
 $!
 $	if p1 .eqs. "CLEANUP"      then $ gosub screen$_erase
 $	if p1 .eqs. "CLEAR"        then $ gosub screen$erase_window
