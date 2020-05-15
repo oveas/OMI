@@ -1017,7 +1017,11 @@ $	   then
 $		if f$type(omi$log_sessions) .nes. "" -
 		   then $ return omi$_ok ! We switched menu's, keep everything as it was
 $		omi$log_sessions == omi$_true
-$		_logfileName = main$session_log_location + f$parse(omi$menu_file,,,"name") + "_"
+$		if f$type(menu$sessionlog_id) .eqs. ""
+$		   then $ _sessionlog_id = f$parse(omi$menu_file,,,"name")
+$		   else $ _sessionlog_id = menu$sessionlog_id
+$		endif
+$		_logfileName = main$session_log_location + _sessionlog_id + "_"
 $		omi$log_session_file == _logfileName + (f$cvtime() - "-"-"-"-" "-":"-":"-".") + ".log"
 $		open /write/error=logsession$_writefail sessionlog 'omi$log_session_file'
 $		write sessionlog "Session started at " + f$time() + -

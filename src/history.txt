@@ -1,3 +1,8 @@
+2.8   Released: xx-xx-xxxx
+
+* Added the OMI$SORT command to the standard toolbox.
+* Added the SESSIONLOG_ID element to the main menu
+
 2.7   Released: 21-02-2020
 
 * Fix: set default values for SELECT lists in OTF menus properly.

@@ -1323,11 +1323,16 @@ By default, no sessions will be logged.
 
 \vs
 
-The default location for session logfiles is \textsl{OMI{\$}MENU{\_}DIRECTORY:}. If that should be changed for all or some users, it can be changed in the configuration file for those users (see section \ref{para:sessionlogfile}).
+The default location for session logfiles is \textsl{OMI{\$}MENU{\_}DIRECTORY:}. If that should be changed for all or some users, it can be changed in the configuration file for those users (see section \ref{para:sessionlogfile}). Refer to section \ref{subsec:sessionlogid} for more information about the sessionlog filename.
+
+\subsection{The SESSIONLOG{\_}ID element}\label{subsec:sessionlogid}\index{log sessions}\index{sessionlog!filename}
+
+If session logging is enabled (see section \ref{subsec:logsession}), this element can be used to specify the ID used in the filename for the sessionlog.\\
+By default, the logfile wil get the name \textsl{\textit{ID}{\_}\textit{timestamp}.LOG}, where \textsl{\textit{ID}} is equal to the filename of the menu. Use this element to overwrite that ID.
 
 \subsection{The KEEP{\_}SLOG{\_}DAYS element}\label{subsec:cleansessionlog}\index{log sessions}\index{sessionlog!cleanup}
 
-Is session logging is enabled (see section \ref{subsec:logsession}), this setting can be used to specify the number of days the logfiles for this menu should be kept.\\
+If session logging is enabled (see section \ref{subsec:logsession}), this setting can be used to specify the number of days the logfiles for this menu should be kept.\\
 This element must be set in the main menu (section \textsl{[MENU{\_}MENU]}), non-integer values will be ignored.\\
 To disble the cleaning of  logfiles for this menu, specify any negative value here\footnote{ with value 0, only the files of the current date will be kept.}.
 
@@ -5150,6 +5155,7 @@ $	return $status
 
 \begin{itemize}
 \item Added the \textsl{OMI{\$}SORT} command to the standard toolbox.
+\item Added the \textsl{SESSIONLOG{\_}ID} element to the main menu
 \end{itemize}
 
 \section*{Version 2.7, Released: 21-02-2020}
