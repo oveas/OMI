@@ -20,7 +20,7 @@
 \begin{document}
 
 \title{
-OMI v2.7\\
+OMI v2.8\\
 Oscar's Menu Interpreter for VMS\\
 Reference Guide}
 
@@ -30,7 +30,7 @@ Oveas Functionality Provider\\
 oscar.van.eijk@oveas.com\\
 \url{https://github.com/oveas/OMI}}
 
-\date{Belgium, Februari 21, 2020}
+\date{Belgium, xxxxx xx, 20xx}
 
 \maketitle
 
@@ -3510,9 +3510,7 @@ user then has to press return to acknowledge the message.\\[3mm]
 The first parameter should be enclosed by double quotes. It contains the 
 message that will be displayed in the popup box.\\
 The message can contain newlines using ``\texttt{\ensuremath{\backslash}n}''. To force an empty line, 2 newlines can be added, but they \textit{must} contain a whitespace: ``\texttt{\ensuremath{\backslash}n\textvisiblespace\ensuremath{\backslash}n}''\\[3mm]
-
 \textbf{Options}\\*[3mm]
-
 \begin{itemize}
 \item \textsl{NOREFRESH} Prevent the screen to be refreshed after displaying a popup.
 This is done by default, but when the command is called by an 
@@ -3539,7 +3537,7 @@ Multiple options can be specified comma-seperated, but make sure there are \text
 blanks between the options!
 
 \subsection{OMI{\$}REVERSE}
-\index{OMI commands in modules!OMI{\$}REVERSE}
+\index{OMI commands in modules!OMI{\$}REVERSE}\index{string!reverse}
 \label{subsubsec:mylabel60}
 
 \indent Format: \textbf{OMI{\$}REVERSE \textit{string}}\\*[3mm]
@@ -3602,6 +3600,43 @@ given in the second argument, separated by commas.\\
 functions they have to be preceded by a single quote, e.g.: \\
 \textsl{{\$} OMI{\$}SIGNAL MYFACIL MYIDENT,VAR1,'F{\$}EDIT(STR2,"UPCASE")}
 \end{description}
+
+\subsection{OMI{\$}SORT}
+\index{OMI commands in modules!OMI{\$}SORT}\index{string!sort elements}
+\label{subsubsec:omisort}
+
+
+\indent Format: \textbf{OMI{\$}SORT \textit{string} \textit{delimiter} [\textit{OPTION}[,...]]}\\*[3mm]
+This command sorts a given inputstring which consists of one ore more elements seperated by a given delimiter.
+The result is a new string where the elements are sorted in the requested order and seperated by the same delimiter.\\[3mm]
+\textbf{Parameters}\\*[3mm]
+The first parameter should a quoted string containing the elements that will be sorted.
+
+The second parameter should be a single character that's used as delimiter in the string.\\[3mm]
+\textbf{Options}\\
+\begin{itemize}
+\item \textsl{CASE{\_}INSENSITIVE} Sort case insensitive. By default, the elements will be sorted case sensitive
+
+\item \textsl{DESCENDING} Sort the elements in reversed order.
+
+\item \textsl{REMOVE{\_}DUPLICATES} Remove duplicate elements from the sorted string.
+\end{itemize}
+\textbf{\textit{Note:}}If both \textsl{CASE{\_}INSENSITIVE} and \textsl{REMOVE{\_}DUPLICATES} are given, the first occurance of a duplicate element will
+be in the sorted string, e.g. if the input string contains the elements ``\texttt{hello}'' and ``\texttt{HELLO}'' in that order, only the element
+``\texttt{hello}'' will be in the returned string.\\*[3mm]
+\textbf{Return value}\\*[3mm]
+The string with sorted elements will be returned in the global symbol 
+\textsl{OMI{\$}SORTED}.\\[3mm]
+\textbf{Example}\\*[3mm]
+\begin{small}
+\begin{textsf}
+\indent{\$} MYSTRING = "hello World" \\
+\indent{\$} OMI{\$}SORT 'MYSTRING' " " \\
+\indent{\$}!\hspace{3cm} result: "World hello"  \\
+\indent{\$} OMI{\$}SORT 'MYSTRING' " " CASE{\_}INSENSITIVE\\
+\indent{\$}!\hspace{3cm} result: "hello World"  \\
+\end{textsf}
+\end{small}
 
 \subsection{OMI{\$}SUBSTITUTE}
 \index{OMI commands in modules!OMI{\$}SUBSTITUTE}
@@ -5110,6 +5145,12 @@ $	return $status
 
 \chapter{History}
 \index{history}
+
+\section*{Version 2.8, Released: xx-xx-xxxx}
+
+\begin{itemize}
+\item Added the \textsl{OMI{\$}SORT} command to the standard toolbox.
+\end{itemize}
 
 \section*{Version 2.7, Released: 21-02-2020}
 

@@ -127,6 +127,7 @@ SETNAME        S succesfully changed the menu name
 SETPWD         S succesfully changed the password
 SHORTPWD       W password can not be shorter than 5 characters
 SUSPINTR       F suspected intruder - access denied
+STRDELIM       W string delimiter \~S\ too long in OMI$SORT
 TAEMPTY        I text area is currently empty
 TAFNF          W text area file not found
 TALOCK         W temporary file is in use - cannot create text area

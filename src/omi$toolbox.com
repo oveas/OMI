@@ -39,7 +39,7 @@ $!
 $	if p2 .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$CALC"
-$		return omi$_warning
+$		return $status
 $	endif
 $!
 $	@omi$:omi$calculator "''p2'" "''p3'" "''p4'" "''p5'" "''p6'" "''p7'" "''p8'"
@@ -220,7 +220,7 @@ $	inputs$ = f$edit(inputs$ ,"trim")
 $	if inputs$ .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$REVERSE"
-$		return omi$_error
+$		return $status
 $	endif
 $!
 $	ilen$ = f$length(inputs$)
@@ -252,7 +252,7 @@ $!
 $	if p2 .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$DUMP_INFO"
-$		return omi$_error
+$		return $status
 $	endif
 $!
 $	records = 1
@@ -290,7 +290,7 @@ $!
 $	if p2 .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$CALL"
-$		return omi$_warning
+$		return $status
 $	endif
 $!
 $	_input_module = p2
@@ -478,7 +478,7 @@ $!
 $	if p2 .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$DECRYPT"
-$		return omi$_error
+$		return $status
 $	endif
 $s4=""
 $s2="''p2'"
@@ -672,7 +672,7 @@ $!
 $	if p2 .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$ENCRYPT"
-$		return omi$_error
+$		return $status
 $	endif
 $s1=p2
 $gosub -
@@ -840,7 +840,7 @@ $!
 $	if p2 .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$CHECK"
-$		return omi$_error
+$		return $status
 $	endif
 $!
 $	if f$type('p2) .eqs. ""
@@ -978,7 +978,7 @@ $!
 $	if f$type(omi$variable) .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$INPUT_VALIDATE"
-$		return omi$_error
+$		return $status
 $	endif
 $	if .not. omi$_debug then -
 	   $ set message /nofacility /noseverity /noidentification /notext
@@ -1175,7 +1175,7 @@ $!
 $	if p2 .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$GET_VMSMESSAGE"
-$		return omi$_error
+$		return $status
 $	endif
 $!
 $	if f$type(p2) .eqs. "STRING"
@@ -1320,6 +1320,126 @@ $	return omi$_warning
 $!
 $!******************************************************************************
 
+
+$!******************************************************************************
+$!
+$!==>	The Omi$Sort command; this command reorders a string (P2) built with
+$!	a given seperator (P3).
+$!
+$ sort$:
+$!
+$	if f$type(omi$sorted) .nes. "" then -
+	   $ delete\ /symbol /global omi$sorted
+$!
+$	if p3 .eqs. ""
+$	   then
+$		omi$signal omi insarg,"OMI$SORT"
+$		return $status
+$	endif
+$!
+$	if F$Length(p3) .ne. 1
+$	   then
+$		omi$signal omi strdelim,"''p3'"
+$		return $status
+$	endif
+$!
+$	_remove_duplicates = omi$_false
+$	_sort_descending   = omi$_false
+$	_case_insensitive  = omi$_false
+$	_cnt = 0
+$!
+$ sort$check_options:
+$!
+$	_opt = f$element(_cnt, ",", p4)
+$	if _opt .eqs. "," .or. _opt .eqs. "" then $ goto sort$checked_options
+$	if f$extract(0,3,_opt) .eqs. "REM" then $ _remove_duplicates = omi$_true
+$	if f$extract(0,3,_opt) .eqs. "DES" then $ _sort_descending   = omi$_true
+$	if f$extract(0,3,_opt) .eqs. "CAS" then $ _case_insensitive  = omi$_true
+$	_cnt = _cnt + 1
+$	goto popup$check_options
+$!
+$ sort$checked_options:
+$!
+$	_index    = 0
+$	_position = 0
+$	_skipped  = 0
+$!
+$ sort$next:
+$	_next_value = f$element(_index, p3, p2)
+$	if _next_value .eqs. p3 then goto sort$finish
+$	_index = _index + 1
+$	_compare_value_1 = _next_value
+$	if (_case_insensitive) then -
+	   $ _compare_value_1 = f$edit(_compare_value_1, "lowercase")
+$	if _remove_duplicates
+$	   then
+$		gosub sort$remove_duplicates
+$		if $status .eq. omi$_true then $ goto sort$next
+$	endif
+$!
+$ sort$this:
+$	if _position .eq. 0
+$	   then
+$		_value'_position' = _next_value
+$		_position =  _index - _skipped
+$		goto sort$next
+$	endif
+$!
+$	_compare_pos =  _position - 1
+$	_compare_value_2 = _value'_compare_pos'
+$	if (_case_insensitive) then -
+	   $ _compare_value_2 = f$edit(_compare_value_2, "lowercase")
+$!
+$	if _sort_descending
+$	   then
+$		if _compare_value_1 .les. _compare_value_2
+$		   then
+$			_value'_position' = _next_value
+$			_position = _index - _skipped
+$			goto sort$next
+$	endif
+$	   else
+$		if _compare_value_1 .ges. _compare_value_2
+$		   then
+$			_value'_position' = _next_value
+$			_position =  _index - _skipped
+$			goto sort$next
+$		endif
+$	endif
+$	_value'_position' = _value'_compare_pos'
+$	_position = _position - 1
+$	goto sort$this
+$!
+$ sort$finish:
+$	_index = 0
+$!
+$ sort$compose:
+$	if f$type(_value'_index') .eqs. "" then $ return omi$_ok
+$	if f$type(omi$sorted) .eqs. ""
+$	   then $ omi$sorted == _value'_index'
+$	   else $ omi$sorted == omi$sorted + p3 + _value'_index'
+$	endif
+$	_index = _index + 1
+$	goto sort$compose
+$!
+$ sort$remove_duplicates:
+$	_chk_pos = 0
+$!
+$ sort$check_duplicate:
+$	if f$type(_value'_chk_pos') .eqs. "" then $ return omi$_false
+$	_compare_value_2 = _value'_chk_pos'
+$	if (_case_insensitive) then -
+	   $ _compare_value_2 = f$edit(_compare_value_2, "lowercase")
+$	if _compare_value_1 .eqs. _compare_value_2
+$	   then
+$		_skipped = _skipped + 1
+$		return omi$_true
+$	endif
+$	_chk_pos = _chk_pos + 1
+$	goto sort$check_duplicate
+$!
+$!******************************************************************************
+
 $!******************************************************************************
 $!
 $!==>	The Omi$Submit command; this command starts an OMI module in the
@@ -1330,7 +1450,7 @@ $!
 $	if p2 .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$SUBMIT"
-$		return omi$_warning
+$		return $status
 $	endif
 $!
 $	omi$background_module = "''p2'"
@@ -1350,7 +1470,7 @@ $!
 $	if p2 .eqs. "" .or. p3 .eqs. "" .or. p4 .eqs. ""
 $	   then
 $		omi$signal omi insarg,"OMI$SUBSTITUTE"
-$		return omi$_warning
+$		return $status
 $	endif
 $      	_subst_location = f$locate(p2, p4)
 $	_input_size     = f$length(p4)
@@ -1389,6 +1509,8 @@ $	if f$type(omi$encrypted) .nes. "" then -
 	   $ delete\ /symbol /global omi$encrypted
 $	if f$type(omi$response) .nes. "" then -
 	   $ delete\ /symbol /global omi$response
+$	if f$type(omi$sorted) .nes. "" then -
+	   $ delete\ /symbol /global omi$sorted
 $	if f$type(omi$substituted) .nes. "" then -
 	   $ delete\ /symbol /global omi$substituted
 $	if f$type(omi$vms_message) .nes. "" then -
