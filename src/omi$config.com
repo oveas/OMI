@@ -400,8 +400,7 @@ $!
 $	_item = f$edit(_item, "upcase")
 $	if f$type('_section'$'_item') .eqs. ""
 $	   then
-$		wval "Error - element ''_item' in section ''_section' has not been defined", F$Fao("!/"),
-		   "        Unknown error - might be in the previous line"
+$		wval "Error - element ''_item' in section ''_section' has not been defined Unknown error - might be in the previous line"
 $		val$_errors = val$_errors + 1
 $		return
 $	endif
@@ -481,40 +480,39 @@ $		val$_errors = val$_errors + 1
 $		return
 $	endif
 $!
+$	if f$extract(0, 1, _this_item_value) .eqs. "{" then $ goto validate$_dynmenu
 $	if f$extract(0, 1, _this_item_value) .nes. ""
 $	   then
 $		if f$type('_this_item_value'$item1) .eqs. "" .and. -
 		   f$type('_this_item_value'$input1) .eqs. ""
 $		   then
-$			wval "Error - element ''_item' in section MENU_''_section' calls an non- existing", F$Fao("!/"),
-			   "        submenu ''_this_item_value'"
+$			wval "Error - element ''_item' in section MENU_''_section' calls an non- existing submenu ''_this_item_value'"
 $			val$_errors = val$_errors + 1
 $		endif
 $		return
 $	endif
+$!
+$ validate$_dynmenu:
 $	_mnuc = 0
 $!
 $ validate$dyn_submenu:
 $!
-$	if f$locate ("}", _this_item_value) .eq. f$length(_this_item_value) -
-	   then $ return
+$	if f$locate ("}", _this_item_value) .eq. f$length(_this_item_value) then $ return
 $	_this_dyn_menu = f$element(_mnuc, "}", _this_item_value)
 $	_this_item_value = _this_item_value - _this_dyn_menu - "}"
 $	_this_dyn_menu = _this_dyn_menu - "{"
 $	if f$locate("|", _this_dyn_menu) .eq. f$length(_this_dyn_menu)
 $	   then
-$		wval "Warning - no text-on-display for dynamic submenu ''_this_dyn_menu'", F$Fao("!/"),
-		   "          in element ''_item' in section MENU_''_section'"
-$		val$_warnings = val$_warnings + 1
-$	   else $ _this_dyn_menu = f$element(1, "|", _this_dyn_menu)
-$	endif
-$!
-$	if f$type('_this_item_value'$item1) .eqs. "" .and. -
- 	   f$type('_this_item_value'$input1) .eqs. ""
-$	   then
-$		wval "Error - element ''_item' in section MENU_''_section' calls an non- existing", F$Fao("!/"), -
-		   "        dynamic submenu ''_this_item_value'"
+$		wval "Error - invalid dynamic submenu ''_this_dyn_menu' in element ''_item' in section MENU_''_section'"
 $		val$_errors = val$_errors + 1
+$	   else
+$		_this_dyn_menu = f$element(1, "|", _this_dyn_menu)
+$		if f$type('_this_dyn_menu'$item1) .eqs. "" .and. -
+ 		   f$type('_this_dyn_menu'$input1) .eqs. ""
+$		   then
+$			wval "Error - element ''_item' in section MENU_''_section' calls an non- existing dynamic submenu ''_this_dyn_menu'"
+$			val$_errors = val$_errors + 1
+$		endif
 $	endif
 $!
 $	goto validate$dyn_submenu
@@ -531,6 +529,7 @@ $		wval "Error - no module called in element ''_item' in section MENU_''_section
 $		val$_errors = val$_errors + 1
 $		return
 $	endif
+$	_this_item_value = f$element(0, " ", f$edit(_this_item_value, "trim,compress"))
 $!
 $! The Parse command below might return an empty string if the module name
 $! contains variables. The Main Menu has a workaround for this, this is not
