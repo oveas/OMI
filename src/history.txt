@@ -180,12 +180,9 @@ This release includes patch 1.4a. Other changes:
   OMI$MAILBOX is still the default value.
 
 1.4a	Released: 21-04-1998
-                                                                               
-This version is distributed as a patch for v1.4, and fixes a bug in de command
+
+This version was distributed as a patch for v1.4, and fixed a bug in de command
 element type using the DCL command 
-The patch is still available as a 3 kB ascii file at
-ftp://ftp.oveas.net/pub/oveas/omi/omi$patch_1-4a.com, but can only be used for
-v1.4. If you still use this version, an upgrade is recommended.
 
 1.4     Released: 19-02-1998
 
