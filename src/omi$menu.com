@@ -331,14 +331,20 @@ $			_log_p2 = ""
 $			_log_p3 = ""
 $			if f$type(omi$option) .eqs. "INTEGER"
 $			   then
-$				_log_p2 = " - "
+$				_log_p2 = "''main$sessiolog_textsep'"
 $				_log_p3 = "(invalid)"
 $				if f$type('omi$current_menu'$item'omi$option') .nes. ""
 $				   then $ _log_p3 = f$element(0, "#", 'omi$current_menu'$item'omi$option')
 $				   else
-$					_input = omi$option - inputs$highest_item
-$					if f$type('omi$current_menu'$input'_input') .nes. "" then -
-					   $ _log_p3 = f$element(0, "#", 'omi$current_menu'$input'_input')
+$					if omi$option .eq. 0
+$					   then
+$						_log_p2 = ""
+$						_log_p3 = ""
+$					   else
+$						_input = omi$option - inputs$highest_item
+$						if f$type('omi$current_menu'$input'_input') .nes. "" then -
+						   $ _log_p3 = f$element(0, "#", 'omi$current_menu'$input'_input')
+$					endif
 $				endif
 $			endif
 $			omi$log_session "''omi$option'" "''_log_p2'" "''_log_p3'"
@@ -352,14 +358,20 @@ $		_log_p2 = ""
 $		_log_p3 = ""
 $		if f$type(omi$option) .eqs. "INTEGER"
 $		   then
-$			_log_p2 = " - "
+$			_log_p2 = "''main$sessiolog_textsep'"
 $			_log_p3 = "(invalid)"
 $			if f$type('omi$current_menu'$item'omi$option') .nes. ""
 $			   then $ _log_p3 = f$element(0, "#", 'omi$current_menu'$item'omi$option')
 $			   else
-$				_input = omi$option - inputs$highest_item
-$				if f$type('omi$current_menu'$input'_input') .nes. "" then -
-				   $ _log_p3 = f$element(0, "#", 'omi$current_menu'$input'_input')
+$				if omi$option .eq. 0
+$				   then
+$					_log_p2 = ""
+$					_log_p3 = ""
+$				   else
+$					_input = omi$option - inputs$highest_item
+$					if f$type('omi$current_menu'$input'_input') .nes. "" then -
+					   $ _log_p3 = f$element(0, "#", 'omi$current_menu'$input'_input')
+				endif
 $			endif
 $		endif
 $		omi$log_session "''omi$option'" "''_log_p2'" "''_log_p3'"
@@ -417,15 +429,16 @@ $	if f$type(omi$option) .nes. ""
 $	   then
 $		if omi$option .eq. 0
 $		   then
-$			if f$type(omi$option) .eqs. "INTEGER" .and. omi$option .eq. 0
+$			if f$type(omi$option) .eqs. "INTEGER" .and. omi$option .eq. 0 -
+			   .and. 'omi$current_menu'$previous .eqs. "" .and. .not. omi$otf_menu
 $			   then
 $				delete\ /symbol /local omi$option
 $				omi$signal omi toplevel
 $				goto main$get_option
 $			endif
-$		   else $ omi$log_session "<Ctrl/Z>"
+$		   else $ if omi$option .ne. 0 then $ omi$log_session "<Ctrl/Z>"
 $		endif
-$	   else $ omi$log_session "<Ctrl/Z>"
+$	   else $ if omi$option .ne. 0 then $ omi$log_session "<Ctrl/Z>"
 $	endif
 $!
 $	gosub main$perf_onexit
@@ -566,7 +579,7 @@ $			if _sel_list
 $			   then
 $				if f$type(_o) .eqs. "INTEGER"
 $				   then
-$					_log_value = _log_value + " - "
+$					_log_value = _log_value + " ''main$sessiolog_textsep' "
 $					if f$type('_select_list'$value'_o') .eqs. ""
 $					   then $ _log_value = _log_value + "(invalid)"
 $					   else $ _log_value = _log_value + '_select_list'$value'_o'
@@ -593,7 +606,7 @@ $		if _sel_list
 $		   then
 $			if f$type(_o) .eqs. "INTEGER"
 $			   then
-$				_log_value = _log_value + " - "
+$				_log_value = _log_value + "''main$sessiolog_textsep'"
 $				if f$type('_select_list'$value'_o') .eqs. ""
 $				   then $ _log_value = _log_value + "(invalid)"
 $				   else $ _log_value = _log_value + '_select_list'$value'_o'
@@ -1597,7 +1610,7 @@ $		if _selected_menu .eqs. "" .or. _selected_menu .eqs. ","
 $		   then
 $			read /end_of_file=dynmnu$cancel_input /prompt="''screen$prompt_position'''_menu_list' " sys$command _selected_menu
 $			_dynmnu_selection = f$element(0, "|", _dynmenu'_selected_menu')
-$			omi$log_session "''_selected_menu'" " - " "''_dynmnu_selection'"
+$			omi$log_session "''_selected_menu'" "''main$sessiolog_textsep'" "''_dynmnu_selection'"
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
@@ -1606,7 +1619,7 @@ $		endif
 $	   else
 $		read /end_of_file=dynmnu$cancel_input /prompt="''screen$prompt_position'''_menu_list' " sys$command _selected_menu
 $		_dynmnu_selection = f$element(0, "|", _dynmenu'_selected_menu')
-$		omi$log_session "''_selected_menu'"  " - " "''_dynmnu_selection'"
+$		omi$log_session "''_selected_menu'"  "''main$sessiolog_textsep'" "''_dynmnu_selection'"
 $	endif
 $	omi$variable = "_selected_menu"
 $	omi$input_validate
@@ -1756,7 +1769,7 @@ $					_rev_option = _tag_sel - 1
 $					if f$type('_tagblock'$value'_rev_option') .nes. "" -
 					   then $ _log_value = "''questions$reverse_tags'"
 $				endif
-$				omi$log_session "''_tag_sel'" " - " "''_log_value'"
+$				omi$log_session "''_tag_sel'" "''main$sessiolog_textsep'" "''_log_value'"
 $			   else $ omi$log_session "''_tag_sel'"
 $			endif
 $			if f$type(jump$_norefresh) .nes. "" then -
@@ -1777,7 +1790,7 @@ $				_rev_option = _tag_sel - 1
 $				if f$type('_tagblock'$value'_rev_option') .nes. "" -
 				   then $ _log_value = "''questions$reverse_tags'"
 $			endif
-$			omi$log_session "''_tag_sel'" " - " "''_log_value'"
+$			omi$log_session "''_tag_sel'" "''main$sessiolog_textsep'" "''_log_value'"
 $		   else $ omi$log_session "''_tag_sel'"
 $		endif
 $	endif
@@ -3148,7 +3161,7 @@ $			if f$type('_select_list'$value'_value') .eqs. ""
 $			   then $ _log_value = "(invalid)"
 $			   else $ _log_value = '_select_list'$value'_value'
 $			endif
-$			omi$log_session '_value' " - " "''_log_value'"
+$			omi$log_session '_value' "''main$sessiolog_textsep'" "''_log_value'"
 $		   else $ omi$log_session "''_value'"
 $		endif
 $	   else
