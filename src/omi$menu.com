@@ -256,7 +256,7 @@ $		omi$_jumping = 1
 $		omi$_p1 = options$_menuname
 $		jump$_norefresh = 1
 $		gosub main$execcmd_jump
-$	   else $ omi$_jumping = 0
+$	   else $ if f$type(omi$_jumping) .eqs. "" then $ omi$_jumping = 0
 $	endif
 $	options$_jumpcounter = 0
 $	goto main$do_menu
@@ -2377,6 +2377,14 @@ $		omi$cmdline_clear
 $		omi$msgline_clear
 $		goto main$execcmd_jump
 $	endif
+$	if f$type(omi$current_menu'$name) .nes. ""
+$	   then
+$		if f$edit(omi$_p1, "upcase") .eqs. f$edit('omi$current_menu'$name, "upcase")
+$		   then
+$			if options$_jumps .eqs. "" then $ omi$signal omi jumphere
+$			return $status
+$		endif
+$	endif
 $	assign sys$scratch:omi$jump_submenu._tmp$ sys$output
 $	show symbol /global *$name
 $	deassign sys$output
@@ -4010,6 +4018,7 @@ $	   then
 $		if _negate then $ goto quals$_loop
 $		if qual$_value .eqs. "" then $ goto qual$valreq_error
 $		options$_jumps  = "''qual$_value'"
+$		omi$_jumping = 1
 $		goto quals$_loop
 $	endif
 $!

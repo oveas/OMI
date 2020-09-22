@@ -89,6 +89,7 @@ messages. After this, OMI can crash at random moments without warning.
 \item When the last input item of a (sub)menu is a SELECT list and all inputs are entered
 using \textsl{ALL{\_}INPUTS}, the screen is refreshed twice after the last item.
 \item When logging a session, the \textsl{/SUBMENU} and \textsl{/JUMPS} values are not logged.
+\item When the \textsl{JUMP} command is used to jump from a submenu to the toplevel, \lt Ctrl/Z\gt{}, \textsl{0} or the command \textsl{MAIN} will cause the mainmenu's \textsl{ON{\_}EXIT} module to be executed if it exists, returning to the previous submenu.
 \end{itemize}
 
 \section*{About this document}\addcontentsline{toc}{section}{About this document}
@@ -5159,8 +5160,10 @@ $	return $status
 \item Fix: In the sessionlog, don't write just option numbers but screen text as well.
 \item Fix: Errors in checking dynamic submenus with \textsl{/VALIDATE}.
 \item Fix: Option \texttt{0} signalled \texttt{TOPLEVEL} messages at all levels
+\item Fix: When \textsl{/JUMPS} ended in the main menu, \lt Ctrl/Z\gt{} didn't cause an exit the first time and an abort at the second attempt.
 \item Added the \textsl{OMI{\$}SORT} command to the standard toolbox.
 \item Added the \textsl{SESSIONLOG{\_}ID} element to the main menu.
+\item \textsl{/JUMPS} qualifer doesn't require \textsl{/SUBMENU} anymore but starts in the toplevel menu when omitted.
 \end{itemize}
 
 \section*{Version 2.7, Released: 21-02-2020}

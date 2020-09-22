@@ -53,6 +53,7 @@ IVSEL          W selection is out of range
 IVSCHEME       E invalid colorscheme \~S\ in OMI$POPUP
 IVSWVAL        W invalid value for SET WIDTH - specify 80 or 132
 IVVALFIL       W option is no select list or has no value file
+JUMPHERE       I jumping in the current menu - whiieeeuw
 LAST           W this is the last page of this list
 LDIGIT         E operands cannot have more than 9 digits
 LOWVAL         W value can't be less than ~S

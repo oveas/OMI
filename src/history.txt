@@ -3,8 +3,11 @@
 * Fix: In the sessionlog, don't write just option numbers but screen text as well.
 * Fix: Errors in checking dynamic submenus with /VALIDATE.
 * Fix: Option 0 signalled TOPLEVEL messages at all levels
+* Fix: When /JUMPS ended in the main menu, <Ctrl/Z> didn't cause an exit the first
+  time and an abort at the second attempt.
 * Added the OMI$SORT command to the standard toolbox.
 * Added the SESSIONLOG_ID element to the main menu.
+* /JUMPS qualifer doesn't require /SUBMENU anymore but starts in the toplevel menu when omitted.
 
 2.7   Released: 21-02-2020
 
