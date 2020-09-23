@@ -84,7 +84,7 @@ as described in section \ref{subsubsec:handling}. However, when the
 menu file is validated with the \textsl{/VALIDATE} qualifier, a warning will be 
 displayed if the first item of two duplicate item names was specified as 
 leading. During run-time this is handled properly.
-\item Switching menus using the \textsl{MENU} command causes \texttt{\%OMI-W-DUPL}
+\item Switching menus using the \textsl{MENU} command causes \textsl{\%OMI-W-DUPL}
 messages. After this, OMI can crash at random moments without warning.
 \item When the last input item of a (sub)menu is a SELECT list and all inputs are entered
 using \textsl{ALL{\_}INPUTS}, the screen is refreshed twice after the last item.
@@ -97,14 +97,16 @@ using \textsl{ALL{\_}INPUTS}, the screen is refreshed twice after the last item.
 \subsection*{Conventions}\addcontentsline{toc}{subsection}{Conventions}
 
 \begin{itemize}
-\item[\textsl{Names}] All OMI literal names (filenames, logicals etc) are
+\item[\textsl{Names}] All (OMI) literal names (filenames, logicals etc) and output examples are
 displayed in a slanted font.
 \item[\textsf{Literals}] This sans-serif font is used when literal text is
 displayed as it should be entered by the user.
 \item[\textsf{\textit{Variables}}] When the user should replace the text as
 displayed with a environment- specific value, the text is printed italic.
-\item[\texttt{Examples}] All examples are printed in this monotype font.
+\item[\texttt{Examples}] All code examples are printed in this monotype font.
 \end{itemize}
+
+{\tiny \textit{(Well, at least these conventions where the original plan, but I didn't stick to them too consequently over the years :-/)}}
 
 \section*{Copyright}\addcontentsline{toc}{section}{Copyright}
 \label{subsec:copyrightbrary}
@@ -122,8 +124,8 @@ arising from the use of this software, is the responsibility of the user.\\*[3mm
 Support and the latest version is available at \\
 \indent\url{https://github.com/oveas/OMI/releases} \\
 %To stay informed about the changes and fixes, subscribe to the OMI mailing 
-%list by sending an email to \textsl{omi-request@oveas.com} with the word 
-%\textsl{subscribe} on the subject line. \\
+%list by sending an email to \textsf{omi-request@oveas.com} with the word 
+%\textsf{subscribe} on the subject line. \\
 For questions, bug reports, feature requests etc., please use the tracket at GitHub: \\
 \indent\url{https://github.com/oveas/OMI/issues}
 
@@ -138,8 +140,8 @@ The HTML version was created with LaTeX2HTML v2002 (1.62).
 \vs
 
 Henry Juengst made me aware of possible crashes and gave me the code that
-resulted in the \texttt{OMI\$INPUT\_VALIDATE} command (v1.0b4). \\
-Edward Vlak did some debugging and fixed a possible loop in \texttt{REQUIRED\_ORDER} (v2.2).
+resulted in the \textsl{OMI\$INPUT\_VALIDATE} command (v1.0b4). \\
+Edward Vlak did some debugging and fixed a possible loop in \textsl{REQUIRED\_ORDER} (v2.2).
 
 \chapter{Installation}
 \label{sec:installationrmed}
@@ -379,7 +381,7 @@ batch queue\index{batch process}\index{process!batch}.
 \indent\textbf{/NOBATCH} (default)\\*[3mm]
 Start OMI in Batch mode. In this mode, all output, written to \textsl{SYS{\$}OUTPUT}, 
 is suppressed. This also means the menus are not displayed at all. This 
-option is useful when used together with \textsl{/SUBMENU} and \textsl{/JUMPS}.
+option is useful when used together with \textsf{/JUMPS} and (optionally\footnote{ since v2.8}) \textsf{/SUBMENU}.
 
 \subsection{/DEBUG}
 \index{debug mode}
@@ -421,7 +423,7 @@ If you specify only one keyword, you can omit the parentheses.
 \index{\%OMI-W-DUPL}
 \indent\textbf{/IGNORE=DUPLICATES}
 
-When starting OMI, \texttt{\%OMI-W-DUPL} warnings are displayed when OMI
+When starting OMI, \textsl{\%OMI-W-DUPL} warnings are displayed when OMI
 tries to set a symbol that's already defined. This happens after
 a crash of the previous OMI session, when the menu file is invalid,
 or when a new OMI session is started in a subprocess from within OMI
@@ -437,16 +439,16 @@ without a warning.
 \indent\textbf{/IGNORE=DCLERRORS}
 
 When a DCL command is given in the menu file, or entered at the OMI 
-prompt (commands \texttt{DCL} (\$) or \texttt{SILENT\_DCL}), or when
+prompt (commands \textsf{DCL} (\$) or \textsf{SILENT\_DCL}), or when
 a subprocess is spawned from the menu file (as an option) or using the
-OMI \texttt{SPAWN} command, OMI will catch its exit status and act
+OMI \textsf{SPAWN} command, OMI will catch its exit status and act
 accordingly. It the exit code was an error (severity 2), OMI crashes.
 
 The /IGNORE=DCLERRORS qualifier ignores errors generated in such circumstances.
 
 \vs
 
-\textbf{NOTE:} This does not apply to \texttt{(SILENT\_)DCL} or \texttt{SPAWN} action from within OMI modules !
+\textbf{NOTE:} This does not apply to \textsf{(SILENT\_)DCL} or \textsf{SPAWN} action from within OMI modules !
     
 \subsubsection{DCLFATALS}
 \index{ignore!DCL fatals}
@@ -467,7 +469,7 @@ Both keywords can be given together as /IGNORE=(DCLERRORS,DCLFATALS).
 \vs
 
 \indent\textbf{/JUMPS=option-list}\\*[3mm]
-With the \textsl{/JUMPS} qualifier, all options that are normally entered one by one 
+With the \textsf{/JUMPS} qualifier, all options that are normally entered one by one 
 at the OMI prompt, can now be specified at the DCL prompt as a list of 
 options separated by comma's. If this list with option contains OMI commands 
 with parameters, blanks are required to separate the parameters if they 
@@ -496,7 +498,7 @@ the configuration file (see section \ref{para:mylabel2}).
 \vs
 
 \indent\textbf{/SUBMENU=submenu-name}\\*[3mm]
-With the \textsl{/SUBMENU} qualifier, it is possible to start the OMI session with 
+With the \textsf{/SUBMENU} qualifier, it is possible to start the OMI session with 
 the submenu that has the specified name. By default, OMI starts a menu file 
 with the main menu (see section \ref{subsubsec:mylabel21}), but when 
 one ore more submenus have names (see section \ref{subsubsec:mylabel24}),
@@ -586,34 +588,34 @@ on the setting in the configuration file. By default, this is \textsl{All inputs
 
 \vs
 
-To go back one level in the menu structure, you can use the \textsl{BACK}\index{OMI 
-commands!BACK} command, the \lt Ctrl/Z\gt{} keystroke, or type a \textsl{0} (zero), 
+To go back one level in the menu structure, you can use the \textsf{BACK}\index{OMI 
+commands!BACK} command, the \lt Ctrl/Z\gt{} keystroke, or type a \textsf{0} (zero), 
 followed by \lt Return\gt . When the current menu is the top level of the menu 
 structure, this will exit OMI.
 
 \subsection{Fast moving}
 \label{subsubsec:mylabel9}
 
-In stead of entering the options, or using \textsl{0} or \lt Ctrl/Z\gt , there are 
+In stead of entering the options, or using \textsf{0} or \lt Ctrl/Z\gt , there are 
 several commands that can be used for fast navigation. They should be 
 entered at the OMI prompt.
 
 \vs
 
-The \textsl{MAIN}\index{OMI commands!MAIN} command jumps immediately to the top-level 
-menu from anywhere in the structure. The commands \textsl{EXIT}\index{OMI 
-commands!EXIT} or \textsl{QUIT}\index{OMI commands!QUIT} end the OMI session.
+The \textsf{MAIN}\index{OMI commands!MAIN} command jumps immediately to the top-level 
+menu from anywhere in the structure. The commands \textsf{EXIT}\index{OMI 
+commands!EXIT} or \textsf{QUIT}\index{OMI commands!QUIT} end the OMI session.
 
 \vs
 
-The command \textsl{JUMP}\index{OMI commands!JUMP}, followed by a menu name, jumps to 
+The command \textsf{JUMP}\index{OMI commands!JUMP}, followed by a menu name, jumps to 
 the specified submenu. Names can be displayed automatically by changing the 
-configuration file (described in chapter \ref{sec:using}), or in a menu using the \textsl{SHOW 
+configuration file (described in chapter \ref{sec:using}), or in a menu using the \textsf{SHOW 
 NAME}\index{OMI commands!SHOW NAME}\index{name}\index{menu!name} command.
 
 \vs
 
-When in a menu, a different menu file can be selected with the \textsl{MENU} command, 
+When in a menu, a different menu file can be selected with the \textsf{MENU} command, 
 followed by the name of the new \textsl{.MNU} file. This command cleans up the 
 current menu completely before starting the new menu.
 
@@ -626,13 +628,13 @@ When the user knows all options, a menu can also be called in Auto Mode.
 This means, the menu file is specified as the first parameter for 
 OMI\footnote{ If the menu file, pointed to by the logical 
 \textsl{OMI{\$}START{\_}MENU} or the file \textsl{OMI{\$}MENU.MNU} needs to be called,
-the parameter can be specified empty (\textsl{""})}, followed by the name of a submenu.
+the parameter can be specified empty (\textsf{""})}, followed by the name of a submenu.
 
 \vs
 
 The third parameter can be a list of options that needs to be specified, 
 separated by commas. If this list contains OMI commands with blanks in it 
-(e.g. \textsl{RESET PASSWORD}), that option has to be enclosed by double quotes, e.g. \\
+(e.g. \textsf{RESET PASSWORD}), that option has to be enclosed by double quotes, e.g. \\
 \indent\textsf{{\$} OMI MY-MENU SUB3 "RESET PASSWORD",EXIT} \\
 or \\
 \indent\textsf{{\$} OMI MY-MENU /SUBMENU=SUB3 /JUMPS="RESET PASSWORD",EXIT}
@@ -644,14 +646,17 @@ entering the menu before executing any command.
 \vs
 
 If one of the options selects a TAG list, the Ctrl/Z{} keystroke can be 
-emulated with the string \textsl{\^{}Z}\footnote{ = `shift-6' `Z' on VT keyboards}.
+emulated with the string \textsf{\^{}Z}\footnote{ = `shift-6' `Z' on VT keyboards}.
 
 \vs
 
 Since version 1.4 qualifiers are also supported. With these qualifiers the 
-menu name can also specified as \textsl{/SUBMENU=menu-name}, the list of 
+menu name can also specified as \textsf{/SUBMENU=menu-name}, the list of 
 options can be specified with the qualifier \textsl{/JUMPS=options-list}. 
 For more info on qualifiers refer to chapter \ref{sec:starting}.
+
+Since version 2.8, the m enu name can be omitted when using qualifiers: jumps will
+start at the toplevel menu.
 
 To have a look at the possibilities with this Auto Mode, try starting the 
 example menu OMI{\$}EXAMPLE with the following command:\\
@@ -702,7 +707,7 @@ to the menu.
 
 If an input option is selected, that can have one value from a predefined 
 list, this list is displayed in a pop-up window. When the list is too long 
-to fit on one screen, the commands \textsl{NEXT} and \textsl{PREVIOUS} can be used to scroll 
+to fit on one screen, the commands \textsf{NEXT} and \textsf{PREVIOUS} can be used to scroll 
 through the list.
 
 Typing the corresponding number, followed by \lt Return\gt , selects that value 
@@ -737,7 +742,7 @@ the options separately. When any if the inputs is omitted (the user enters
 \lt Return\gt{} without a value), the current value will not be overwritten.
 
 If this is disabled for the current menu (see section \ref{subsubsec:mylabel30}),
-this facility can still be used by entering the \textsl{ALL} command at the OMI prompt.
+this facility can still be used by entering the \textsf{ALL} command at the OMI prompt.
 
 \section{Protected Menus}
 \index{password}
@@ -842,7 +847,7 @@ anything, just remove any value (`\textsl{EMPTY{\_}VALUE =} ').
 
 \subsubsection{KEY}
 
-If a key was set using the \textsl{SET KEY}\index{OMI commands!SET KEY} command 
+If a key was set using the \textsf{SET KEY}\index{OMI commands!SET KEY} command 
 before version 1.3, it will be stored here in the configuration file. The 
 key has a binary code, and should not be set or changed manually.
 
@@ -856,7 +861,7 @@ still supported.
 \subsubsection{SILENT{\_}OUTPUT}
 
 If DCL commands are executed in silent mode (using the OMI command 
-\textsl{SILENT{\_}DCL}\index{OMI commands!SILENT{\_}DCL}), the output, if any, 
+\textsf{SILENT{\_}DCL}\index{OMI commands!SILENT{\_}DCL}), the output, if any, 
 including errors, will be written to the NULL device (\textsl{NLA0:}),
 or any file name specified by this element. \\
 The final return status of the command will always be displayed.
@@ -918,7 +923,7 @@ runs.
 
 \vs
 
-The setting can always be overwritten by specifying the \textsl{/[NO]PROGRESS} 
+The setting can always be overwritten by specifying the \textsf{/[NO]PROGRESS} 
 qualifier when starting OMI from the DCL command line (see section
 \ref{subsubsec:mylabel6}).
 
@@ -1152,13 +1157,13 @@ process. Default is
 
 \subsubsection{OPTIONS{\_}BAT}
 
-Used to add extra qualifiers to the \textsl{SUBMIT} command, eg:\\
+Used to add extra qualifiers to the \textsf{SUBMIT} command, eg:\\
 \indent\textsf{OPTIONS{\_}BAT = /NOTIFY} \\
 For more information, refer to the OpenVMS documentation.
 
 \subsubsection{OPTIONS{\_}DET}
 
-Used to add extra qualifiers to the \textsl{RUN /DETACH} command, eg:\\
+Used to add extra qualifiers to the \textsf{RUN /DETACH} command, eg:\\
 \indent\textsf{OPTIONS{\_}DET = /JOB{\_}TABLE{\_}QUOTA=8192} \\
 For more information, refer to the OpenVMS documentation.
 
@@ -1167,8 +1172,8 @@ For more information, refer to the OpenVMS documentation.
 \index{security!encryption key}
 \label{subsubsec:mylabel20}
 
-All encryption keys that are created by the user with the \textsl{SET KEY} command, 
-or imported with the \textsl{IMPORT KEY} command, are stored in this section. They 
+All encryption keys that are created by the user with the \textsf{SET KEY} command, 
+or imported with the \textsf{IMPORT KEY} command, are stored in this section. They 
 have a binary value, and cannot be added or modified manually.
 
 \subsection{Adding sections}
@@ -1191,14 +1196,14 @@ If a file needs to be printed on the user specific printer queue, use the comman
 
 \begin{table}[h!tb]
 \begin{minipage}[h!tb]{\textwidth}
-\noindent\textsl{[MAIN]} \newline
-\textsl{[SCREEN]} \newline
-\textsl{[QUESTIONS]} \newline
-\textsl{[BGRPROCESS]} \newline
-\textsl{[KEYRING]} \newline
-\textsl{[COUNTER]} \newline
-\textsl{[INTERACTIVE{\_}AUTH]} \newline
-\textsl{[MENU{\_}\textit{*}]} (all sections starting with \textsl{MENU{\_}}) \newline
+\noindent\textsf{[MAIN]} \newline
+\textsf{[SCREEN]} \newline
+\textsf{[QUESTIONS]} \newline
+\textsf{[BGRPROCESS]} \newline
+\textsf{[KEYRING]} \newline
+\textsf{[COUNTER]} \newline
+\textsf{[INTERACTIVE{\_}AUTH]} \newline
+\textsf{[MENU{\_}\textit{*}]} (all sections starting with \textsl{MENU{\_}}) \newline
 \caption{Reserved section names}\label{tab:ressect}
 \end{minipage}
 \end{table}
@@ -1366,7 +1371,7 @@ If the exit module returns status \textsl{OMI{\$}{\_}WARNING} (described in chap
 
 \vs
 
-If a submenu is left with any of the commands \textsl{MENU}, \textsl{EXIT} or \textsl{QUIT}, OMI will 
+If a submenu is left with any of the commands \textsf{MENU}, \textsf{EXIT} or \textsf{QUIT}, OMI will 
 check both the current submenu and the main menu for the \textsl{ON{\_}EXIT} element. \\
 The default type of init- and exit modules is \textsl{.OMI}. Figure \ref{fig:iemods}
 shows the use of init- and exit modules.
@@ -1406,7 +1411,7 @@ Since version 2.2 it is also possible to execute OMI commands in the
 To do so, the element value should start a colon (``:''), immediatly followed my the OMI command.
 The command will be executed, then control is passed to the selected menu. Figure~\ref{fig:iecmds}
 shows an example where all variables in the menu are reset to their default values (using the
-command \textsl{RESET VARIABLES}, see section~\ref{subsubsec:resetvar}) when the user leaves the
+command \textsf{RESET VARIABLES}, see section~\ref{subsubsec:resetvar}) when the user leaves the
 menu.
 
 The return value of the OMI command is not evaluated.
@@ -1448,12 +1453,12 @@ This last prompt will always be used if it is protected (see section \ref{para:p
 \label{subsubsec:mylabel24}
 
 The name will only be displayed when the element \textsl{DISPLAY{\_}NAMES} in the 
-configuration file is set to \textsl{TRUE}, and with the \textsl{SHOW NAME}\index{OMI 
+configuration file is set to \textsl{TRUE}, and with the \textsf{SHOW NAME}\index{OMI 
 commands!SHOW NAME} command on the OMI prompt.
 
 \vs
 
-The name is used for the \textsl{JUMP}\index{OMI commands!JUMP} command (see section \ref{subsec:mylabel16}),
+The name is used for the \textsf{JUMP}\index{OMI commands!JUMP} command (see section \ref{subsec:mylabel16}),
 and in auto mode (see section \ref{subsubsec:mylabel10}).
 
 \subsection{The COMMENT element}
@@ -1511,7 +1516,7 @@ displayed, telling the user to select another input element first.
 If the selected element is the first one required, it is removed from the 
 list and the user can enter the input. When the list is completely empty 
 (all required inputs have been entered in the correct order), no checks will 
-be performed until the \textsl{RESET ORDER} (see section 
+be performed until the \textsf{RESET ORDER} (see section 
 \ref{subsubsec:mylabel72}) is issued from the menu.
 
 \vs
@@ -1632,7 +1637,7 @@ one (sub)menu can have only one counter. The total number of counters in the
 menu file is unlimited.
 
 The current value of the counter can be displayed in the comment line, as in 
-the example, or with the \textsl{SHOW COUNTER}\index{OMI commands!SHOW COUNTER} 
+the example, or with the \textsf{SHOW COUNTER}\index{OMI commands!SHOW COUNTER} 
 command.
 
 The option ``Display the array'' calls an example OMI module, 
@@ -1647,10 +1652,10 @@ DISPLAY{\_}ARRAY.OMI, which could be created to display all entered values.
 
 Counter values can also be manipulated using commands on the OMI prompt. If 
 any of these commands are used, the comment line in figure \ref{fig:counter} will not be 
-updated until the screen is refreshed with the \textsl{REFRESH}\index{OMI 
-commands!REFRESH} command, except for \textsl{INCREASE}\index{OMI commands!INCREASE} 
-command, with which the \textsl{REFRESH} parameter can optionally be specified. \\
-The \textsl{INCREASE}\index{OMI commands!INCREASE} command increases the current 
+updated until the screen is refreshed with the \textsf{REFRESH}\index{OMI 
+commands!REFRESH} command, except for \textsf{INCREASE}\index{OMI commands!INCREASE} 
+command, with which the \textsf{REFRESH} parameter can optionally be specified. \\
+The \textsf{INCREASE}\index{OMI commands!INCREASE} command increases the current 
 counter value with one.
 
 \vs
@@ -1661,7 +1666,7 @@ specified in the \textsl{[COUNTER]} section!}\label{fnote:resetcounter},
 use the command \\
 \indent\textsf{RESET COUNTER}\index{OMI commands!RESET COUNTER}.
 
-The command \textsl{SET COUNTER}\index{OMI commands!SET COUNTER}\index{menu!counter}, 
+The command \textsf{SET COUNTER}\index{OMI commands!SET COUNTER}\index{menu!counter}, 
 followed by an integer value, sets the counter to the specified value.
 
 \vs
@@ -1737,7 +1742,7 @@ Valid security levels are listed in table \ref{tab:seclevels}.
 \textsl{NONE} & The specified user has no access to the menu \\ \hline
 \textsl{READ} & The user can enter the menu and see the choices, but cannot execute any of the options, or any command at the command line. The only way to leave the menu is by using \lt Ctrl/Z\gt . \\ \hline
 \textsl{EXEC} &  The user has full access to all menu elements for execution \\ \hline
-\textsl{WRITE} & The user can make modifications to the menu, using the \textsl{SET} or \textsl{RESET} command \\ \hline
+\textsl{WRITE} & The user can make modifications to the menu, using the \textsf{SET} or \textsf{RESET} command \\ \hline
 \end{tabular}
 \caption{Security levels in Security sections}\label{tab:seclevels}
 \end{minipage}
@@ -1754,7 +1759,7 @@ users except for the owner, who'll also have \textsl{WRITE} access.
 
 The \textsl{PASSWORD} element\index{password}\index{security!password}\index{menu!password} holds 
 the password in encrypted format. It cannot be modified using an editor; a 
-password can only be set or changed with the \textsl{SET PASSWORD}\index{OMI 
+password can only be set or changed with the \textsf{SET PASSWORD}\index{OMI 
 commands!SET PASSWORD} command from the OMI prompt.
 
 \vs
@@ -1848,8 +1853,8 @@ owner for that menu), who has \textsl{READ,WRITE,EXEC}, since that menu uses no
 \index{{\$}}
 \label{subsubsec:interactive}
 
-Users can be blocked from using interactive DCL with the \textsl{SPAWN}, \textsl{DCL} or  
-\textsl{SILENT{\_}DCL} command by including the section \textsl{[INTERACTIVE{\_}AUTH]} in 
+Users can be blocked from using interactive DCL with the \textsf{SPAWN}, \textsf{DCL} or  
+\textsf{SILENT{\_}DCL} command by including the section \textsl{[INTERACTIVE{\_}AUTH]} in 
 the menu file. This section can contain user names that are, or are not 
 authorized to use interactive DCL.
 
@@ -1864,7 +1869,7 @@ explicitly included with value \textsl{TRUE}.
 
 \vs
 
-Note that this does not affect the \textsl{(SILENT{\_})DCL} and \textsl{SPAWN} commands that 
+Note that this does not affect the \textsf{(SILENT{\_})DCL} and \textsf{SPAWN} commands that 
 are called by menu items; they can always be executed by all users that have 
 \textsl{EXEC} privilege to the submenu that contains the items.
 
@@ -1884,7 +1889,7 @@ are called by menu items; they can always be executed by all users that have
 \end{ttfamily}
 
 \noindent When the menu file contains this section, the users SYSTEM, SYSTEST and 
-DEVELOPER can use the commands \textsl{(SILENT{\_})DCL} and \textsl{SPAWN} at the OMI command 
+DEVELOPER can use the commands \textsf{(SILENT{\_})DCL} and \textsf{SPAWN} at the OMI command 
 line, all other users can't.
 
 All users however can execute the items that are given in the main menu in 
@@ -1935,7 +1940,7 @@ informational messages generated by VMS are suppressed. If you don't want
 this (e.g. while creating and testing menus or modules), use the command \\
 \indent\textsf{{\$} SET MESSAGE 'OMI{\$}{\_}MESSAGE'} \\
 in the top of the procedure, or start OMI with the qualifier 
-\textsl{/DEBUG}\index{debug mode}\index{OMI mode!debug}.
+\textsf{/DEBUG}\index{debug mode}\index{OMI mode!debug}.
 
 For a further description of OMI modules, refer to chapter \ref{sec:writing}.
 
@@ -2025,11 +2030,11 @@ name of the menu section (without the \textsl{MENU{\_}} string!).
 \vs
 
 You can also specify dynamic menus. This is done in the third argument. In 
-stead of \textit{my{\_}menu{\_}name}, it should contain the value \\
+stead of \textsl{\textit{my{\_}menu{\_}name}}, it should contain the value \\
 \textsl{{\{}\textit{Text}\textbar\textit{submenu}{\}}{\{}\textit{Text}\textbar\textit{submenu}{\}}\textit{prompt}},
 as in\\
-\indent\textsf{ITEM = Choose a submenu{\#}SUBMENU{\#}{\{}First submenu\textbar MYMENU1{\}} - }\\
-\indent\indent\textsf{{\{}Second submenu\textbar MYNAME2{\}}Select a menu}
+\indent\textsl{ITEM = Choose a submenu{\#}SUBMENU{\#}{\{}First submenu\textbar MYMENU1{\}} - }\\
+\indent\indent\textsl{{\{}Second submenu\textbar MYNAME2{\}}Select a menu}
 
 \vs
 
@@ -2093,7 +2098,7 @@ The first argument represents how the option will be displayed on the
 window.\\
 This part is also used as prompt to ask for user input if the \textsl{[QUESTIONS]} section in the
 configuration file doesn't contain an \textsl{INPUT} setting (see also section \ref{para:input})\footnote{ when all inputs are asked
-at once using the \textsl{All input} option or the \textsl{ALL} command (see section \ref{subsubsec:entering}), this
+at once using the \textsl{All input} option or the \textsf{ALL} command (see section \ref{subsubsec:entering}), this
 part will always be used as prompt.}.
 
 The second argument contains the variable name (the symbol that is defined 
@@ -2180,8 +2185,8 @@ Valid keywords are listed in table \ref{tab:filespec}.
 \begin{table}[h!tb]
 \begin{minipage}[h!tb]{\textwidth}
 \begin{tabular}{llp{6cm}} \hline
-\textsl{REQUIRED} & [\textsf{TRUE} or \textsf{FALSE}] & If set to \textsl{TRUE}, OMI checks to see if the file exists. If not, an error is displayed.\\
-\textsl{WILDCARDS} & [\textsf{TRUE} or \textsf{FALSE}] & If set to \textsl{TRUE}, OMI will allow wildcards (`*' and `\%') in the file name.\\
+\textsl{REQUIRED} & [\textsl{TRUE} or \textsl{FALSE}] & If set to \textsl{TRUE}, OMI checks to see if the file exists. If not, an error is displayed.\\
+\textsl{WILDCARDS} & [\textsl{TRUE} or \textsl{FALSE}] & If set to \textsl{TRUE}, OMI will allow wildcards (`*' and `\%') in the file name.\\
 \textsl{FDEVICE} & [\textit{device name}] & This can specify a default device name. \\
 \textsl{FDIRECORY} & [\textit{directory name}] & This can specify a default directory name. \\
 \textsl{FTYPE} & [\textit{file type}] & This can specify a default file type. \\ \hline
@@ -2202,9 +2207,9 @@ Valid keywords are listed in table \ref{tab:string}.
 \begin{table}[h!tb]
 \begin{minipage}[h!tb]{\textwidth}
 \begin{tabular}{llp{5cm}} \hline
-\textsl{UPCASE} & [\textsf{TRUE} or \textsf{FALSE}] & If set to \textsl{TRUE}, the input string will be converted to uppercase.\\
+\textsl{UPCASE} & [\textsl{TRUE} or \textsl{FALSE}] & If set to \textsl{TRUE}, the input string will be converted to uppercase.\\
 \textsl{LOWERCASE} & [\textsf{TRUE} or \textsf{FALSE}] & If set to \textsl{TRUE}, the input string will be converted to lowercase.\\
-\textsl{COLLAPSE} & [\textsf{TRUE} or \textsf{FALSE}] & If set to \textsl{TRUE}, all blanks and tabs will be removed from the 
+\textsl{COLLAPSE} & [\textsl{TRUE} or \textsl{FALSE}] & If set to \textsl{TRUE}, all blanks and tabs will be removed from the 
 input string\footnote{ In versions prior to 2.3, the keyword \textsl{BLANKS} was used for this
 format, but this was very confusing, since \textsl{BLANKS = TRUE} would remove 
 the blanks---all defaults are FALSE with the formatting keywords. Therefore, \textsl{BLANKS} has been replaced by \textsl{COLLAPSE}.
@@ -2217,7 +2222,7 @@ message will be displayed\footnote{ This list can NOT contain an exclamation mar
 double quote ("). Also, if the list should contain a blank, it 
 cannot be the first or the last character of the list, blanks 
 are allowed, but have to be enclosed by other characters}.\\
-\textsl{ALFANUM} & [\textsf{TRUE} or \textsf{FALSE}] & 
+\textsl{ALFANUM} & [\textsl{TRUE} or \textsl{FALSE}] & 
 If set to \textsl{TRUE}, the keyword \textsl{IVCHARS} will be filled automatically with the character list: \verb"`'~^!?@#$%&* -+=(){}[]<>:;,.\|/"\footnote{ Unlike the use of \textsl{IVCHARS}
 as a keyword directly, the exclamation mark (!) will be added to the list of invalid characters this way, but the
 double quote (") still not. The \textsl{ALFANUM} keyword makes sure the formatted string
@@ -2261,7 +2266,7 @@ All valid keywords are listed in table \ref{tab:float}.
 \begin{tabular}{llp{6cm}} \hline
 \textsl{MIN} & [\textit{floating point value}] & The lowest value allowed. \\
 \textsl{MAX} & [\textit{floating point value}] & The highest value allowed. \\
-\textsl{FLOAT\_POINT} & [\textsf{.} or \textsf{,}]&  Specifies which character will be used as the floating-point 
+\textsl{FLOAT\_POINT} & [\textsl{.} or \textsl{,}]&  Specifies which character will be used as the floating-point 
 character. It overwrites the default value from the configuration 
 file (see section \ref{para:float})\footnote{ Input entered by the user, must contain the same floating-point 
 character!}.\\ \hline
@@ -2282,7 +2287,7 @@ Valid keywords are listed in table \ref{tab:date}.
 \begin{table}[h!tb]
 \begin{minipage}[h!tb]{\textwidth}
 \begin{tabular}{llp{4cm}} \hline
-\textsl{FORMAT} & [\textsf{ABSOLUTE}, \textsf{COMPARISON} or \textsf{DELTA}] & Specify the format to which the input will be converted.\\ \hline
+\textsl{FORMAT} & [\textsl{ABSOLUTE}, \textsl{COMPARISON} or \textsl{DELTA}] & Specify the format to which the input will be converted.\\ \hline
 \end{tabular}
 \caption{Keywords for the DATE format type}\label{tab:date}
 \end{minipage}
@@ -2323,16 +2328,16 @@ and the default type is \textsl{.TXT}. \linebreak
 If this field is not specified, the name \textsl{TA\_\textit{menu}\$INPUT\textit{n}} will 
 be used, where \textit{menu} is the current menu name, and \textsl{INPUT\textit{n}} the 
 OMI internal element name\footnote{ \textit{n} can either be the explicit element number, or the automatic generated number}. \\
-\textsl{KEEP} & [\textsf{TRUE} or \textsf{FALSE}] & If set to \textsl{TRUE}, the temporary file will not be removed when 
+\textsl{KEEP} & [\textsl{TRUE} or \textsl{FALSE}] & If set to \textsl{TRUE}, the temporary file will not be removed when 
 OMI exists, and so will be available for a future session.\\
-\textsl{HISTORY} & [\textsf{TRUE} or \textsf{FALSE}] &  If set to \textsl{TRUE}, older version of the temporary file will also 
+\textsl{HISTORY} & [\textsl{TRUE} or \textsl{FALSE}] &  If set to \textsl{TRUE}, older version of the temporary file will also 
 be saved, limited by the VMS VERSION\_LIMIT. When \textsl{KEEP} is set 
 to \textsl{FALSE} or not specified, \textsl{HISTORY} is automatically set to \textsl{FALSE}. \linebreak
 By default, only the last version will be saved (if \textsl{KEEP} is \textsl{TRUE})\\
-\textsl{LARGE} & [\textsf{TRUE} or \textsf{FALSE}] &  The size of a textarea is limited to 255 characters by default. 
+\textsl{LARGE} & [\textsl{TRUE} or \textsl{FALSE}] &  The size of a textarea is limited to 255 characters by default. 
 With this option it is possible to store values up to 1024 characters 
 in the variable\footnote{ Setting this option to \textsl{TRUE}, can cause the command 
-\textsl{SHOW TEXTAREA} not to show anything without a warning!}. \linebreak
+\textsf{SHOW TEXTAREA} not to show anything without a warning!}. \linebreak
 The maximum size does not affect the value that is stored in 
 the temporary file. \\ \hline
 \end{tabular}
@@ -2353,7 +2358,7 @@ Valid keywords are listed in table \ref{tab:time}.
 \begin{table}[h!tb]
 \begin{minipage}[h!tb]{\textwidth}
 \begin{tabular}{llp{6cm}} \hline
-\textsl{HOURS} & [\textsf{12} or \textsf{24}] &  Specifies if the time should be in 12 or 24 hours format. In 
+\textsl{HOURS} & [\textsl{12} or \textsl{24}] &  Specifies if the time should be in 12 or 24 hours format. In 
 12 hours format, the string ``am'' or ``pm'' will be added, and the time 
 value will, if necessary, be converted (e.g. ``21:45'' will be converted 
 to ``9:45pm'', ``10:15'' will be converted to `10:15am''). \linebreak
@@ -2362,9 +2367,9 @@ used (see section \ref{para:mylabel1}).\\
 \textsl{SEPARATOR} & [\textit{separator string}] & By default, a colon (\textsl{:}) will be used to separate hours and minutes 
 (HH:MM), but by using this element, any character string can 
 be diaplayed in the output. For user input, only a colon (\textsl{:}) or a dot (\textsl{.}) are allowed. \\
-\textsl{TRZERO} & [\textsf{TRUE} or \textsf{FALSE}] & If set to \textsl{TRUE}, trailing zeros will be included for the hours 
+\textsl{TRZERO} & [\textsl{TRUE} or \textsl{FALSE}] & If set to \textsl{TRUE}, trailing zeros will be included for the hours 
 if necessary, e.g. ``9:45pm'' will be displayed as ``09:45pm''.\\
-\textsl{UPCASE} & [\textsf{TRUE} or \textsf{FALSE}] &  If set to \textsl{TRUE}, the string am or pm will be converted to uppercase. 
+\textsl{UPCASE} & [\textsl{TRUE} or \textsl{FALSE}] &  If set to \textsl{TRUE}, the string am or pm will be converted to uppercase. 
 This element will be ignored when \textsl{HOURS} is specified as \textsl{24}. \\ \hline
 \end{tabular}
 \caption{Keywords for the TIME format type}\label{tab:time}
@@ -2504,7 +2509,7 @@ can NOT be formatted or validated! So, if an OMI module is called with the
 variable USRNAME from the USER menu in the example, which requires the 
 username to be in uppercase, lowercase user input will cause failures!
 
-When this input is asked using the \textsl{ALL}\index{OMI commands!ALL} command, or 
+When this input is asked using the \textsf{ALL}\index{OMI commands!ALL} command, or 
 the last input option from the menu (see section \ref{subsubsec:entering}, the current value is highlighted in the 
 pop-up window, and won't be overwritten if no new value is selected.
 
@@ -2646,7 +2651,7 @@ another input element to get the variable pointing to the requested value
 file.
 
 If you have write privilege to the current menu, the value file can be 
-modified with the \textsl{EDIT VALUE{\_}FILE} command.
+modified with the \textsf{EDIT VALUE{\_}FILE} command.
 
 \subsection{Set Tag and Select values by a module}
 \index{select lists!set by a module}
@@ -2723,7 +2728,7 @@ When the input item is a Free input type (see secion \ref{subsubsec:mylabel37}),
 value as given in the input element.
 
 If the input element contains a formating block and the default value is invalid\index{variables!invalid default value}, the value will be set to:\\
-\texttt{Invalid default value}
+\textsl{Invalid default value}
 
 \subsubsection{Default for Select lists}\label{subsubsection:defaultforselectlist}\index{select lists!default value}
 
@@ -2871,7 +2876,7 @@ to the item that should be used.
 \vs
 
 The order in which the files are read is not relevant\footnote{ When a menu 
-file is validated with the \textsl{/VALIDATE} qualifier (see section 
+file is validated with the \textsf{/VALIDATE} qualifier (see section 
 \ref{subsubsec:mylabel8}), a warning will be displayed if the first 
 item of two duplicate item names was specified as leading. During run-time 
 this is handled properly.}; the item that has been specified with 
@@ -2987,16 +2992,16 @@ Each menu file can have a help file. This file can be used for brief usage infor
 or other descriptions.
 
 Help files have to be located in the same directory where the menu is found, and should
-have the same name but with file type \texttt{.OMH}, e.g. if your menu file is
-called \texttt{MY-MENU.MNU}, the help file should be called \texttt{MY-MENU.OMH}.
+have the same name but with file type \textsl{.OMH}, e.g. if your menu file is
+called \textsl{MY-MENU.MNU}, the help file should be called \textsl{MY-MENU.OMH}.
 
 \vs
 
 The layout of the menu file is similar to the menu file. There is a section name
-between square brackets, which should be equal the menu name without the \texttt{MENU\_} prefix.
-For the main menu---who's section in the menu file always has to be \texttt{[MENU\_MENU]}---this
-means the help section is called \texttt{[MENU]}, and if a menu is created in the menu file
-with section name \texttt{[MENU\_MY-FUNNY-SUBMENU]}, its helpsection is named \texttt{[MY-FUNNY-SUBMENU]}.
+between square brackets, which should be equal the menu name without the \textsl{MENU\_} prefix.
+For the main menu---who's section in the menu file always has to be \textsl{[MENU\_MENU]}---this
+means the help section is called \textsl{[MENU]}, and if a menu is created in the menu file
+with section name \textsl{[MENU\_MY-FUNNY-SUBMENU]}, its helpsection is named \textsl{[MY-FUNNY-SUBMENU]}.
 
 \vs
 
@@ -3004,25 +3009,25 @@ The text in the section is displayed on the screen as entered in the file.
 As with long file descriptions, the \textsl{\lt EOF\gt}\index{EOF} identifier
 can also be used to force the end of file (see also section~\ref{subsec:adding}).
 Additionally, the textstring \textsl{\lt FF\gt}\index{FF} can be used to force
-a newpage. By default, the user has to press \texttt{Return} when the last line
-in the OMI screen is written, but \textsl{\lt FF\gt} forces an \texttt{OMI{\$}WAIT}\footnote{ see section~\ref{subsubsec:mylabel64}}
+a newpage. By default, the user has to press \textsl{Return} when the last line
+in the OMI screen is written, but \textsl{\lt FF\gt} forces an \textsl{OMI{\$}WAIT}\footnote{ see section~\ref{subsubsec:mylabel64}}
 at the line where it occured.
 
 \vs
 
-If a menu contains an on-the-fly menu (see chapter \ref{sec:mylabel2}), it can be documented in the section \texttt{[OTF{\_}MENU]}.\index{on-the-fly menus!in helpfiles}
+If a menu contains an on-the-fly menu (see chapter \ref{sec:mylabel2}), it can be documented in the section \textsl{[OTF{\_}MENU]}.\index{on-the-fly menus!in helpfiles}
 
 If a menu contains more on-the-menus that have to be documented in different sections, the key in the help file can be specified when defining the on-the-fly menu with the symbol \textsl{OTF{\_}MENU{\$}INFO{\_}KEY} (see also section \ref{subsec:otfhelp}).
 
 \vs
 
-Helpfiles are read with the \texttt{INFO}\index{OMI commands!INFO} command. For
+Helpfiles are read with the \textsf{INFO}\index{OMI commands!INFO} command. For
 more information on this command, refer to section~\ref{subsec:cmdinfo}.
 
 
 \vs
 
-The menu \texttt{OMI{\$}MANAGE}\index{omi\$manage menu}, which comes with the distribution,
+The menu \textsl{OMI{\$}MANAGE}\index{omi\$manage menu}, which comes with the distribution,
 has a help file that can be used as an example.
 
 \chapter{Writing Modules}
@@ -3292,7 +3297,7 @@ This command can be used to decrypt a string, that was encrypted with
 The encrypted string has to be specified as a parameter. If the encrypted 
 string is encrypted with OMI v1.1 or higher, an encryption key is required. 
 That has to be the same key that was used for encrypting. This key is 
-generated with the \textsl{SET KEY} command and stored in the user specific 
+generated with the \textsf{SET KEY} command and stored in the user specific 
 configuration file.
 
 \vs
@@ -3300,7 +3305,7 @@ configuration file.
 The second parameter should be the name of the key with which the string was 
 encrypted. It has to exist at the keyring of the users configuration file 
 (see section \ref{subsubsec:mylabel20}). If it's not there, it can be 
-imported with the OMI command \textsl{IMPORT KEY}.
+imported with the OMI command \textsf{IMPORT KEY}.
 
 Strings that where encrypted with OMI v1.0b3 - v1.0 can still be decrypted 
 without the need for a key.\\[3mm]
@@ -3321,18 +3326,18 @@ The \textsl{OMI{\$}RECORD\textit{n}} symbols should be local.
 \vs
 
 \hspace{-8mm}\textbf{NOTE:}\label{note:dispinfo} If this command is called more than once during the same run 
-(without any \textsl{exit} commands that clean up the local symbols 
+(without any \textsf{exit} commands that clean up the local symbols 
 OMI{\$}RECORDn), make sure the symbols \textsl{OMI{\$}RECORD\textit{n}} of the previous calls 
 are erased or overwritten. \\
 E.g. If the first call writes 5 records to the screen, and the second call 
 should write 4 records, it'll also write the last record of the first call. 
 The older fifth record should be removed using:\\
-\indent\textsl{{\$} DELETE /SYMBOL /LOCAL OMI{\$}RECORD5} \\
+\indent\texttt{{\$} DELETE /SYMBOL /LOCAL OMI{\$}RECORD5} \\
 or by specifying it as empty: \\
-\indent\textsl{{\$} OMI{\$}RECORD5 = ""}\\[3mm]
+\indent\texttt{{\$} OMI{\$}RECORD5 = ""}\\[3mm]
 \textbf{Parameter}\\*[3mm]The optional keyword \textsl{OVERWRITE} prevents a screen refresh before the output is written. This can be used if consecutive calls to \textsl{OMI{\$}DISPLAY{\_}INFO} are made, each  with additional records, without refreshing records that already have been written to the screen.\\[3mm]
 \textbf{Example}\\*[3mm]
-\begin{textsf}
+\begin{texttt}
 \indent{\$} OMI{\$}RECORD1 = "Username : " + USR{\$}NAME \newline
 \indent{\$} OMI{\$}RECORD2 = "Login dir : " + USR{\$}HOME \newline
 \indent{\$} OMI{\$}RECORD3 = "Owner : " + USR{\$}OWNER \newline
@@ -3341,7 +3346,7 @@ or by specifying it as empty: \\
 \indent{\$} OMI{\$}WAIT \newline
 \indent{\$} OMI{\$}REFRESH \newline
 \indent{\$} EXIT
-\end{textsf}\\*[3mm]
+\end{texttt}\\*[3mm]
 In this example, information, gathered by the procedure, is stored in the 
 \linebreak OMI{\$}RECORDn symbols, and presented on the menu window. After being 
 displayed, \textsl{OMI{\$}WAIT}\index{OMI commands in modules!OMI{\$}WAIT} is called, 
@@ -3388,7 +3393,7 @@ added at the end of the file. Otherwise, the file will be created.
 This command can be used to perform some rude encryption on the input 
 string, which is specified as a parameter. The OMI encryption method 
 requires an encryption key, which is stored in the user specific 
-configuration file. This key is generated with the \textsl{SET KEY}\index{OMI 
+configuration file. This key is generated with the \textsf{SET KEY}\index{OMI 
 commands!SET KEY} command.\\[3mm]
 \textbf{Return value}
 
@@ -3438,7 +3443,7 @@ returns \textsl{OMI{\$}{\_}ERROR}.
 
 \textsl{OMI{\$}{\_}ERROR} is also the return value when \textsl{OMI{\$}VARIABLE} is not set.\\[3mm]
 \textbf{Examples}\\*[3mm]
-\begin{textsf}
+\begin{texttt}
 \indent{\$} OMI{\$}ASK "Password: " \\
 \indent{\$} OMI{\$}CMDLINE{\_}CLEAR \\
 \indent{\$} OMI{\$}VARIABLE = "OMI{\$}RESPONSE" ! No single quotes! \\
@@ -3449,7 +3454,7 @@ returns \textsl{OMI{\$}{\_}ERROR}.
 \indent{\$}     RETURN \\
 \indent{\$} ENDIF \\
 \indent{\$} OMI{\$}ENCRYPT "''OMI{\$}RESPONSE'" \\
-\end{textsf}\\*[3mm]
+\end{texttt}\\*[3mm]
 In this example, \textsl{OMI{\$}INPUT{\_}VALIDATE} is called to check the syntax of 
 the password that was entered.
 
@@ -3459,7 +3464,7 @@ translated by the call of \textsl{OMI{\$}ENCRYPT}.
 
 If USER-INPUT is a function like F{\$}PID(GOTO), the function is executed causing 
 GOTO to be defined as a new symbol!\\[3mm]
-\begin{textsf}
+\begin{texttt}
 \indent{\$} OMI{\$}ASK "Password: " \\
 \indent{\$} OMI{\$}CMDLINE{\_}CLEAR \\
 \indent{\$} OMI{\$}VARIABLE = "OMI{\$}RESPONSE" \\
@@ -3470,7 +3475,7 @@ GOTO to be defined as a new symbol!\\[3mm]
 \indent{\$}     RETURN \\
 \indent{\$} ENDIF \\
 \indent{\$} OMI{\$}ENCRYPT OMI{\$}RESPONSE \\
-\end{textsf}\\*[3mm]
+\end{texttt}\\*[3mm]
 The main difference in this example is the call of \textsl{OMI{\$}ENCRYPT}, where the 
 password is not passed to the function between double quotes (causing the 
 input to be translated to uppercase).
@@ -3515,7 +3520,7 @@ user then has to press return to acknowledge the message.\\[3mm]
 \textbf{Parameter}\\*[3mm]
 The first parameter should be enclosed by double quotes. It contains the 
 message that will be displayed in the popup box.\\
-The message can contain newlines using ``\texttt{\ensuremath{\backslash}n}''. To force an empty line, 2 newlines can be added, but they \textit{must} contain a whitespace: ``\texttt{\ensuremath{\backslash}n\textvisiblespace\ensuremath{\backslash}n}''\\[3mm]
+The message can contain newlines using ``\textsl{\ensuremath{\backslash}n}''. To force an empty line, 2 newlines can be added, but they \textit{must} contain a whitespace: ``\textsl{\ensuremath{\backslash}n\textvisiblespace\ensuremath{\backslash}n}''\\[3mm]
 \textbf{Options}\\*[3mm]
 \begin{itemize}
 \item \textsl{NOREFRESH} Prevent the screen to be refreshed after displaying a popup.
@@ -3555,7 +3560,7 @@ The reversed value of the input string will be returned in the global symbol
 \textsl{OMI{\$}REVERSED}.\\[3mm]
 \textbf{Example}\\*[3mm]
 \begin{small}
-\begin{textsf}
+\begin{texttt}
 \indent{\$} DIRECTORY = "DEVICE:[TOPDIR.SUBDIR]" \\
 \indent{\$} OMI{\$}REVERSE 'DIRECTORY'                    \\
 \indent{\$}!\hspace{3cm} result: ]RIDBUS.RIDPOT[:ECIVED \\
@@ -3568,7 +3573,7 @@ The reversed value of the input string will be returned in the global symbol
 \indent{\$}!\hspace{3cm} result: RID.RIDBUS]RIDPOT[:ECIVED \\
 \indent{\$} OMI{\$}REVERSE 'FILENAME' \\
 \indent{\$} FILENAME = OMI{\$}REVERSED \\
-\end{textsf}
+\end{texttt}
 \end{small}\\*[3mm]
 This example reads a directory specification as input, reverses it and 
 filters the last directory as a filename. The new filename is composed 
@@ -3585,7 +3590,7 @@ After this, the complete name is reversed again, resulting in the value
 
 \indent Format: \textbf{OMI{\$}SIGNAL \textsf{facility identifier[,variable,variable...]}}\\*[3mm]
 This command signals a message that will be read from the message data file. \\
-Message data files can be created and filled with the \textsl{OMI{\$}MANAGE}\index{messages}\index{omi\$manage menu} menu\footnote{ This menu is not documented, but comes with a basic OMI help file. Type \texttt{INFO} in the menu for more information.}.\\[3mm]
+Message data files can be created and filled with the \textsl{OMI{\$}MANAGE}\index{messages}\index{omi\$manage menu} menu\footnote{ This menu is not documented, but comes with a basic OMI help file. Type \textsf{INFO} in the menu for more information.}.\\[3mm]
 \textbf{Parameters}
 
 \begin{description}
@@ -3628,20 +3633,20 @@ The second parameter should be a single character that's used as delimiter in th
 \item \textsl{REMOVE{\_}DUPLICATES} Remove duplicate elements from the sorted string.
 \end{itemize}
 \textbf{\textit{Note:}}If both \textsl{CASE{\_}INSENSITIVE} and \textsl{REMOVE{\_}DUPLICATES} are given, the first occurance of a duplicate element will
-be in the sorted string, e.g. if the input string contains the elements ``\texttt{hello}'' and ``\texttt{HELLO}'' in that order, only the element
-``\texttt{hello}'' will be in the returned string.\\*[3mm]
+be in the sorted string, e.g. if the input string contains the elements ``\textsl{hello}'' and ``\textsl{HELLO}'' in that order, only the element
+``\textsl{hello}'' will be in the returned string.\\*[3mm]
 \textbf{Return value}\\*[3mm]
 The string with sorted elements will be returned in the global symbol 
 \textsl{OMI{\$}SORTED}.\\[3mm]
 \textbf{Example}\\*[3mm]
 \begin{small}
-\begin{textsf}
+\begin{texttt}
 \indent{\$} MYSTRING = "hello World" \\
 \indent{\$} OMI{\$}SORT 'MYSTRING' " " \\
 \indent{\$}!\hspace{3cm} result: "World hello"  \\
 \indent{\$} OMI{\$}SORT 'MYSTRING' " " CASE{\_}INSENSITIVE\\
 \indent{\$}!\hspace{3cm} result: "hello World"  \\
-\end{textsf}
+\end{texttt}
 \end{small}
 
 \subsection{OMI{\$}SUBSTITUTE}
@@ -3706,7 +3711,7 @@ By default, this command returns status code \textsl{OMI{\$}{\_}OK} (normal
 successful completion). When the user presses Ctrl/Z in stead of \lt Return\gt, 
 this function returns \textsl{OMI{\$}{\_}CANCELLED}.\\[3mm]
 \textbf{Example}\\*[3mm]
-\begin{textsf}
+\begin{texttt}
 \indent{\$}LOOP: \\
 \indent{\$} READ /END{\_}OF{\_}FILE=END INPUT RECORD \\
 \indent{\$} OMI{\$}RECORD1 = "Date : " + F{\$}ELEMENT(0, "{\#}", RECORD) \\
@@ -3721,7 +3726,7 @@ this function returns \textsl{OMI{\$}{\_}CANCELLED}.\\[3mm]
 \indent{\$} CLOSE INPUT \\
 \indent{\$} OMI{\$}REFRESH \\
 \indent{\$} EXIT \\
-\end{textsf}\\*[3mm]
+\end{texttt}\\*[3mm]
 In this example, information, read from an input file, is displayed record 
 by record in a loop. When the user has seen enough, she can cancel the loop 
 by pressing Ctrl/Z.
@@ -4024,12 +4029,12 @@ OMI modules can create \textit{on-the-fly} menus. They are used to setup a tempo
 To do so, all menu items have to be specified in the module as 
 global symbols, with the menu-name \textsl{OTF{\_}MENU}, e.g.: \\
 \begin{small}
-\begin{textsf}
+\begin{texttt}
 \indent{\$} OTF{\_}MENU{\$}ITEM1 == "Leave this menu{\#}COMMAND{\#}BACK NOEXIT{\_}MODULE" \\
 \indent{\$} OTF{\_}MENU{\$}ITEM2 == "Do something, then leave{\#}COMMAND{\#}BACK" \\
 \indent{\$} OTF{\_}MENU{\$}INPUT1 == "Some input please{\#}VARIABLE{\#}This is default" \\
 \indent{\$} OTF{\_}MENU{\$}ON{\_}EXIT == MY{\_}EXIT{\_}MODULE \\
-\end{textsf}
+\end{texttt}
 \end{small}
 
 \vs
@@ -4069,11 +4074,11 @@ The name of an on-the-fly menu by default is \textsl{OTF{\_}MENU}, which can be 
 
 The symbol \textsl{OTF{\_}MENU{\$}INFO{\_}KEY} can be used to let the \textsl{INFO} command read a named section, e.g.: \\
 \begin{small}
-\begin{textsf}
+\begin{texttt}
 \indent{\$} OTF{\_}MENU{\$}INFO{\_}KEY == OTFMNU{\_}1 \\
 \indent{\$} OTF{\_}MENU{\$}ITEM1 == "Exit without changes{\#}COMMAND{\#}BACK NOEXIT{\_}MODULE" \\
 \indent{\$} OTF{\_}MENU{\$}ITEM2 == "Write changes and exit{\#}COMMAND{\#}BACK" \\
-\end{textsf}
+\end{texttt}
 \end{small}
 
 In this example, the help file should contain a section \textsl{[OTFMNU{\_}1]}.
@@ -4103,12 +4108,12 @@ or a section created dynamically.
 \hspace{-8mm}\textbf{NOTE:} All sections in an on-the-fly menu, \textit{except} the menu section itself, 
 have to be defined as \textit{local} symbols! \\
 E.g.: \\
-\begin{textsf}
+\begin{texttt}
 \indent{\$} MY{\_}LIST{\$}VALUE1 = "Yes" \\
 \indent{\$} MY{\_}LIST{\$}VALUE2 = "No" \\
 \indent{\$} MY{\_}LIST{\$}VALUE3 = "Maybe" \\
 \indent{\$} MY{\_}LIST{\$}DELIMITER = "/" ! So it can be used as a taglist as well \\
-\end{textsf}
+\end{texttt}
 
 \vs
 
@@ -4308,12 +4313,12 @@ Enter any DCL command. The output of the DCL command will be displayed your
 terminal, and you'll have to press \lt Return\gt{} when execution is completed.
 
 If you don't want the output on your screen, you can use the command 
-\textsl{SILENT{\_}DCL}\index{OMI commands!SILENT{\_}DCL}.
+\textsf{SILENT{\_}DCL}\index{OMI commands!SILENT{\_}DCL}.
 
 \vs
 
-In stead of the command \textsl{DCL}, the dollar sign 
-(\textsl{{\$}})\index{{\$}}\index{dollar-sign} can also be used.
+In stead of the command \textsf{DCL}, the dollar sign 
+(\textsf{{\$}})\index{{\$}}\index{dollar-sign} can also be used.
 
 \vs
 
@@ -4416,7 +4421,7 @@ written to the menu file. Therefore, \textsl{WRITE} privilege to the current men
 required.
 
 Since v1.1, encrypting an element requires a key, so you must have generated 
-an own key using the \textsl{SET KEY}\index{OMI commands!SET KEY} command.
+an own key using the \textsf{SET KEY}\index{OMI commands!SET KEY} command.
 
 \vs
 
@@ -4437,8 +4442,8 @@ The second parameter is the element name.
 
 The third parameter should be the name of the key with which the string has 
 to be encrypted. It has to exist at the keyring of the user's configuration 
-file. If it's not there, it can be imported with the OMI command \textsl{IMPORT KEY}, 
-or created with the \textsl{SET KEY} command.
+file. If it's not there, it can be imported with the OMI command \textsf{IMPORT KEY}, 
+or created with the \textsf{SET KEY} command.
 
 \vs
 
@@ -4458,7 +4463,7 @@ the previous menu.
 
 \vs
 
-\textsl{EXIT}\index{OMI commands!EXIT} and \textsl{QUIT}\index{OMI commands!QUIT} are 
+\textsf{EXIT}\index{OMI commands!EXIT} and \textsf{QUIT}\index{OMI commands!QUIT} are 
 synonymous.
 
 \section{EXPORT KEY}
@@ -4517,7 +4522,7 @@ should be updated.
 If the current menu has an info section in the menu specific help
 file\footnote{ \textsl{OMI\$MENU\_DIRECTORY:\textit{menu-file-name}.OMH}, 
 where \textit{menu-file-name} is the same as the filename of the current menu file}, the
-\textsl{INFO} command can be used to display the information. This way it is possible to add menu specific help.
+\textsf{INFO} command can be used to display the information. This way it is possible to add menu specific help.
 
 For more information on writing help files, please refer to rection~\ref{sec:mnhelp}
 
@@ -4530,7 +4535,7 @@ Jump immediately to the submenu with the name that's specified as a
 parameter of this command.
 
 The name of submenus can be displayed using the
-\textsl{SHOW NAME}\index{OMI commands!SHOW NAME}\index{name}\index{menu!name}
+\textsf{SHOW NAME}\index{OMI commands!SHOW NAME}\index{name}\index{menu!name}
 command, or automatically by setting the option \textsl{DISPLAY{\_}NAMES} in the
 \textsl{[SCREEN]}\index{configuration file!modify the layout of OMI}
 section of the configuration file to \textsl{TRUE}.
@@ -4563,7 +4568,7 @@ menu.
 
 To retrieve a listing of all available menu files in \textsl{OMI{\$}:} and 
 \linebreak\textsl{OMI{\$}MENU{\_}DIRECTORY:}\index{menu!listing of all menu files}, enter a 
-question mark (\textsl{?}).
+question mark (\textsf{?}).
 
 \section{QUIT}
 \index{OMI commands!QUIT}
@@ -4573,12 +4578,12 @@ question mark (\textsl{?}).
 Use this command to leave OMI. This will return control to your previous 
 interface (e.g. the DCL prompt), from any menu level.
 
-If you started a new menu using the \textsl{MENU} command, control will NOT return to 
+If you started a new menu using the \textsf{MENU} command, control will NOT return to 
 the previous menu.
 
 \vs
 
-\textsl{QUIT}\index{OMI commands!QUIT} and \textsl{EXIT}\index{OMI commands!EXIT} are 
+\textsf{QUIT}\index{OMI commands!QUIT} and \textsf{EXIT}\index{OMI commands!EXIT} are 
 synonymous.
 
 \section{REFRESH}
@@ -4636,7 +4641,7 @@ If the current menu has a required order (see section
 which remembers the input elements that have already been selected. The list 
 changes every time one of the required inputs is selected for the first 
 time. If all required inputs have been selected, the list is empty, and will 
-remain empty during the current OMI session, unless the command \textsl{RESET ORDER} 
+remain empty during the current OMI session, unless the command \textsf{RESET ORDER} 
 is issued in the menu having the list.
 
 \subsection{RESET PASSWORD}
@@ -4661,7 +4666,7 @@ screen and displaying a message if the command is called in the background.
 \section{SET}
 \label{subsec:mylabel20}
 
-The \textsl{SET} command can be used to change the value of an internal OMI variable.
+The \textsf{SET} command can be used to change the value of an internal OMI variable.
 
 \subsection{SET AUTO{\_}REFRESH}
 \index{OMI commands!SET AUTO{\_}REFRESH}
@@ -4691,7 +4696,7 @@ If the current menu has no counter, a message will be displayed.
 
 \indent Format: \textbf{SET KEY \textit{value}}\\*[3mm]
 This command defines a personal key. This key will be used for the 
-\textsl{ENCRYPT}\index{OMI commands!ENCRYPT} command in OMI, and for the 
+\textsf{ENCRYPT}\index{OMI commands!ENCRYPT} command in OMI, and for the 
 \textsl{OMI{\$}ENCRYPT}\index{OMI commands in modules!OMI{\$}ENCRYPT} and 
 \textsl{OMI{\$}DECRYPT}\index{OMI commands in modules!OMI{\$}DECRYPT} command in OMI 
 modules.
@@ -4723,7 +4728,7 @@ This command requires \textsl{WRITE} privilege to the current menu.
 \vs
 
 \hspace{-8mm}\textbf{NOTE:} If you want a menu to have the name \textsl{RESET}, you need to set 
-this name using the editor, this won't work with the \textsl{SET} command, since this 
+this name using the editor, this won't work with the \textsf{SET} command, since this 
 name conflicts with OMI internal names.\\[3mm]
 \textbf{Parameter}\\*[3mm]
 The new menu name can optionally be specified as a parameter. If omitted, 
@@ -4848,7 +4853,7 @@ The final status code will be displayed on the OMI message line.\\[3mm]
 Enter any valid DCL command. If you omit a parameter, you will be prompted 
 for the command.
 
-When the command \textsl{SILENT{\_}DCL} is used in a menu file, OMI can prompt for 
+When the command \textsf{SILENT{\_}DCL} is used in a menu file, OMI can prompt for 
 additional input for the command, if the string \textsl{\~{}?} is used in the parameter.
 
 If the current user is not authorized for interactive DCL, a warning message 
@@ -4880,7 +4885,7 @@ input for the command, if the string \textsl{\~{}?} is used in the parameter.
 
 \indent Format: \textbf{SUBMIT \textit{omi{\_}module}}\\*[3mm]
 With this command, an OMI module can be started in the background. It works 
-the same as using the qualifier \textsl{/BACKGROUND=BATCH} from the DCL 
+the same as using the qualifier \textsf{/BACKGROUND=BATCH} from the DCL 
 prompt.
 
 When starting a background process from the OMI prompt, a module can only be 
@@ -5158,12 +5163,12 @@ $	return $status
 
 \begin{itemize}
 \item Fix: In the sessionlog, don't write just option numbers but screen text as well.
-\item Fix: Errors in checking dynamic submenus with \textsl{/VALIDATE}.
-\item Fix: Option \texttt{0} signalled \texttt{TOPLEVEL} messages at all levels
-\item Fix: When \textsl{/JUMPS} ended in the main menu, \lt Ctrl/Z\gt{} didn't cause an exit the first time and an abort at the second attempt.
+\item Fix: Errors in checking dynamic submenus with \textsf{/VALIDATE}.
+\item Fix: Option \textsf{0} signalled \textsl{TOPLEVEL} messages at all levels
+\item Fix: When \textsf{/JUMPS} ended in the main menu, \lt Ctrl/Z\gt{} didn't cause an exit the first time and an abort at the second attempt.
 \item Added the \textsl{OMI{\$}SORT} command to the standard toolbox.
 \item Added the \textsl{SESSIONLOG{\_}ID} element to the main menu.
-\item \textsl{/JUMPS} qualifer doesn't require \textsl{/SUBMENU} anymore but starts in the toplevel menu when omitted.
+\item \textsf{/JUMPS} qualifer doesn't require \textsf{/SUBMENU} anymore but starts in the toplevel menu when omitted.
 \end{itemize}
 
 \section*{Version 2.7, Released: 21-02-2020}
@@ -5173,13 +5178,13 @@ $	return $status
 \item Fix: \textsl{\textbf{P}revious}/\textsl{\textbf{N}ext} labels where not displayed when scrolling through a \textsl{SELECT} list with multiple columns.
 \item Fix: Refresh when a \textsl{SELECT} list value is not changed in \textsl{ALL{\_}INPUTS}.
 \item Fix: Issue introduced with rounding in the calculator in v2.6.
-\item Fix: Option \texttt{0} at toplevel signals the \texttt{TOPLEVEL} messages, but \textit{did} execute an \textsl{ON{\_}EXIT} module if set.
+\item Fix: Option \textsf{0} at toplevel signals the \textsl{TOPLEVEL} messages, but \textit{did} execute an \textsl{ON{\_}EXIT} module if set.
 \item Introduced symbols for font- and color section (section \ref{subsection:fontcolors}).
 \item Added the \textsl{COLORSCHEME} option to \textsl{OMI{\$}POPUP}.
 \item Added the symbols \textsl{OMI{\$}{\_}TRUE} and \textsl{OMI{\$}{\_}FALSE}
 \item Added keywords \textsl{INSIDE{\_}ONLY} for \textsl{OMI{\$}REFRESH} and \textsl{OVERWRITE} for \textsl{OMI{\$}DISPLAY{\_}INFO}
-\item Added support for forced newlines (\texttt{\ensuremath{\backslash}n}) in \textsl{OMI{\$}POPUP}.
-\item Added support for the \textsl{INFO} command in \textsl{OTF} menus.
+\item Added support for forced newlines (\textsl{\ensuremath{\backslash}n}) in \textsl{OMI{\$}POPUP}.
+\item Added support for the \textsf{INFO} command in \textsl{OTF} menus.
 \item Configurable prompt for Tag- and Selectlists.
 \item Added the configion option \textsl{CENTER{\_}SELECT{\_}LISTS} in the \textsl{[SCREEN]} section to allow the \textsl{SELECT} subwindows to be positioned in the center..
 \item Added an option to log sessions using the \textsl{LOG{\_}SESSION} element in the main menu.
@@ -5218,14 +5223,14 @@ $	return $status
 \item Keep the current screen width and height when the value for \textsl{width}, \textsl{height} and/or \textsl{exit{\_}width} is set to \textsl{0} in the \textsl{[screen]} section.
 \item Introduced \textsl{exit{\_}height} in the configuration file's \textsl{[screen]} section.
 \item Search order for modules that are called without explicit path is now reversed: first check is in \textsl{OMI{\$}MENU{\_}DIRECTORY}, if not found look for the module in \textsl{OMI{\$}}.
-\item Bugfix in the \textsl{INFO} command: clear textbuffers after display.
+\item Bugfix in the \textsf{INFO} command: clear textbuffers after display.
 \item Bugfix in \textsl{TAG} inputs: entering negative values caused OMI to crash.
 \end{itemize}
 
 \section*{Version 2.3, Released: 25-06-2004}
 
 \begin{itemize}
-\item Added keywords \textsl{DCLERRORS} and \textsl{DCLFATALS} to the \textsl{/IGNORE} qualifier
+\item Added keywords \textsl{DCLERRORS} and \textsl{DCLFATALS} to the \textsf{/IGNORE} qualifier
 \item The keyword \textsl{BLANKS} in \textsl{STRING} formatting type is now deprecated, it's replaced by \textsl{COLLAPSE}
 \item Added the keyword \textsl{ALFANUM} in the \textsl{STRING} formatting type
 \item Made the answers \textsl{Yes} and \textsl{No} configurable using the values \textsl{answer{\_}yes} and \textsl{answer{\_}no} in the \textsl{[questions]} section of the configuration file.\\
@@ -5233,17 +5238,17 @@ $	return $status
 \begin{itemize}
 \item The default answer when using \textsl{OMI{\$}CONFIRM} should be changed in your applications from \textsl{Y} to \textsl{'questions{\$}answer{\_}yes'}, and from \textsl{N} to \textsl{'questions{\$}answer{\_}no'} if you want to change the values in the configuration file as well.\\
 See section \ref{subsubsec:mylabel46}.
-\item The message \texttt{\%OMI-W-IVANS} now requires 2 parameters. If you use this message in your software, you will need to change it to:\\
+\item The message \textsl{\%OMI-W-IVANS} now requires 2 parameters. If you use this message in your software, you will need to change it to:\\
 \textsl{OMI{\$}SIGNAL OMI IVANS,QUESTIONS{\$}ANSWER{\_}YES,QUESTIONS{\$}ANSWER{\_}NO}
 \end{itemize}
 \item Bugfix the last page when scrolling select lists
-\item Bugfix in the \textsl{INFO} command
-\item Added the commands \textsl{CLS} and \textsl{OMI{\$}CLEAR{\_}SCREEN}
+\item Bugfix in the \textsf{INFO} command
+\item Added the commands \textsf{CLS} and \textsl{OMI{\$}CLEAR{\_}SCREEN}
 \item Added the option \textsl{NOWAIT} to the \textsl{OMI{\$}POPUP} command
 \item Bugfix in reading \textsl{TAG}- and \textsl{SELECT} lists from a file; files where not found when they located in the \textsl{OMI{\$}MENU{\_}DIRECTORY} searchpath, but not in the first index.\\
 This is because the VMS lexical \textsl{F{\$}PARSE()} expands to the first index only.
 \item Allow submenus in on-the-fly menus
-\item Added the error messages \texttt{OUTOFRA} and \texttt{PROOUTRA} that signals when an intermediate value in the calculator is or might be out of range.\\
+\item Added the error messages \textsl{OUTOFRA} and \textsl{PROOUTRA} that signals when an intermediate value in the calculator is or might be out of range.\\
 This prevents random results when a temporary value exceeds the DCL limit (2,147,483,647)
 \end{itemize}
 
@@ -5261,7 +5266,7 @@ This prevents random results when a temporary value exceeds the DCL limit (2,147
 \item Added basic menu- specific help support using \textsl{.OMH} files and the new command \textsl{INFO}
 \item Documented the OMI{\$}Manage menu
 \item Bugfixes in the OMI{\$}Manage menu and standard OMI modules \textsl{LIST{\_}FILES.OMI} and \textsl{TYPE{\_}FILE.OMI}
-\item Added the \textsl{/[NO]IGNORE} qualifier with keyword \textsl{DUPLICATES} to suppress \texttt{\%OMI-W-DUPL} messages.
+\item Added the \textsf{/[NO]IGNORE} qualifier with keyword \textsl{DUPLICATES} to suppress \textsl{\%OMI-W-DUPL} messages.
 \end{itemize}
 
 \section*{Version 2.1, Released: 25-08-2001}
@@ -5271,7 +5276,7 @@ This prevents random results when a temporary value exceeds the DCL limit (2,147
 \item Bugfix in updating menu- files; when \textsl{OMI{\$}MENU{\_}DIRECTORY} is a search path, update commands always wrote the update menu file back in the first directory of the path.
 \item Bugfix in the user installation procedure.
 \item Restore the original VMS message state in spawned processes.
-\item Added more checks when running with \textsl{/VALIDATE}.
+\item Added more checks when running with \textsf{/VALIDATE}.
 \item Added support for leading values using the \textsl{{\#}LEADING} attribute in item names to make sure the leading value is used when an item is duplicate within a menu file and/or included library.
 \item Removed the SQL toolbox that was never - and never will be - finished.
 \item Changed the default file type for libraries to \textsl{.OML}.
@@ -5285,10 +5290,10 @@ This prevents random results when a temporary value exceeds the DCL limit (2,147
 \item Extended the calculator to work with longer formulas and parentheses.
 \item Added the \textsl{{\#}INCLUDE} directive to include standard libraries in menu files.
 \item Added the \textsl{/BACKGROUND=(BATCH|DETACH)} qualifier to run an OMI module unattended as a batch- or detached process from the DCL prompt.
-\item Implemented support for background jobs (batch only) using the \textsl{SUBMIT} command at the OMI prompt or \textsl{OMI{\$}SUBMIT} within modules.
+\item Implemented support for background jobs (batch only) using the \textsf{SUBMIT} command at the OMI prompt or \textsl{OMI{\$}SUBMIT} within modules.
 \item Added some accompanying elements in the configuration file for background job support
 \item Fixed a bug that caused the cursor to disappear when the \textsl{OMI{\$}WAIT }command was used and OMI was called with the \textsl{/BATCH} qualifier.
-\item Fixed a bug in the \textsl{/JUMPS} causing a \texttt{\%DCL-W-UNDSYM} warning.
+\item Fixed a bug in the \textsl{/JUMPS} causing a \textsl{\%DCL-W-UNDSYM} warning.
 \item Some minor bugfixes in the message handling
 \end{itemize}
 
@@ -5311,9 +5316,9 @@ Messages files created with the \textsl{OMI{\$}MANAGE} menu are still created in
 
 This release includes patch 1.4a. Other changes:
 \begin{itemize}
-\item The dollar-sign (\textsl{{\$}}) is now supported as a synonym for the OMI command \textsl{DCL}
+\item The dollar-sign (\textsf{{\$}}) is now supported as a synonym for the OMI command \textsf{DCL}
 \item Added the \textsl{CONFIRM} element to the configuration file (default is \textsl{TRUE})
-\item Enhanced the \textsl{TEXTAREA} input format, and added the new commands \textsl{SHOW TEXTAREA} and \textsl{DELETE TEXTAREA}
+\item Enhanced the \textsl{TEXTAREA} input format, and added the new commands \textsf{SHOW TEXTAREA} and \textsf{DELETE TEXTAREA}
 \item Added validation and formatting options for dynamic input using format sections
 \item Added multiple mailbox support, by allowing the logical name, which could only be \textsl{OMI{\$}MAILBOX} in previous versions, to be specified by a parameter. \textsl{OMI{\$}MAILBOX} is still the default value.
 \end{itemize}
@@ -5329,35 +5334,35 @@ element type using the DCL command.
 \item Renamed the file \textsl{OMI{\$}CREATE{\_}HELPLIB.COM} to \textsl{OMI{\$}INSTALL.COM} which is a better name for what it does. \\
 The old \textsl{OMI{\$}INSTALL.COM} is now called \textsl{OMI{\$}USER{\_}INSTALL.COM}.
 \item The logical \textsl{OMI{\$}MENU{\_}DIRECTORY} can bow be a search list. The user specific file \textsl{OMI{\$}SETUP.COM} (created by \textsl{OMI{\$}USER{\_}INSTALL.COM}) now scans the given menu directory for subdirectories, and adds them all to the logical. By editing \textsl{OMI{\$}SETUP.COM} manually, more directories can be added.
-\item Added the \textsl{[INTERACTIVE{\_}AUTH]} section support to prevent users from executing the \textsl{DCL} or \textsl{SPAWN} commands, except when these commands are called by a menu item.
-\item Added the \textsl{AUTO{\_}REFRESH} menu element, and the \textsl{(RE)SET AUTO{\_}REFRESH} command
+\item Added the \textsl{[INTERACTIVE{\_}AUTH]} section support to prevent users from executing the \textsf{DCL} or \textsf{SPAWN} commands, except when these commands are called by a menu item.
+\item Added the \textsl{AUTO{\_}REFRESH} menu element, and the \textsf{(RE)SET AUTO{\_}REFRESH} command
 \item Added qualifier support with the following qualifiers:
 \begin{itemize}
-\item \textsl{/[NO]DEBUG}
-\item \textsl{/[NO]BATCH}
-\item \textsl{/SUBMENU=menu-name}
-\item \textsl{/JUMPS=option-list}
-\item \textsl{/[NO]PROGRESS}
+\item \textsf{/[NO]DEBUG}
+\item \textsf{/[NO]BATCH}
+\item \textsf{/SUBMENU=menu-name}
+\item \textsf{/JUMPS=option-list}
+\item \textsf{/[NO]PROGRESS}
 \end{itemize}
 \end{itemize}
 
 \section*{Version 1.3, Released: 19-11-1997}
 
 \begin{itemize}
-\item Added multiple key support for encryption, using a user specific keyring, stored in the configuration file, and a global keyring, to and from which keys can be exported and imported with the new commands \textsl{EXPORT KEY} and \textsl{IMPORT KEY}
+\item Added multiple key support for encryption, using a user specific keyring, stored in the configuration file, and a global keyring, to and from which keys can be exported and imported with the new commands \textsf{EXPORT KEY} and \textsf{IMPORT KEY}
 \item Added support for on-the-fly menus
-\item Added the \textsl{NOEXIT{\_}MODULE} option in the \textsl{BACK} command
-\item The \textsl{BACK} command and option \textsl{0} don't exit the menu anymore when at the toplevel. \lt Ctrl/Z\gt{} still does.
+\item Added the \textsl{NOEXIT{\_}MODULE} option in the \textsf{BACK} command
+\item The \textsf{BACK} command and option \textsf{0} don't exit the menu anymore when at the toplevel. \lt Ctrl/Z\gt{} still does.
 \item Fixed a bug for \textsl{ON{\_}INIT} and \textsl{ON{\_}EXIT} elements using parameters where the file type was not specified
 \item Fixed a bug in the \textsl{TEXTAREA} input field that occured when the logical \textsl{OMI{\$}MENU{\_}DIRECORY} is not defined
 \item Added the \textsl{FIXED} option for \textsl{TEXTAREA} input types
-\item Added the \textsl{ELEMENT} and \textsl{MENU{\_}FILE} options to the \textsl{EDIT} command
-\item Added the option to have Tag- and Select lists retrieve their values from a file, and the \textsl{EDIT VALUE{\_}FILE} command to enable (privileged) users to maintain those files
+\item Added the \textsl{ELEMENT} and \textsl{MENU{\_}FILE} options to the \textsf{EDIT} command
+\item Added the option to have Tag- and Select lists retrieve their values from a file, and the \textsf{EDIT VALUE{\_}FILE} command to enable (privileged) users to maintain those files
 \item Added the \textsl{PRINTER} element to the section MAIN in the configuration file
 \item Added the module command \textsl{OMI{\$}DUMP{\_}INFO}
 \item Added the module command \textsl{OMI{\$}GET{\_}VMSMESSAGE}
-\item Added the \textsl{SHOW VMS{\_}MESSAGE} command
-\item Added the question mark option for the \textsl{MENU} command, and the listing of all available menus when OMI is started without a menu, or with an invalid menu.
+\item Added the \textsf{SHOW VMS{\_}MESSAGE} command
+\item Added the question mark option for the \textsf{MENU} command, and the listing of all available menus when OMI is started without a menu, or with an invalid menu.
 \item Added the symbols \textsl{OMI{\$}OPTION} and \textsl{OMI{\$}OPTION{\_}TYPE} to the internal symbol list.
 \end{itemize}
 
@@ -5365,8 +5370,8 @@ The old \textsl{OMI{\$}INSTALL.COM} is now called \textsl{OMI{\$}USER{\_}INSTALL
 
 \begin{itemize}
 \item Added the \textsl{TEXTAREA} format type.
-\item The elements \textsl{ON{\_}INIT} and \textsl{ON{\_}EXIT} now work for all menu levels, and will also be executed when the \textsl{MENU} command is entered.
-\item Modified the \textsl{HELP} command so it now accepts topics that were entered as a parameter on the OMI prompt
+\item The elements \textsl{ON{\_}INIT} and \textsl{ON{\_}EXIT} now work for all menu levels, and will also be executed when the \textsf{MENU} command is entered.
+\item Modified the \textsf{HELP} command so it now accepts topics that were entered as a parameter on the OMI prompt
 \item Added the \textsl{FDEVICE}, \textsl{FDIRECTORY} and \textsl{FTYPE} keywords to the \textsl{FILESPEC} format type, to specify default attributes for files.
 \item Added the possability to let lines in the menu- and configuration files span more lines, using the dash (-) to continue on the next line.
 \item Implemented a new message handler, and added the command \textsl{OMI{\$}SIGNAL} to call this handler in OMI modules.
@@ -5374,7 +5379,7 @@ The old \textsl{OMI{\$}INSTALL.COM} is now called \textsl{OMI{\$}USER{\_}INSTALL
 \item Fixed the default values for stack variables, after every increase, the variables using counters will now get their default value.
 \item Fixed the bug that did not allow the user to cancel dynamic input (\textsl{~?}) with \lt Ctrl/Z\gt.
 \item Fixed the bug due to which the Auto Mode did not work for Dynamic Menus.
-\item Added the \textsl{SET WIDTH} command.
+\item Added the \textsf{SET WIDTH} command.
 \item Added the \textsl{OMI{\$}CALL} command, which can be used to call standard modules from OMI modules.
 \item Added the \textsl{PROMPT} element to the menu sections, to allow different prompts for all menu levels.
 \item OMI now displays the percentage of lines read from the menu file during initialization. This is usefull for large menu files.
@@ -5389,14 +5394,14 @@ The old \textsl{OMI{\$}INSTALL.COM} is now called \textsl{OMI{\$}USER{\_}INSTALL
 \item Added a proper error message when there are more items in a menu than can fit on the screen, in stead of running out of the screen.
 \item Added a proper error message when a tag- list is too long to fit on one screen in stead of running out of the screen.
 \item Fixed a bug in the tag lists which would display no than one value per column when more than two columns are required.
-\item Added the \textsl{NEXT} and \textsl{PREVIOUS} commands in the Select list option, due to which selections can now be made from multiple screens.
+\item Added the \textsf{NEXT} and \textsf{PREVIOUS} commands in the Select list option, due to which selections can now be made from multiple screens.
 \item Added defaults to the configuration settings, so not not all fields in the configuration file are required.
 \item Added checks in the configuration routine to encounter duplicate items. The user will now be prompted to ask if an existing item should be overwritten.
 \item Again, implemented a new encryption method, using keys, since I expect everybody who tried hard enough found the encryption method by now. The new method can still decrypt strings encrypted with v1.0b3 and up.
 \item Changed the password prompt for password protected menus so when an invalid password is given the user can retry it, three times in total.
 \item Added intrusion settings when the same user entered an invalid password on the same menu for nine times during one session.
-\item Added the \textsl{SET KEY} command.
-\item Changed the default prompt to \texttt{OMI\gt}.
+\item Added the \textsf{SET KEY} command.
+\item Changed the default prompt to \textsl{OMI\gt}.
 \end{itemize}
 
 \section*{Version 1.0, Released: 30-05-1997}
@@ -5404,15 +5409,15 @@ The old \textsl{OMI{\$}INSTALL.COM} is now called \textsl{OMI{\$}USER{\_}INSTALL
 \begin{itemize}
 \item Added the option to specify a parameter for \textsl{OMI{\$}DATE{\_}INFO}, which enables date information for other dates. Default is 'today'.
 \item Fixed a bug in \textsl{OMI{\$}DATE{\_}INFO}, which miscalculates after september.
-\item Some minor documentation bugs in the \textsl{HELP} file fixed.
+\item Some minor documentation bugs in the \textsf{HELP} file fixed.
 \end{itemize}
 
 \section*{Version 1.0b4, Released: 13-05-1997}
 
 \begin{itemize}
-\item Bugfix for the \texttt{\%DCL-W-UNDSYM} error on password protected menus.
-\item Implemented the \textsl{ASK} command.
-\item Implemented the \textsl{OMI{\$}INPUT{\_}VALIDATE} command, that fixes a possible bug when a user enters \textsl{''F{\$}PID(GOTO)'} as input.\\
+\item Bugfix for the \textsl{\%DCL-W-UNDSYM} error on password protected menus.
+\item Implemented the \textsf{ASK} command.
+\item Implemented the \textsl{OMI{\$}INPUT{\_}VALIDATE} command, that fixes a possible bug when a user enters \textsf{''F{\$}PID(GOTO)'} as input.\\
 Thanks to Henry Juengst (juengst@saph1.iskp.uni-bonn.de) for making me aware of this.
 \end{itemize}
 
@@ -5420,15 +5425,15 @@ Thanks to Henry Juengst (juengst@saph1.iskp.uni-bonn.de) for making me aware of 
 
 \begin{itemize}
 \item Fixed a security bug; a security block in the main menu wasn't properly handled.
-\item Added the \textsl{QUIT} command as a synonym for \textsl{EXIT}.
-\item Added extra parameters to select a submenu by name and the options immediatly from the DCL command line when starting OMI, and the \textsl{JUMP} command.
+\item Added the \textsf{QUIT} command as a synonym for \textsf{EXIT}.
+\item Added extra parameters to select a submenu by name and the options immediatly from the DCL command line when starting OMI, and the \textsf{JUMP} command.
 \item Moved most extra options (like the encryption module and the \textsl{OMI{\$}CHECK} command) to the newly created \textsl{OMI{\$}TOOLBOX.COM}.
 \item Added the commands \textsl{OMI{\$}CREATE{\_}MBX}, \textsl{OMI{\$}ENCRYPT}, \textsl{OMI{\$}DECRYPT} and \textsl{OMI{\$}REVERSE}.
 \item Added the \textsl{FILESPEC} format type.
 \item Enhanced the encryption method, which is incompatible with the encryption of v1.0b2.\\
-\textbf{NOTE:} Due to this, password checks will now fail if the password was set with an older release. The password value needs to be removed manually from the MNU file, after which it will default to 'Omi{\$}System'. It can then be set again with the \textsl{SET PASSWORD} command.
+\textbf{NOTE:} Due to this, password checks will now fail if the password was set with an older release. The password value needs to be removed manually from the MNU file, after which it will default to 'Omi{\$}System'. It can then be set again with the \textsf{SET PASSWORD} command.
 \item Added the \textsl{\lt EOF\gt} identifier for menu and config files.
-\item Added the \textsl{ENCRYPT} command.
+\item Added the \textsf{ENCRYPT} command.
 \end{itemize}
 
 \section*{Version 1.0b2, Released: 15-04-1997}
@@ -5442,7 +5447,7 @@ Thanks to Henry Juengst (juengst@saph1.iskp.uni-bonn.de) for making me aware of 
 
 \section*{Version 1.0b1, Date: 14-03-1997  (not released)}
 
-Added dynamic menu's, counters, OMI commands \textsl{SET}, \textsl{RESET} and \textsl{SHOW}, implemented the version number, the comment field and the password option.
+Added dynamic menu's, counters, OMI commands \textsf{SET}, \textsf{RESET} and \textsf{SHOW}, implemented the version number, the comment field and the password option.
 
 \section*{Version 0.0, Date: 11-03-1997  (not released)}
 
