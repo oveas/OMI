@@ -217,7 +217,7 @@ $	endif
 $	if omi$status .eq. omi$_error then $ goto main$_fatal
 $	if f$type(menu$log_session) .nes. ""
 $	   then
-$		if menu$log_session then $ omi$log_session "INIT_SESSIONLOG"
+$		if menu$log_session .and. options$_slog then $ omi$log_session "INIT_SESSIONLOG"
 $	endif
 $	omi$current_menu = "menu"
 $	'omi$current_menu'$previous = ""
@@ -255,10 +255,11 @@ $	   then
 $		omi$_jumping = 1
 $		omi$_p1 = options$_menuname
 $		jump$_norefresh = 1
+$		omi$log_session "JUMP ''options$_menuname'"
 $		gosub main$execcmd_jump
 $	   else $ if f$type(omi$_jumping) .eqs. "" then $ omi$_jumping = 0
 $	endif
-$	options$_jumpcounter = 0
+$	options$_jumpcounter == 0 ! Global to let it survive OTF menus!
 $	goto main$do_menu
 $!
 $!******************************************************************************
@@ -319,6 +320,7 @@ $!
 $	if omi$_jumping
 $	   then
 $		omi$option = f$element(options$_jumpcounter,",",options$_jumps)
+$		options$_jumpcounter == options$_jumpcounter + 1
 $		if omi$option .eqs. "" .or. omi$option .eqs. ","
 $		   then
 $			read /end_of_file=option$cancel_input 'omi$prompt_timeout' -
@@ -327,54 +329,20 @@ $			read /end_of_file=option$cancel_input 'omi$prompt_timeout' -
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
-$			_log_p2 = ""
-$			_log_p3 = ""
-$			if f$type(omi$option) .eqs. "INTEGER"
+$			gosub option$do_sessionlog
+$		   else
+$			if f$edit(omi$option,"upcase") .eqs. "^Z"
 $			   then
-$				_log_p2 = "''main$sessiolog_textsep'"
-$				_log_p3 = "(invalid)"
-$				if f$type('omi$current_menu'$item'omi$option') .nes. ""
-$				   then $ _log_p3 = f$element(0, "#", 'omi$current_menu'$item'omi$option')
-$				   else
-$					if omi$option .eq. 0
-$					   then
-$						_log_p2 = ""
-$						_log_p3 = ""
-$					   else
-$						_input = omi$option - inputs$highest_item
-$						if f$type('omi$current_menu'$input'_input') .nes. "" then -
-						   $ _log_p3 = f$element(0, "#", 'omi$current_menu'$input'_input')
-$					endif
-$				endif
+$				omi$option = ""
+$				goto option$cancel_input
 $			endif
-$			omi$log_session "''omi$option'" "''_log_p2'" "''_log_p3'"
-$		   else $ options$_jumpcounter = options$_jumpcounter + 1
+$			gosub option$do_sessionlog
 $		endif
 $	   else
 $		read /end_of_file=option$cancel_input 'omi$prompt_timeout' -
 		   /prompt="''screen$prompt_position'''_current_prompt' " -
 		   sys$command omi$option
-$		_log_p2 = ""
-$		_log_p3 = ""
-$		if f$type(omi$option) .eqs. "INTEGER"
-$		   then
-$			_log_p2 = "''main$sessiolog_textsep'"
-$			_log_p3 = "(invalid)"
-$			if f$type('omi$current_menu'$item'omi$option') .nes. ""
-$			   then $ _log_p3 = f$element(0, "#", 'omi$current_menu'$item'omi$option')
-$			   else
-$				if omi$option .eq. 0
-$				   then
-$					_log_p2 = ""
-$					_log_p3 = ""
-$				   else
-$					_input = omi$option - inputs$highest_item
-$					if f$type('omi$current_menu'$input'_input') .nes. "" then -
-					   $ _log_p3 = f$element(0, "#", 'omi$current_menu'$input'_input')
-				endif
-$			endif
-$		endif
-$		omi$log_session "''omi$option'" "''_log_p2'" "''_log_p3'"
+$		gosub option$do_sessionlog
 $	endif
 $	omi$variable = "omi$option"
 $	omi$input_validate
@@ -427,18 +395,17 @@ $ option$cancel_input:
 $!
 $	if f$type(omi$option) .nes. ""
 $	   then
-$		if omi$option .eq. 0
+$		if omi$option .eq. 0 .and. f$type(omi$option) .eqs. "INTEGER"
 $		   then
-$			if f$type(omi$option) .eqs. "INTEGER" .and. omi$option .eq. 0 -
-			   .and. 'omi$current_menu'$previous .eqs. "" .and. .not. omi$otf_menu
+$			if 'omi$current_menu'$previous .eqs. "" .and. .not. omi$otf_menu
 $			   then
 $				delete\ /symbol /local omi$option
 $				omi$signal omi toplevel
 $				goto main$get_option
 $			endif
-$		   else $ if omi$option .ne. 0 then $ omi$log_session "<Ctrl/Z>"
+$		   else $ omi$log_session "<Ctrl/Z>"
 $		endif
-$	   else $ if omi$option .ne. 0 then $ omi$log_session "<Ctrl/Z>"
+$	   else $ omi$log_session "<Ctrl/Z>"
 $	endif
 $!
 $	gosub main$perf_onexit
@@ -450,6 +417,30 @@ $	omi$current_menu = 'omi$current_menu'$previous
 $	omi$cmdline_clear
 $	omi$msgline_clear
 $	goto main$do_menu
+$!
+$ option$do_sessionlog:
+$	_log_p2 = ""
+$	_log_p3 = ""
+$	if f$type(omi$option) .eqs. "INTEGER"
+$	   then
+$		_log_p2 = "''main$sessiolog_textsep'"
+$		_log_p3 = "(invalid)"
+$		if f$type('omi$current_menu'$item'omi$option') .nes. ""
+$		   then $ _log_p3 = f$element(0, "#", 'omi$current_menu'$item'omi$option')
+$		   else
+$			if omi$option .eq. 0
+$			   then
+$				_log_p2 = ""
+$				_log_p3 = ""
+$			   else
+$				_input = omi$option - inputs$highest_item
+$				if f$type('omi$current_menu'$input'_input') .nes. "" then -
+				   $ _log_p3 = f$element(0, "#", 'omi$current_menu'$input'_input')
+$			endif
+$		endif
+$	endif
+$	omi$log_session "''omi$option'" "''_log_p2'" "''_log_p3'"
+$	return
 $!
 $!******************************************************************************
 
@@ -568,54 +559,31 @@ $	if f$type(_saved_value) .nes. "" then $ delete\ /symbol _saved_value
 $	if omi$_jumping
 $	   then
 $		'_variable' = f$element(options$_jumpcounter,",",options$_jumps)
+$		options$_jumpcounter == options$_jumpcounter + 1
 $		if '_variable' .eqs. "" .or. '_variable' .eqs. ","
 $		   then
 $			if _hidden then $ set terminal /noecho
 $			if f$type('_variable') .nes. "" then $ _saved_value = '_variable'
 $			read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''_prompt': " sys$command '_variable'
-$			_o = '_variable'
-$			_log_value = "''_o'"
-$			if _sel_list
-$			   then
-$				if f$type(_o) .eqs. "INTEGER"
-$				   then
-$					_log_value = _log_value + " ''main$sessiolog_textsep' "
-$					if f$type('_select_list'$value'_o') .eqs. ""
-$					   then $ _log_value = _log_value + "(invalid)"
-$					   else $ _log_value = _log_value + '_select_list'$value'_o'
-$					endif
-$				endif
-$			   else
-$				if _hidden then $ _log_value = "(hidden)"
-$			endif
-$			omi$log_session "''_log_value'"
+$			gosub input$do_sessionlog
 $			if _hidden then $ set terminal /echo
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
 $			omi$msgline_clear
-$		   else $ options$_jumpcounter = options$_jumpcounter + 1
+$		   else
+$			if f$edit('_variable', "upcase") .eqs. "^Z"
+$			   then
+$				'_variable' = ""
+$				goto input$cancel_input
+$			endif
+$			gosub input$do_sessionlog
 $		endif
 $	   else
 $		if _hidden then $ set terminal /noecho
 $		if f$type('_variable') .nes. "" then $ _saved_value = '_variable'
 $		read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''_prompt': " sys$command '_variable'
-$		_o = '_variable'
-$		_log_value = "''_o'"
-$		if _sel_list
-$		   then
-$			if f$type(_o) .eqs. "INTEGER"
-$			   then
-$				_log_value = _log_value + "''main$sessiolog_textsep'"
-$				if f$type('_select_list'$value'_o') .eqs. ""
-$				   then $ _log_value = _log_value + "(invalid)"
-$				   else $ _log_value = _log_value + '_select_list'$value'_o'
-$				endif
-$			endif
-$		   else
-$			if _hidden then $ _log_value = "(hidden)"
-$		endif
-$		omi$log_session "''_log_value'"
+$		gosub input$do_sessionlog
 $		if _hidden then $ set terminal /echo
 $		omi$msgline_clear
 $	endif
@@ -800,6 +768,26 @@ $		omi$cmdline_clear
 $		omi$msgline_clear
 $	endif
 $	return omi$_ok
+$!
+$ input$do_sessionlog:
+$!
+$	_o = '_variable'
+$	_log_value = "''_o'"
+$	if _sel_list
+$	   then
+$		if f$type(_o) .eqs. "INTEGER"
+$		   then
+$			_log_value = _log_value + " ''main$sessiolog_textsep' "
+$			if f$type('_select_list'$value'_o') .eqs. ""
+$			   then $ _log_value = _log_value + "(invalid)"
+$			   else $ _log_value = _log_value + '_select_list'$value'_o'
+$			endif
+$		endif
+$	   else
+$		if _hidden then $ _log_value = "(hidden)"
+$	endif
+$	omi$log_session "''_log_value'"
+$	return
 $!
 $!******************************************************************************
 
@@ -1606,6 +1594,7 @@ $!
 $	if omi$_jumping
 $	   then
 $		_selected_menu = f$element(options$_jumpcounter,",",options$_jumps)
+$		options$_jumpcounter == options$_jumpcounter + 1
 $		if _selected_menu .eqs. "" .or. _selected_menu .eqs. ","
 $		   then
 $			read /end_of_file=dynmnu$cancel_input /prompt="''screen$prompt_position'''_menu_list' " sys$command _selected_menu
@@ -1614,7 +1603,9 @@ $			omi$log_session "''_selected_menu'" "''main$sessiolog_textsep'" "''_dynmnu_s
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
-$		   else $ options$_jumpcounter = options$_jumpcounter + 1
+$		   else
+$			_dynmnu_selection = f$element(0, "|", _dynmenu'_selected_menu')
+$			omi$log_session "''_selected_menu'"  "''main$sessiolog_textsep'" "''_dynmnu_selection'"
 $		endif
 $	   else
 $		read /end_of_file=dynmnu$cancel_input /prompt="''screen$prompt_position'''_menu_list' " sys$command _selected_menu
@@ -1755,46 +1746,24 @@ $!
 $	if omi$_jumping
 $	   then
 $		_tag_sel = f$element(options$_jumpcounter,",",options$_jumps)
+$		options$_jumpcounter == options$_jumpcounter + 1
 $		if _tag_sel .eqs. "" .or. _tag_sel .eqs. ","
 $		   then
 $			read /end_of_file=main$end_taglist sys$command _tag_sel -
 			   /prompt="''screen$prompt_position'''questions$taglist_input' "
-$			if f$type(_tag_sel) .eqs. "INTEGER"
-$			   then
-$				_log_value = "(invalid)"
-$				if f$type('_tagblock'$value'_tag_sel') .nes. ""
-$				   then $ _log_value = '_tagblock'$value'_tag_sel'
-$				   else
-$					_rev_option = _tag_sel - 1
-$					if f$type('_tagblock'$value'_rev_option') .nes. "" -
-					   then $ _log_value = "''questions$reverse_tags'"
-$				endif
-$				omi$log_session "''_tag_sel'" "''main$sessiolog_textsep'" "''_log_value'"
-$			   else $ omi$log_session "''_tag_sel'"
-$			endif
+$			gosub tag$do_sessionlog
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
-$		   else $ options$_jumpcounter = options$_jumpcounter + 1
+$		   else
+$			gosub tag$do_sessionlog
+$			if f$edit(_tag_sel,"upcase") .eqs. "^Z" then $ goto main$end_taglist
 $		endif
 $	   else
 $		read /end_of_file=main$end_taglist sys$command _tag_sel -
 		   /prompt="''screen$prompt_position'''questions$taglist_input' "
-$		if f$type(_tag_sel) .eqs. "INTEGER"
-$		   then
-$			_log_value = "(invalid)"
-$			if f$type('_tagblock'$value'_tag_sel') .nes. ""
-$			   then $ _log_value = '_tagblock'$value'_tag_sel'
-$			   else
-$				_rev_option = _tag_sel - 1
-$				if f$type('_tagblock'$value'_rev_option') .nes. "" -
-				   then $ _log_value = "''questions$reverse_tags'"
-$			endif
-$			omi$log_session "''_tag_sel'" "''main$sessiolog_textsep'" "''_log_value'"
-$		   else $ omi$log_session "''_tag_sel'"
-$		endif
+$		gosub tag$do_sessionlog
 $	endif
-$	if f$edit(_tag_sel,"upcase") .eqs. "^Z" then $ goto main$end_taglist
 $	omi$cmdline_clear
 $	omi$msgline_clear
 $!
@@ -1860,6 +1829,22 @@ $	omi$log_session "<Ctrl/Z>"
 $	omi$refresh inside_only
 $	omi$cmdline_clear
 $	return omi$_ok
+$!
+$ tag$_do_sessionlog:
+$	if f$type(_tag_sel) .eqs. "INTEGER"
+$	   then
+$		_log_value = "(invalid)"
+$		if f$type('_tagblock'$value'_tag_sel') .nes. ""
+$		   then $ _log_value = '_tagblock'$value'_tag_sel'
+$		   else
+$			_rev_option = _tag_sel - 1
+$			if f$type('_tagblock'$value'_rev_option') .nes. "" -
+			   then $ _log_value = "''questions$reverse_tags'"
+$		endif
+$		omi$log_session "''_tag_sel'" "''main$sessiolog_textsep'" "''_log_value'"
+$	   else $ omi$log_session "''_tag_sel'"
+$	endif
+$	return
 $!
 $!******************************************************************************
 
@@ -4001,6 +3986,14 @@ $		endif
 $		goto quals$_loop
 $	endif
 $!
+$!==>	/[NO]SESSION_LOG qualifier
+$!
+$	if qual$_name .eqs. f$extract(0, f$length(qual$_name), "SESSION_LOG")
+$	   then
+$		options$_slog = (_negate .eq. 0)
+$		goto quals$_loop
+$	endif
+$!
 $!==>	/SUBMENU=menu-name qualifier
 $!
 $	if qual$_name .eqs. f$extract(0, f$length(qual$_name), "SUBMENU")
@@ -4135,6 +4128,7 @@ $!
 $	if f$type(options$_startmenu) .eqs. "" then $ options$_startmenu = ""
 $	if f$type(options$_menuname)  .eqs. "" then $ options$_menuname  = ""
 $	if f$type(options$_jumps)     .eqs. "" then $ options$_jumps     = ""
+$	if f$type(options$_slog)      .eqs. "" then $ options$_slog      = 1
 $	return
 $!
 $!******************************************************************************
@@ -4211,7 +4205,10 @@ $!
 $	omi$_true      = %X1fff3007
 $	omi$_false     = %X1fff3008
 $!
-$	ESC$[0,8]  = %X1b
+$	if omi$batch_mode
+$	   then $ ESC$      = ""
+$	   else $ ESC$[0,8] = %X1b
+$	endif
 $	BELL$[0,8] = %X7
 $	LF$[0,8]   = %Xa
 $	CR$[0,8]   = %Xd
@@ -4516,6 +4513,9 @@ $	if f$type(omi$menu_file) .nes. "" then $ omi$config "''omi$menu_file'" Cleanup
 $	@Omi$:Omi$Config Setup "" Cleanup
 $	if f$type(omi$inputs) .nes. "" then $ gosub cleanup$missing_items
 $	if f$type(_thisfile_location) .nes. "" then $ deassign Omi$
+$!
+$	if f$type(options$_jumpcounter) .nes. "" then -
+	   $ delete\/symbol/global options$_jumpcounter
 $!
 $	return omi$_ok
 $!

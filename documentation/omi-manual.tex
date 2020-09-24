@@ -88,7 +88,6 @@ leading. During run-time this is handled properly.
 messages. After this, OMI can crash at random moments without warning.
 \item When the last input item of a (sub)menu is a SELECT list and all inputs are entered
 using \textsl{ALL{\_}INPUTS}, the screen is refreshed twice after the last item.
-\item When logging a session, the \textsl{/SUBMENU} and \textsl{/JUMPS} values are not logged.
 \item When the \textsl{JUMP} command is used to jump from a submenu to the toplevel, \lt Ctrl/Z\gt{}, \textsl{0} or the command \textsl{MAIN} will cause the mainmenu's \textsl{ON{\_}EXIT} module to be executed if it exists, returning to the previous submenu.
 \end{itemize}
 
@@ -489,6 +488,23 @@ For more info, see \textit{Auto mode} in section \ref{subsubsec:mylabel10}.
 \indent\textbf{/NOPROGRESS}\\*[3mm]
 This qualifier can be used to overwrite the \textsl{SHOW{\_}PROGRESS} element from 
 the configuration file (see section \ref{para:mylabel2}).
+
+\subsection{/SESSION{\_}LOG}
+\index{log sessions!disable}
+\label{subsubsec:sessionlog}
+
+\vs
+
+\indent\textbf{/SESSION{\_}LOG} (default) \newline
+\indent\textbf{/NOSESSION{\_}LOG}\\*[3mm]
+
+When session logging is enabled using the \textsl{LOG{\_}SESSION} element in the menu file (see section \ref{subsec:logsession}), this can be disabled for a specific session by starting OMI with the \textsf{/NOSESSION{\_}LOG} qualifier.
+
+It is discouraged to use this for interactive sessions, but in batch mode (section \ref{subsubsec:mylabel3}) this is a useful option.
+
+\vs
+
+If session logging is not enabled in the menu file, this qualifier has no effect.
 
 \subsection{/SUBMENU}
 \index{auto mode}
@@ -1330,6 +1346,10 @@ By default, no sessions will be logged.
 \vs
 
 The default location for session logfiles is \textsl{OMI{\$}MENU{\_}DIRECTORY:}. If that should be changed for all or some users, it can be changed in the configuration file for those users (see section \ref{para:sessionlogfile}). Refer to section \ref{subsec:sessionlogid} for more information about the sessionlog filename.
+
+\vs
+
+Session logging can be disabled using the \textsf{NOSESSION{\_}LOG} qualifier (see section \ref{subsubsec:sessionlog}).
 
 \subsection{The SESSIONLOG{\_}ID element}\label{subsec:sessionlogid}\index{log sessions}\index{sessionlog!filename}
 
@@ -5166,9 +5186,12 @@ $	return $status
 \item Fix: Errors in checking dynamic submenus with \textsf{/VALIDATE}.
 \item Fix: Option \textsf{0} signalled \textsl{TOPLEVEL} messages at all levels
 \item Fix: When \textsf{/JUMPS} ended in the main menu, \lt Ctrl/Z\gt{} didn't cause an exit the first time and an abort at the second attempt.
+\item Fix: Added \textsf{/JUMPS} and \textsf{/SUBMENU} input to the session log.
+\item Fix: Bug in jumping through OTF menus
 \item Added the \textsl{OMI{\$}SORT} command to the standard toolbox.
 \item Added the \textsl{SESSIONLOG{\_}ID} element to the main menu.
 \item \textsf{/JUMPS} qualifer doesn't require \textsf{/SUBMENU} anymore but starts in the toplevel menu when omitted.
+\teim Added the /\textsf{[NO]SESSION{\_}LOG} qualifier.
 \end{itemize}
 
 \section*{Version 2.7, Released: 21-02-2020}

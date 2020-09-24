@@ -212,6 +212,20 @@ This qualifier can be used to overwrite the SHOW_PROGRESS element
 from the configuration file. This element declares the default for
 this qualifier.
 
+/SESSION_LOG
+ /SESSION_LOG (default)
+ /NOSESSION_LOG
+
+When session logging is enabled using the LOG_SESSION element in the
+menu file, this can be disabled for a specific session by starting
+OMI with the /NOSESSION_LOG qualifier.
+
+It is discouraged to use this for interactive sessions, but in batch
+mode this is a useful option.
+
+If session logging is not enabled in the menu file, this qualifier has
+no effect.
+
 /SUBMENU
  /SUBMENU=submenu-name
 

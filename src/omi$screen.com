@@ -259,15 +259,18 @@ $		_select_list = _select_list - "{" - "}"
 $!
 $		if f$type('_variable') .nes. "" .and. f$edit(f$extract(0, 3, _select_list),"upcase") .nes. "TAG"
 $		   then
-$			_block = f$extract(4, f$length(_select_list)-4, _select_list)
-$			_val_index = 1
-$	 scrnval$check_module_value:
-$			if f$edit('_block'$value'_val_index',"upcase") .eqs. f$edit('_variable',"upcase") -
-			   then $ goto scrnval$check_module_value_done
-$			_val_index = _val_index + 1
-$			if f$type('_block'$value'_val_index') .nes. "" then $ goto scrnval$check_module_value
-$			omi$signal omi notinlist,'_variable'
-$	 scrnval$check_module_value_done:
+$			if '_variable' .nes. ""
+$			   then
+$				_block = f$extract(4, f$length(_select_list)-4, _select_list)
+$				_val_index = 1
+$		 scrnval$check_module_value:
+$				if f$edit('_block'$value'_val_index',"upcase") .eqs. f$edit('_variable',"upcase") -
+				   then $ goto scrnval$check_module_value_done
+$				_val_index = _val_index + 1
+$				if f$type('_block'$value'_val_index') .nes. "" then $ goto scrnval$check_module_value
+$				omi$signal omi notinlist,'_variable'
+$		 scrnval$check_module_value_done:
+$			endif
 $		endif
 $	endif
 $!
