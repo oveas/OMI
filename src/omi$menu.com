@@ -178,12 +178,34 @@ $	omi$version = "2.7"
 $	if f$trnlnm("omi$menu_directory") .eqs. "" then -
 	   $ define /nolog omi$menu_directory omi$
 $	gosub main$_initialize
+$!
+$	if options$_delay .ge. 0
+$	   then
+$		if .not. omi$_replay
+$		   then
+$			omi$signal omi orphanopt,/DELAY,/REPLAY
+$			goto main$_fatal
+$		endif
+$	endif
+$!
+$	if omi$_jumping .and. omi$_replay
+$	   then
+$		omi$signal omi mutex,/JUMPS,/REPLAY
+$		goto main$_fatal
+$	endif
+$!
+$	if omi$_replay .and. options$_menuname .nes. ""
+$	   then
+$		omi$signal omi mutex,/SUBMENU,/REPLAY
+$		goto main$_fatal
+$	endif
+$!
 $	gosub main$_getstart
 $	if omi$backgr_mode
 $	   then
 $		omi$_jumping = 1
-$		options$_menuname  = "main"
-$		options$_jumps  = "Exit"
+$		options$_menuname = "main"
+$		options$_jumps = "Exit"
 $		omi$menu_file = "Omi$:Omi$Background_Module.Mnu"
 $		omi$background_module = "''omi$startmenu'"
 $	   else $ omi$menu_file = "''omi$startmenu'"
@@ -217,7 +239,10 @@ $	endif
 $	if omi$status .eq. omi$_error then $ goto main$_fatal
 $	if f$type(menu$log_session) .nes. ""
 $	   then
-$		if menu$log_session .and. options$_slog then $ omi$log_session "INIT_SESSIONLOG"
+$		if menu$log_session .and. options$_slog
+$		   then
+$			if .not. omi$_replay then $ omi$log_session "INIT_SESSIONLOG"
+$		endif
 $	endif
 $	omi$current_menu = "menu"
 $	'omi$current_menu'$previous = ""
@@ -257,10 +282,64 @@ $		omi$_p1 = options$_menuname
 $		jump$_norefresh = 1
 $		omi$log_session "JUMP ''options$_menuname'"
 $		gosub main$execcmd_jump
-$	   else $ if f$type(omi$_jumping) .eqs. "" then $ omi$_jumping = 0
 $	endif
 $	options$_jumpcounter == 0 ! Global to let it survive OTF menus!
+$	if omi$_replay then $ gosub main$get_replay_jumps
+$	if $status .ge. omi$_error then $ goto main$_fatal
+$			
 $	goto main$do_menu
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	We're entering replay mode. Read the jumps from the session logfile
+$!
+$ main$get_replay_jumps:
+$!
+$	if f$search(omi$_replay_file) .eqs. ""
+$	   then
+$		omi$_replay = 0
+$		omi$signal omi fnf,'omi$_replay_file'
+$		return $status
+$	endif
+$!
+$	open /read /share=read replay_jumps 'omi$_replay_file'
+$	read replay_jumps _jump ! Skip the 'Session started at [...]' line
+$	read replay_jumps _jump ! Skip the '-----' line
+$	options$_jumps = ""
+$!
+$ main$_get_jumps:
+$	read/end_of_file=main$_got_jumps replay_jumps _jump
+$	if f$extract(0, 5, _jump) .eqs. "-----" then $ goto main$_got_jumps
+$	_jump = f$extract(13, f$length(_jump) - 13, _jump) ! Strip timestamp
+$	_jump = f$edit(f$element(0, "''main$sessionlog_textsep'", _jump), "trim") ! Strip comment
+$	if options$_jumps .nes. "" then options$_jumps = options$_jumps + ","
+$	if _jump .eqs. "<Ctrl/Z>" then $ _jump = "^Z"
+$	options$_jumps = options$_jumps + _jump
+$	goto main$_get_jumps
+$!
+$ main$_got_jumps:
+$	close replay_jumps
+$	omi$_jumping = 1
+$	return omi$_ok
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	When in replay mode, this routine checks for delays
+$!
+$ main$execute_delay:
+$	if options$_delay .ge. 0
+$	   then
+$		write sys$output "''screen$prompt_position'''screen$replay_mode'''delay_prompt'"
+$		if options$_delay .eq. 0
+$		   then $ omi$wait
+$		   else $ omi$delay 'options$_delay'
+$		endif
+$	endif
+$	return
 $!
 $!******************************************************************************
 
@@ -334,9 +413,12 @@ $		   else
 $			if f$edit(omi$option,"upcase") .eqs. "^Z"
 $			   then
 $				omi$option = ""
+$				gosub main$execute_delay
 $				goto option$cancel_input
 $			endif
 $			gosub option$do_sessionlog
+$			delay_prompt = _current_prompt
+$			gosub main$execute_delay
 $		endif
 $	   else
 $		read /end_of_file=option$cancel_input 'omi$prompt_timeout' -
@@ -423,7 +505,7 @@ $	_log_p2 = ""
 $	_log_p3 = ""
 $	if f$type(omi$option) .eqs. "INTEGER"
 $	   then
-$		_log_p2 = "''main$sessiolog_textsep'"
+$		_log_p2 = "''main$sessionlog_textsep'"
 $		_log_p3 = "(invalid)"
 $		if f$type('omi$current_menu'$item'omi$option') .nes. ""
 $		   then $ _log_p3 = f$element(0, "#", 'omi$current_menu'$item'omi$option')
@@ -575,9 +657,13 @@ $		   else
 $			if f$edit('_variable', "upcase") .eqs. "^Z"
 $			   then
 $				'_variable' = ""
+$				delay_prompt = _prompt
+$				gosub main$execute_delay
 $				goto input$cancel_input
 $			endif
 $			gosub input$do_sessionlog
+$			delay_prompt = _prompt
+$			gosub main$execute_delay
 $		endif
 $	   else
 $		if _hidden then $ set terminal /noecho
@@ -777,7 +863,7 @@ $	if _sel_list
 $	   then
 $		if f$type(_o) .eqs. "INTEGER"
 $		   then
-$			_log_value = _log_value + " ''main$sessiolog_textsep' "
+$			_log_value = _log_value + " ''main$sessionlog_textsep' "
 $			if f$type('_select_list'$value'_o') .eqs. ""
 $			   then $ _log_value = _log_value + "(invalid)"
 $			   else $ _log_value = _log_value + '_select_list'$value'_o'
@@ -1599,18 +1685,20 @@ $		if _selected_menu .eqs. "" .or. _selected_menu .eqs. ","
 $		   then
 $			read /end_of_file=dynmnu$cancel_input /prompt="''screen$prompt_position'''_menu_list' " sys$command _selected_menu
 $			_dynmnu_selection = f$element(0, "|", _dynmenu'_selected_menu')
-$			omi$log_session "''_selected_menu'" "''main$sessiolog_textsep'" "''_dynmnu_selection'"
+$			omi$log_session "''_selected_menu'" "''main$sessionlog_textsep'" "''_dynmnu_selection'"
 $			if f$type(jump$_norefresh) .nes. "" then -
 			   $ delete\ /symbol /local jump$_norefresh
 $			omi$_jumping = 0
 $		   else
 $			_dynmnu_selection = f$element(0, "|", _dynmenu'_selected_menu')
-$			omi$log_session "''_selected_menu'"  "''main$sessiolog_textsep'" "''_dynmnu_selection'"
+$			omi$log_session "''_selected_menu'"  "''main$sessionlog_textsep'" "''_dynmnu_selection'"
+$			delay_prompt = _menu_list
+$			gosub main$execute_delay
 $		endif
 $	   else
 $		read /end_of_file=dynmnu$cancel_input /prompt="''screen$prompt_position'''_menu_list' " sys$command _selected_menu
 $		_dynmnu_selection = f$element(0, "|", _dynmenu'_selected_menu')
-$		omi$log_session "''_selected_menu'"  "''main$sessiolog_textsep'" "''_dynmnu_selection'"
+$		omi$log_session "''_selected_menu'"  "''main$sessionlog_textsep'" "''_dynmnu_selection'"
 $	endif
 $	omi$variable = "_selected_menu"
 $	omi$input_validate
@@ -1757,6 +1845,8 @@ $			if f$type(jump$_norefresh) .nes. "" then -
 $			omi$_jumping = 0
 $		   else
 $			gosub tag$do_sessionlog
+$			delay_prompt = questions$taglist_input
+$			gosub main$execute_delay
 $			if f$edit(_tag_sel,"upcase") .eqs. "^Z" then $ goto main$end_taglist
 $		endif
 $	   else
@@ -1841,7 +1931,7 @@ $			_rev_option = _tag_sel - 1
 $			if f$type('_tagblock'$value'_rev_option') .nes. "" -
 			   then $ _log_value = "''questions$reverse_tags'"
 $		endif
-$		omi$log_session "''_tag_sel'" "''main$sessiolog_textsep'" "''_log_value'"
+$		omi$log_session "''_tag_sel'" "''main$sessionlog_textsep'" "''_log_value'"
 $	   else $ omi$log_session "''_tag_sel'"
 $	endif
 $	return
@@ -3154,7 +3244,7 @@ $			if f$type('_select_list'$value'_value') .eqs. ""
 $			   then $ _log_value = "(invalid)"
 $			   else $ _log_value = '_select_list'$value'_value'
 $			endif
-$			omi$log_session '_value' "''main$sessiolog_textsep'" "''_log_value'"
+$			omi$log_session '_value' "''main$sessionlog_textsep'" "''_log_value'"
 $		   else $ omi$log_session "''_value'"
 $		endif
 $	   else
@@ -4015,6 +4105,35 @@ $		omi$_jumping = 1
 $		goto quals$_loop
 $	endif
 $!
+$!==>	/REPLAY=session_logfile qualifier
+$!
+$	if qual$_name .eqs. f$extract(0, f$length(qual$_name), "REPLAY")
+$	   then
+$		if _negate then $ goto quals$_loop
+$		if qual$_value .eqs. ""
+$		   then $ goto qual$valreq_error
+$		   else $ omi$_replay_file = qual$_value
+$		endif
+$		omi$_replay = 1
+$		goto quals$_loop
+$	endif
+$!
+$!==>	/DELAY[=interval]
+$!
+$	if qual$_name .eqs. f$extract(0, f$length(qual$_name), "DELAY")
+$	   then
+$		if _negate then $ goto quals$_loop
+$		if qual$_value .eqs. ""
+$		   then $ goto qual$valreq_error
+$		   else
+$			if f$type(qual$_value) .nes. "INTEGER"
+$			   then $ goto qual$ivdelay_error
+$			   else $ options$_delay = qual$_value
+$			endif
+$		endif
+$		goto quals$_loop
+$	endif
+$!
 $!==>	/VALIDATE[=log-file]
 $!
 $	if qual$_name .eqs. f$extract(0, f$length(qual$_name), "VALIDATE")
@@ -4125,10 +4244,14 @@ $	goto qual$ivqual_error
 $!
 $ params$end_loop:
 $!
+$	if f$type(omi$_jumping)       .eqs. "" then $ omi$_jumping       = ""
+$	if f$type(omi$_replay)        .eqs. "" then $ omi$_replay        = ""
+$!
 $	if f$type(options$_startmenu) .eqs. "" then $ options$_startmenu = ""
 $	if f$type(options$_menuname)  .eqs. "" then $ options$_menuname  = ""
 $	if f$type(options$_jumps)     .eqs. "" then $ options$_jumps     = ""
 $	if f$type(options$_slog)      .eqs. "" then $ options$_slog      = 1
+$	if f$type(options$_delay)     .eqs. "" then $ options$_delay     = -1
 $	return
 $!
 $!******************************************************************************
@@ -4167,6 +4290,12 @@ $!
 $ qual$ivbgrmod_error:
 $!
 $	_message = "IVBGRMOD, invalid background mode - specify BATCH or DETACH"
+$	qual$_name = "''qual$_value'"
+$	goto qual$_error
+$!
+$ qual$ivdelay_error:
+$!
+$	_message = "IVVAL, invalid value for /DELAY - specify an integer or omit value"
 $	qual$_name = "''qual$_value'"
 $	goto qual$_error
 $!

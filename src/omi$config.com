@@ -803,8 +803,7 @@ $	call config$_set_defaults main$show_progress 		"1"
 $	call config$_set_defaults main$time_format   		"12"
 $	call config$_set_defaults main$float_point   		"."
 $	call config$_set_defaults main$session_log_location	"OMI$MENU_DIRECTORY:"
-$!	Next one is undocumented and yet unused, but might be useful for a possible future 'Replay' option
-$	call config$_set_defaults main$sessiolog_textsep	" - "
+$	call config$_set_defaults main$sessionlog_textsep	"#"
 $!
 $	call config$_set_defaults screen$width_margin		"4"
 $	call config$_set_defaults screen$height_margin		"1"
@@ -821,6 +820,7 @@ $	call config$_set_defaults screen$tab			"15"
 $	call config$_set_defaults screen$width_inquired		omi$_false
 $	call config$_set_defaults screen$height_inquired	omi$_false
 $	call config$_set_defaults screen$center_select_lists	omi$_false
+$	call config$_set_defaults screen$replay_mode		"(replay mode) "
 $!
 $	call config$_set_defaults questions$all_inputs		"All Inputs"
 $	call config$_set_defaults questions$option		"OMI>"
@@ -834,6 +834,7 @@ $	call config$_set_defaults questions$wait_prompt		"Press <Return> to continue"
 $	call config$_set_defaults questions$confirm		"1"
 $	call config$_set_defaults questions$answer_yes		"Y"
 $	call config$_set_defaults questions$answer_no		"N"
+$	call config$_set_defaults questions$delay_timeout	10
 $!
 $	call config$_set_defaults bgrprocess$batch_queue	"sys$batch"
 $	call config$_set_defaults bgrprocess$detach_lgicmd	"sys$login:login.com"

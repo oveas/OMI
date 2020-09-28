@@ -1079,8 +1079,24 @@ $!
 $ wait$:
 $!
 $	if omi$batch_mode then $ return omi$_ok
-$	read /end_of_file=wait$_cancelled sys$command _dummy -
- 	   /prompt="''ESC$'[''screen$line_command';''screen$default_position'H''ESC$'[?25l''questions$wait_prompt' "
+$	if options$_delay .gt. 0
+$	   then
+$		omi$delay 'options$_delay'
+$		return $status
+$	endif
+$!
+$ wait$_delay_loop:
+$	if omi$_replay 
+$	   then
+$		if options$_delay .eq. 0
+$		   then $ read /end_of_file=wait$_cancelled/time_out='questions$delay_timeout' -
+			   /error=wait$_still_waiting sys$command _dummy -
+			   /prompt="''ESC$'[''screen$line_command';''screen$line_length'H''ESC$'[?25l"
+$		   else $ return omi$_ok
+$		endif
+$	   else $ read /end_of_file=wait$_cancelled sys$command _dummy -
+		   /prompt="''screen$prompt_position'''ESC$'[?25l''questions$wait_prompt' "
+$	endif
 $	omi$msgline_clear
 $	omi$cmdline_clear
 $	write sys$output "''ESC$'[?25h"
@@ -1093,6 +1109,48 @@ $	omi$msgline_clear
 $	omi$cmdline_clear
 $!	if omi$_verify then $ set verify
 $	return omi$_cancelled
+$!
+$ wait$_still_waiting:
+$!
+$	omi$signal omi replwait
+$	goto wait$_delay_loop
+$!
+$!******************************************************************************
+
+$!******************************************************************************
+$!
+$!==>	Handle the OMI$DELAY command that pauses for the given amount of seconds.
+$!
+$ delay$:
+$!
+$	if f$type(p2) .nes. "INTEGER"
+$	   then
+$		omi$signal omi delayint,'P2'
+$		return $status
+$	endif
+$!
+$	_s = p2
+$	_m = 0
+$	_h = 0
+$!
+$ delay$_s:
+$	if _s .ge. 60
+$	   then
+$		_m = _m + 1
+$		_s = _s - 60
+$		goto delay$_s
+$	endif
+$!
+$ delay$_m:
+$	if _m .ge. 60
+$	   then
+$		_h = _h + 1
+$		_m = _m - 60
+$		goto delay$_m
+$	endif
+$!
+$	wait '_h':'_m':'_s'
+$	return omi$_ok
 $!
 $!******************************************************************************
 

@@ -13,6 +13,7 @@ CREMBX         I please wait - creating mailbox
 CREMBXERR      F error in OMI$CREATE_MBX - cannot create mailbox
 CURORDER       I options ~S still have to be selected
 DECERR         E cannot decrypt - no OMI encryption or invalid key
+DELAYINT       E invalid parameter for OMI$DELAY: \~S\ - specify integers only
 DIVZERO        E cannot devide by zero
 ENCRYPT        S successfully encrypted the menu element
 ERASEMNU       I erasing the menu from memory
@@ -61,6 +62,7 @@ MANAGE         I you already are in the Management Menu
 MBXALREX       W invalid call of OMI$CREATE_MBX - mailbox ~s already created
 MNUNOTFOUND    W menu file ~S not found
 MODNOTFOUND    E module ~S not found
+MUTEX          E ~S and ~S are mutually exclusive
 NAME           I the name of this menu is \~S\
 NESTINCL       W nested includes are not allowed
 NOCFG          E no personal configuration file found - key not set
@@ -108,6 +110,7 @@ NOWILDCARD     W wildcards are not allowed in this option
 NO_OTF         E no on-the-fly menu specified
 NO_OTFINP      E missing on-the-fly menu inputs
 NO_OTFITM      E missing on-the-fly menu items
+ORPHANOPT      E ~S requires ~S
 OTFSUB         E submenus not allowed in on-the-fly menus
 OUTOFRA        E intermediate value ~S is out of range
 OVERFLOW       E screen overflow
@@ -118,6 +121,7 @@ READERR        E error reading from file ~S
 READMNU        I reading menu file - ~S% done
 REMNAME        S succesfully removed the menu name
 REMPWD         S succesfully removed the password
+REPLWAIT       I press <Enter> to continue replay
 REQSELECTED    I all required options have been selected
 RESETVAR       S variables reset to default
 RESTMNU        I restoring previous menu

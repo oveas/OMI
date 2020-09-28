@@ -406,13 +406,27 @@ is issued before starting OMI, all code is displayed as well.
 This qualifier replaces the symbol \textsl{OMI{\$}{\_}DEBUG}, that was used until 
 version 1.3 (however this symbol is still supported).
 
+\subsection{/DELAY}
+\index{sessionlog!replay!delay}
+\label{subsubsec:delay}
+\indent\textbf{/DELAY=\textit{value}}\\*[3mm]
+In replay mode (see section \ref{subsubsec:replay}), a delay can be introduces between all steps using this qualifier.\\
+The value must be 0 or greater, where 0 means the user is requested to press \lt Return \gt{} after every step, all other values are interpreted as the delay in seconds.
+
+\vs
+
+To replay without delays, omit this qualifier.
+
+\vs
+
+The \textsf{/DELAY} qualifier can only be used together with \textsf{/REPLAY}.
+
 \subsection{/IGNORE}
 \index{ignore warnings}
 \index{qualifiers!ignore}
 \label{subsubsec:ignore}
 \indent\textbf{/NOIGNORE} (default)\newline
-\indent\textbf{/IGNORE=\textit{(keyword[,...])}}
-
+\indent\textbf{/IGNORE=\textit{(keyword[,...])}}\\*[3mm]
 Ignore specified warnings or errors during the OMI session.
 If you specify only one keyword, you can omit the parentheses.
 
@@ -420,8 +434,7 @@ If you specify only one keyword, you can omit the parentheses.
 \index{ignore!duplicates}
 \index{qualifiers!ignore!duplicates}
 \index{\%OMI-W-DUPL}
-\indent\textbf{/IGNORE=DUPLICATES}
-
+\indent\textbf{/IGNORE=DUPLICATES}\\*[3mm]
 When starting OMI, \textsl{\%OMI-W-DUPL} warnings are displayed when OMI
 tries to set a symbol that's already defined. This happens after
 a crash of the previous OMI session, when the menu file is invalid,
@@ -429,21 +442,20 @@ or when a new OMI session is started in a subprocess from within OMI
 (for OTF menus, this is the only way to open a new menu without
 leaving the OFT context).
 
-The /IGNORE=DUPLICATES qualifier overwrites all existing symbols
+The \textsf{/IGNORE=DUPLICATES} qualifier overwrites all existing symbols
 without a warning.
     
 \subsubsection{DCLERRORS}
 \index{ignore!DCL errors}
 \index{qualifiers!ignore!dclerrors}
-\indent\textbf{/IGNORE=DCLERRORS}
-
+\indent\textbf{/IGNORE=DCLERRORS}\\*[3mm]
 When a DCL command is given in the menu file, or entered at the OMI 
 prompt (commands \textsf{DCL} (\$) or \textsf{SILENT\_DCL}), or when
 a subprocess is spawned from the menu file (as an option) or using the
 OMI \textsf{SPAWN} command, OMI will catch its exit status and act
 accordingly. It the exit code was an error (severity 2), OMI crashes.
 
-The /IGNORE=DCLERRORS qualifier ignores errors generated in such circumstances.
+The \textsf{/IGNORE=DCLERRORS} qualifier ignores errors generated in such circumstances.
 
 \vs
 
@@ -452,27 +464,23 @@ The /IGNORE=DCLERRORS qualifier ignores errors generated in such circumstances.
 \subsubsection{DCLFATALS}
 \index{ignore!DCL fatals}
 \index{qualifiers!ignore!dclfatals}
-\indent\textbf{/IGNORE=DCLFATALS}
-
-
+\indent\textbf{/IGNORE=DCLFATALS}\\*[3mm]
 This keyword has the same effect as the DCLERRORS keyword, but for
 fatal exit codes (severity 4).
 
-Both keywords can be given together as /IGNORE=(DCLERRORS,DCLFATALS).
+Both keywords can be given together as \textsf{/IGNORE=(DCLERRORS,DCLFATALS)}.
 
 \subsection{/JUMPS}
 \index{auto mode}
 \index{qualifiers!jumps}
 \label{subsubsec:mylabel5}
-
-\vs
-
 \indent\textbf{/JUMPS=option-list}\\*[3mm]
 With the \textsf{/JUMPS} qualifier, all options that are normally entered one by one 
 at the OMI prompt, can now be specified at the DCL prompt as a list of 
 options separated by comma's. If this list with option contains OMI commands 
 with parameters, blanks are required to separate the parameters if they 
-should be specified. The option has to be enclosed by double quotes.
+should be specified. The option has to be enclosed by double quotes.\\
+\textsf{/JUMPS} can not be used together with \textsf{/REPLAY}. 
 
 \vs
 
@@ -481,20 +489,26 @@ For more info, see \textit{Auto mode} in section \ref{subsubsec:mylabel10}.
 \subsection{/PROGRESS}
 \index{qualifiers!progress}
 \label{subsubsec:mylabel6}
-
-\vs
-
 \indent\textbf{/PROGRESS} \newline
 \indent\textbf{/NOPROGRESS}\\*[3mm]
 This qualifier can be used to overwrite the \textsl{SHOW{\_}PROGRESS} element from 
 the configuration file (see section \ref{para:mylabel2}).
 
-\subsection{/SESSION{\_}LOG}
-\index{log sessions!disable}
-\label{subsubsec:sessionlog}
+\subsection{/REPLAY}
+\index{sessionlog!replay}
+\label{subsubsec:replay}
+\indent\textbf{/REPLAY=\textit{session-logfile}}\\*[3mm]
+With this qualifier, a session logfile that has been recorded earlier (see section \ref{subsubsec:logsessions}) will be read and replayed.\\
+The \textit{session-logfile} should be the full name, including path, of the file.\\
+\textsf{/REPLAY} can not be used together with \textsf{/JUMPS} or \textsf{/SUBMENU}. 
 
 \vs
 
+For more information, refer to section \ref{subsubsec:autoreplay}.
+
+\subsection{/SESSION{\_}LOG}
+\index{log sessions!disable}
+\label{subsubsec:sessionlog}
 \indent\textbf{/SESSION{\_}LOG} (default) \newline
 \indent\textbf{/NOSESSION{\_}LOG}\\*[3mm]
 
@@ -510,15 +524,14 @@ If session logging is not enabled in the menu file, this qualifier has no effect
 \index{auto mode}
 \index{qualifiers!submenu}
 \label{subsubsec:mylabel7}
-
-\vs
-
 \indent\textbf{/SUBMENU=submenu-name}\\*[3mm]
 With the \textsf{/SUBMENU} qualifier, it is possible to start the OMI session with 
 the submenu that has the specified name. By default, OMI starts a menu file 
 with the main menu (see section \ref{subsubsec:mylabel21}), but when 
 one ore more submenus have names (see section \ref{subsubsec:mylabel24}),
-OMI can start in one of those menus.
+OMI can start in one of those menus.\\
+\textsf{/SUBMENU} can not be used together with \textsf{/REPLAY}. 
+
 
 \subsection{/VALIDATE}
 \index{validate}
@@ -526,9 +539,6 @@ OMI can start in one of those menus.
 \index{qualifiers!validate}
 \index{menu file!validate}
 \label{subsubsec:mylabel8}
-
-\vs
-
 \indent\textbf{/VALIDATE[=log-file]} \newline
 \indent\textbf{/NOVALIDATE} (default)\\*[3mm]
 This qualifier reads the menu file and validates the syntax line by line. It 
@@ -640,6 +650,8 @@ current menu completely before starting the new menu.
 \index{navigating}
 \label{subsubsec:mylabel10}
 
+\subsubsection{Jumps}\index{auto mode!jumps}\label{subsubsec:autojumps}
+
 When the user knows all options, a menu can also be called in Auto Mode. 
 This means, the menu file is specified as the first parameter for 
 OMI\footnote{ If the menu file, pointed to by the logical 
@@ -684,6 +696,29 @@ or \\
 
 \hspace{-8mm}\textbf{NOTE:} When using qualifiers, the first parameter (the menu file), 
 is always required, and has to be entered \textit{before} all qualifiers!
+
+\subsubsection{Replay}
+\index{auto mode!replay}
+\index{sessionlog!replay}
+\index{replay sessionlog}
+\label{subsubsec:autoreplay}
+
+When sessions have been logged (see section \ref{subsec:logsession}), a session logfile can be used for replay using the \textsf{/REPLAY=\textit{logfile}} option when starting OMI (see alsio section \ref{subsubsec:replay}). In this mode, all previously given commands and inputs are read from the session logfile and replayed in a new session.
+
+All screen updates will be displayed. This can be supressed using the \textsf{/BATCH} qualifier (see section \ref{subsubsec:mylabel3}).
+
+\vs
+
+By default, all actions actions will be performed again consecutively without delay. To replay interactive, e.g. for analysis purposes, the \textsf{/DELAY} qualifier can be used (see section \ref{subsubsec:delay}).\\
+This qualifier expects an integer greater than 0 which will be the number of seconds between all actions. If a delay of 0 is given, OMI will wait for the user to press \lt Return\gt{} after every action. 
+
+\vs
+
+Note that session logfile by default are deleted after a given amount of time (see section \ref{subsec:cleansessionlog}). In order to use session logfiles for a longer period, the files should be saved at a different location of with a name that doesn't match the file pattern.
+
+\vs
+
+\hspace{-8mm}\textbf{NOTE:} Sessions replayed from previously recorded session will not be recorded again, no new session logfile will be written!
 
 \section{Entering values}
 \index{enter input}
@@ -1051,6 +1086,12 @@ By default, all selectlist subwindows will be displayed at the upper left corner
 
 This option is ignored when the selectlist has multiple columns or scrolling is enabled.
 
+\subsubsection{REPLAY{\_}MODE}\index{sessionlog!replay}\index{replay sessionlog}
+
+When replaying a session logfile using delays (see section \ref{subsubsec:autoreplay}), prompts will be displayed as in a normal session. This setting is used as a prefix for all prompts to distinguish replay sessions from a normal session.
+
+The default value is ``\textsl{(replay mode) }''.
+
 \subsection{[QUESTIONS]}
 \index{configuration file!change the language}
 \label{subsubsec:mylabel18}
@@ -1366,6 +1407,10 @@ The default value is 30 days.
 
 \vs
 
+The file pattern of the files that are cleaned is \textsl{\textit{SESSIONLOG{\_}ID}{\_}\textit{yyyymmddHHMMSSCC}.LOG}.
+
+\vs
+
 Note the files will only be cleaned if \textsl{LOG{\_}SESSION} is set to \textsl{TRUE}, so when logging is disabled at a certain point in time, no files will be removed anymore from that moment!
 
 \subsection{The ON{\_}INIT and ON{\_}EXIT elements}
@@ -1479,7 +1524,7 @@ commands!SHOW NAME} command on the OMI prompt.
 \vs
 
 The name is used for the \textsf{JUMP}\index{OMI commands!JUMP} command (see section \ref{subsec:mylabel16}),
-and in auto mode (see section \ref{subsubsec:mylabel10}).
+and in auto mode with \textsf{/JUMPS} (see section \ref{subsubsec:autojumps}).
 
 \subsection{The COMMENT element}
 \index{menu!comment lines}
@@ -1603,7 +1648,7 @@ on the DCL prompt.
 
 Note that the first parameter (``MYMENU'', which points to the file- name) is 
 required, even if the logical \textsl{OMI{\$}START{\_}MENU} points to that file, when 
-the menu- name is used as a parameter! (See also section \ref{subsubsec:mylabel10})
+the menu- name is used as a parameter! (See also section \ref{subsubsec:autojumps})
 \caption{Setting menu characteristics}
 \hrulefill
 \end{minipage}
@@ -2744,7 +2789,7 @@ To do this, the value must start with \textsl{CALL:}.\\
 See section \ref{subsubsection:defaultbymodule} for more on this.
 
 \subsubsection{Default for Free input}
-When the input item is a Free input type (see secion \ref{subsubsec:mylabel37}), the default will be the exact
+When the input item is a Free input type (see section \ref{subsubsec:mylabel37}), the default will be the exact
 value as given in the input element.
 
 If the input element contains a formating block and the default value is invalid\index{variables!invalid default value}, the value will be set to:\\
@@ -5191,7 +5236,9 @@ $	return $status
 \item Added the \textsl{OMI{\$}SORT} command to the standard toolbox.
 \item Added the \textsl{SESSIONLOG{\_}ID} element to the main menu.
 \item \textsf{/JUMPS} qualifer doesn't require \textsf{/SUBMENU} anymore but starts in the toplevel menu when omitted.
-\teim Added the /\textsf{[NO]SESSION{\_}LOG} qualifier.
+\item Added the \textsf{/[NO]SESSION{\_}LOG} qualifier.
+\item Added the \textsf{/REPLAY} option
+\item Added \textsf{OMI{\$}DELAY} to the standard toolbox
 \end{itemize}
 
 \section*{Version 2.7, Released: 21-02-2020}
