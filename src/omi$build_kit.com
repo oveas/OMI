@@ -4,7 +4,7 @@ $! Oscar van Eijk, October 4, 2018
 $!
 $! Note: The symbol or foreign command ZIP must exist!
 $!
-$	omiSource = F$Search("OMI-V*.DIR")
+$	omiSource = F$Search("OMI-V*_*.DIR")
 $	if omiSource .eqs. ""
 $	   then
 $		write sys$output "No OMI version found - make sure the directory OMI-Vx_y exists"

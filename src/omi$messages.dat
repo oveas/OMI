@@ -27,7 +27,7 @@ GLKEYNF        W global key ~S not found
 HIVAL          W value can't be more than ~S
 IMPKEY         S successfully imported key ~S
 INCLFNF        E cannot find file ~S for including
-INFO           I Oscar's Menu Interpreter, (c)1997-2020, O. van Eijk - OVEAS
+INFO           I Oscar's Menu Interpreter, (c)1997-2021, O. van Eijk - OVEAS
 INIT           I initializing...
 INPREQ         I input is required here - and that's no bug
 INSARG         E invalid call of ~S - insufficient arguments

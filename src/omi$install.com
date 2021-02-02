@@ -41,7 +41,7 @@ $! Error and exit routines
 $ nozip:
 $!
 $	set message 'omi$_message
-$	write sys$error "%OMI-E-NOZIP, unzip command not found - please download the SHARE distribution"
+$	write sys$error "%OMI-E-NOZIP, unzip command not found - exiting"
 $	exit_status = %x2c
 $	goto bye
 $!

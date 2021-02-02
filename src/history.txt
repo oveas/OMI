@@ -1,4 +1,4 @@
-2.8   Released: xx-xx-xxxx
+2.8   Released: 04-02-2021
 
 * Fix: In the sessionlog, don't write just option numbers but screen text as well.
 * Fix: Errors in checking dynamic submenus with /VALIDATE.

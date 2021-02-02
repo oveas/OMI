@@ -1,4 +1,4 @@
-OMI v2.7 - (c) 1997-2020, Oscar van Eijk, Oveas Functionality Provider
+OMI v2.8 - (c) 1997-2021, Oscar van Eijk, Oveas Functionality Provider
 ======================================================================
 
 Oscar's Menu Interpreter is a DCL procedure that reads menu files and
