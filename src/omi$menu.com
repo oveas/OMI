@@ -1921,7 +1921,7 @@ $	omi$refresh inside_only
 $	omi$cmdline_clear
 $	return omi$_ok
 $!
-$ tag$_do_sessionlog:
+$ tag$do_sessionlog:
 $	if f$type(_tag_sel) .eqs. "INTEGER"
 $	   then
 $		_log_value = "(invalid)"
