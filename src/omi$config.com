@@ -261,12 +261,8 @@ $		if _section .eqs. "SCREEN" .and. _value .le. 0 -
 		   _item .eqs. "HEIGHT" .or. _item .eqs. "EXIT_HEIGHT")
 $		   then
 $			if _item .eqs. "HEIGHT" .or. _item .eqs. "EXIT_HEIGHT"
-$			   then
-$				_value = f$getdvi("tt:", "tt_page")
-$				if _item .eqs. "HEIGHT" then $ screen$height_inquired == omi$_true
-$			   else
-$				_value = f$getdvi("tt:", "devbufsiz")
-$				if _item .eqs. "WIDTH" then $ screen$width_inquired == omi$_true
+$			   then $ _value = f$getdvi("tt:", "tt_page")
+$			   else $ _value = f$getdvi("tt:", "devbufsiz")
 $			endif
 $		endif
 $		if f$type('_section'$'_item') .nes. "" .and. p3 .nes. -
@@ -807,6 +803,7 @@ $	call config$_set_defaults main$sessionlog_textsep	"#"
 $!
 $	call config$_set_defaults screen$width_margin		"4"
 $	call config$_set_defaults screen$height_margin		"1"
+$	call config$_set_defaults screen$device_type            ""
 $	call config$_set_defaults screen$width			"80"
 $	call config$_set_defaults screen$height			"24"
 $	call config$_set_defaults screen$exit_width		"0"
@@ -817,8 +814,6 @@ $	call config$_set_defaults screen$scrollregion_autodisable	"y"
 $	call config$_set_defaults screen$separate_inputs	omi$_true
 $	call config$_set_defaults screen$display_names		omi$_false
 $	call config$_set_defaults screen$tab			"15"
-$	call config$_set_defaults screen$width_inquired		omi$_false
-$	call config$_set_defaults screen$height_inquired	omi$_false
 $	call config$_set_defaults screen$center_select_lists	omi$_false
 $	call config$_set_defaults screen$replay_mode		"(replay mode) "
 $!

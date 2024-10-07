@@ -670,12 +670,9 @@ $!	each time this procedure is called.
 $!
 $ screen$_values:
 $!
-$	if .not. screen$width_inquired
-$	   then
-$		if screen$width .gt. 80
-$		   then $ screen$width == 132
-$		   else $ screen$width == 80
-$		endif
+$	if screen$width .gt. 80
+$	   then $ screen$width == 132
+$	   else $ screen$width == 80
 $	endif
 $	_screenheight = screen$height - screen$height_margin 
 $!
@@ -776,13 +773,9 @@ $!
 $	_leftline  = screen$width_margin  
 $      	_rightline = screen$width - screen$width_margin  
 $!
-$	if screen$width_inquired
-$	   then $ cls
-$!	   else $ ws "''ESC$'[''screen$width'$"
-$	   else $ set terminal/width='screen$width'
-$	endif
-$	if .not. screen$height_inquired then $ ws "''ESC$'[''screen$height't"
-$	set terminal /inquire
+$	_devtype = ""
+$	if screen$device_type .nes. "" then _devtype = "/device_type=''screen$device_type'"
+$	set terminal/width='screen$width'/page='screen$height''_devtype'
 $!
 $	if screen$width_margin .eq. 0
 $	   then $ _blank = ""
@@ -994,16 +987,10 @@ $	if f$type(scroll$previous_page) .nes. "" then -
 $!
 $	if p2 .nes. "NOCLS" .and. .not. omi$batch_mode
 $	   then
-$!		if screen$width_inquired
-$!		   then $ cls
-$!!		   else $ ws "''ESC$'[''screen$exit_width'$"
-$!		   else $ set terminal/width = 'screen$exit_width'
-$!		endif
-$		set terminal/width = 'screen$exit_width'
-$!		if .not. screen$height_inquired then $ ws "''ESC$'[''screen$exit_height't"
-$		ws "''ESC$'[''screen$exit_height't"
+$		_devtype = ""
+$		if screen$device_type .nes. "" then _devtype = "/device_type=''screen$device_type'"
+$		set terminal/width = 'screen$exit_width'/page='screen$exit_height''_devtype'
 $	endif
-$	set terminal /inquire
 $!
 $	return
 $!
