@@ -20,7 +20,7 @@
 \begin{document}
 
 \title{
-OMI v2.8\\
+OMI v2.9\\
 Oscar's Menu Interpreter for VMS\\
 Reference Guide}
 
@@ -30,7 +30,7 @@ Oveas Functionality Provider\\
 oscar.van.eijk@oveas.com\\
 \url{https://github.com/oveas/OMI}}
 
-\date{Belgium, February 4, 2021}
+\date{Belgium, Xxxx xx, 202x}
 
 \maketitle
 
@@ -175,7 +175,7 @@ by the distribution.
 {\%}OMI-I-INS{\_}ZIP, installing the ZIP distribution \newline
 {\_}Install in [{\$}1{\$}DKA200:[APPLIC.OMI]]: \newline
 {\%}OMI-I-UNPACK, please wait - unpacking distribution \newline
-DELETE {\$}1{\$}DKA200:[TEMP]OMI-V2{\_}1.COM;1 ? [N]: \newline
+DELETE {\$}1{\$}DKA200:[TEMP]OMI-V2{\_}1.ZIP;1 ? [N]: \newline
 {\%}OMI-I-EXISTS, OMI{\$}TOOLBOX.INI exists \newline
 -OMI-S-TBPATCHED, OMI{\$}TOOLBOX.INI successfully patched \newline
 {\%}OMI-I-EXISTS, OMI{\$}MENU.CFG exists \newline
@@ -991,6 +991,13 @@ Note the path value should end with a colon for non-concealed logicals!
 This section contains all elements that define the layout of the menu 
 screen.
 
+\subsubsection{DEVICE{\_}TYPE}\index{terminal!device type}
+
+Optionally set the terminal to a specific device type. Specify a value that is supported by the \textsf{SET TERMINAL /DEVICE{\_}TYPE} command.
+
+E.g., for PuTTY clients\footnote{ \url{https://www.putty.org}}\index{PuTTY}, the device type \textsl{vt400} works best. With other device types, resizing the screen height might not work properly.\\
+Remove or outcomment this item to use the process value.
+
 \subsubsection{WIDTH{\_}MARGIN}
 
 You can use the full width of the screen (without borderlines at both 
@@ -1007,29 +1014,23 @@ lowermost \textit{n} lines not to be used.
 
 The symbol \textsl{WIDTH} allows two values: 80 and 132. Values up to 80 will be 
 changed to 80. All values greater than 80 will be changed to 132. It defines 
-the screen width of the menu window.
-
-Specify 0 to leave the current screen width unchanged.
+the screen width of the menu window.\\
+Specify `\textsl{0}' to leave the current screen width unchanged.
 
 \subsubsection{HEIGHT}
 
-Define the number of lines the menu should use. It is not recommended to 
-change the default value of 24.
-
-Specify 0 to leave the current screen height unchanged.
+Define the number of lines the menu should use.\\
+Specify `\textsl{0}' to leave the current screen height unchanged.
 
 \subsubsection{EXIT{\_}WIDTH}
 
-When leaving the menu, \textsl{EXIT{\_}WIDTH} is the screenwidth that is set on 
-exit.
-
-The value '0' can be used to restore to the original value before OMI started.
+When leaving the menu, \textsl{EXIT{\_}WIDTH} is the screenwidth that is set on exit.\\
+The value `\textsl{0}' can be used to restore to the original value before OMI started.
 
 \subsubsection{EXIT{\_}WIDTH}
 
-When leaving the menu, \textsl{EXIT{\_}WIDTH} is the number of lines that the terminal will be set to on exit.
-
-The value '0' can be used to restore to the original value before OMI started.
+When leaving the menu, \textsl{EXIT{\_}WIDTH} is the number of lines that the terminal will be set to on exit.\\
+The value `\textsl{0}' can be used to restore to the original value before OMI started.
 
 \subsubsection{WINDOW{\_}TOPMARGIN}
 
@@ -5222,6 +5223,13 @@ $	return $status
 \chapter{History}
 \index{history}
 
+\section*{Version 2.9, Released: xx-xx-202x}
+
+\begin{itemize}
+\item: Fix: Crash when making a selection from a taglists with sessionlog enabled.
+\item: Fix: Make resizing the screen work when using Telnet/SSH clients.
+\end{itemize}
+
 \section*{Version 2.8, Released: 04-02-2021}
 
 \begin{itemize}
@@ -5513,15 +5521,15 @@ Thanks to Henry Juengst (juengst@saph1.iskp.uni-bonn.de) for making me aware of 
 \item Added the free option in select lists.
 \end{itemize}
 
-\section*{Version 1.0b1, Date: 14-03-1997  (not released)}
+\section*{Version 1.0b1, Date: 14-03-1997\footnote{ This version was not publicly released\label{notrel}}}
 
 Added dynamic menu's, counters, OMI commands \textsf{SET}, \textsf{RESET} and \textsf{SHOW}, implemented the version number, the comment field and the password option.
 
-\section*{Version 0.0, Date: 11-03-1997  (not released)}
+\section*{Version 0.0, Date: 11-03-1997\footref{notrel}}
 
 Initial release, containing submenus, commands with input option, free inputs and selection lists.
 
-\section*{OMB -- Oscar's Menu Builder (1990-1995)}
+\section*{OMB -- Oscar's Menu Builder (1990-1995)\footref{notrel}}
 \index{OMI!predecessor}
 
 OMB was OMI's predecessor I wrote and maintained in the early 90's. It was meant for private use only... and for the fun of it of course ;)
