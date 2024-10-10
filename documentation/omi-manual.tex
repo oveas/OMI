@@ -4972,17 +4972,18 @@ This example is included in the distribution as \textsl{OMI{\$}EXAMPLE.MNU}.
 
 \begin{verbatim}
 [MENU_MENU]
-  owner = system
-  title = OMI Example Menu
-  name  = Main                                  ! Menu name for shortcut
-  item  = Print the menu file#command#silent_dcl print -
+  owner   = system
+  title   = OMI Example Menu
+  name    = Main                                ! Menu name for shortcut
+  comment = The command INFO can be used in some menus for context specific help
+  item    = Print the menu file#command#silent_dcl print -
           /queue=~?{Printer queue:} /notify omi$:omi$example.mnu
                                                 ! Print this menu file to read
                                                 ! on paper what's happening.
-  item  = Exit#command#exit                     ! Command item, EXIT the menu
-  item  = Protected Menu#submenu#pwdtest        ! Submenu item, calls PWDTEST
-  item  = Get some inputs#submenu#inptest       ! Submenu item, calls INPTEST
-  item  = Counter menu#submenu#cnttest          ! Submenu item, calls CNTTEST
+  item    = Exit#command#exit                   ! Command item, EXIT the menu
+  item    = Protected Menu#submenu#pwdtest      ! Submenu item, calls PWDTEST
+  item    = Get some inputs#submenu#inptest     ! Submenu item, calls INPTEST
+  item    = Counter menu#submenu#cnttest        ! Submenu item, calls CNTTEST
 
 [MENU_PWDTEST]
   password = <90>Ë<8f>¼<8e>Ê<8d>Ë<8c><88><8b><89><8a><8a>Õ
@@ -5128,6 +5129,45 @@ The '<EOF>' above will be interpreted as an end-of-file. This means the
 OMI will never read these lines. This is done to improve performance while
 initializing; long comments can now be written past the end-of-file.
 \end{verbatim}
+
+\chapter{Example OMI Menu specific help}
+
+This example is included in the distribution as \textsl{OMI{\$}EXAMPLE.OMH}.
+
+\begin{footnotesize}
+\begin{verbatim}
+[MENU]
+
+A little note on some of the menu options:
+
+<ESC>[1mProtected menu<ESC>[0m
+    This menu is password protected. The default password as set in the
+    distribution is <ESC>[1mtest123456789<ESC>[0m.
+
+<ESC>[1mGet some inputs<ESC>[0m
+    This menu and its submenu shows some examples of the way input can be
+    asked and formatted.
+    It also has <ESC>[4mRESET VARIABLES<ESC>[0m option. An <ESC>[4mON_EXIT<ESC>[0m element checks if this
+    reset has been executed.
+
+The submenus <ESC>[1mProtected menu<ESC>[0m and <ESC>[1mCounter menu<ESC>[0m have their own context
+specific help.
+
+[PWDTEST]
+
+The default password of this menu is <ESC>[1mtest123456789<ESC>[0m.
+The command <ESC>[4mSET PASSWORD<ESC>[0m can be used to change this.
+
+[CNTTEST]
+
+This menu has a counter that is increased every time it is called.
+
+The submenu <ESC>[1mMore counters<ESC>[0m has a different counter and shows an example how
+they can be used in arrays.
+\end{verbatim}
+\end{footnotesize}
+
+
 
 \chapter{Example OMI Module}
 

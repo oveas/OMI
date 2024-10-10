@@ -1,0 +1,29 @@
+[MENU]
+
+A little note on some of the menu options:
+
+[1mProtected menu[0m
+    This menu is password protected. The default password as set in the
+    distribution is [1mtest123456789[0m.
+
+[1mGet some inputs[0m
+    This menu and its submenu shows some examples of the way input can be
+    asked and formatted.
+    It also has [4mRESET VARIABLES[0m option. An [4mON_EXIT[0m element checks if this
+    reset has been executed.
+
+The submenus [1mProtected menu[0m and [1mCounter menu[0m have their own context
+specific help.
+
+[PWDTEST]
+
+The default password of this menu is [1mtest123456789[0m.
+The command [4mSET PASSWORD[0m can be used to change this.
+
+[CNTTEST]
+
+This menu has a counter that is increased every time it is called.
+
+The submenu [1mMore counters[0m has a different counter and shows an example how
+they can be used in arrays.
+

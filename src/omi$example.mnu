@@ -1,15 +1,16 @@
 [MENU_MENU]
-  owner = system
-  title = OMI Example Menu
-  name  = Main                                  ! Menu name for shortcut
-  item  = Print the menu file#command#silent_dcl print -
+  owner   = system
+  title   = OMI Example Menu
+  name    = Main                                ! Menu name for shortcut
+  comment = The command INFO can be used in some menus for context specific help
+  item    = Print the menu file#command#silent_dcl print -
           /queue=~?{Printer queue:} /notify omi$:omi$example.mnu
                                                 ! Print this menu file to read
                                                 ! on paper what's happening.
-  item  = Exit#command#exit                     ! Command item, EXIT the menu
-  item  = Protected Menu#submenu#pwdtest        ! Submenu item, calls PWDTEST
-  item  = Get some inputs#submenu#inptest       ! Submenu item, calls INPTEST
-  item  = Counter menu#submenu#cnttest          ! Submenu item, calls CNTTEST
+  item    = Exit#command#exit                   ! Command item, EXIT the menu
+  item    = Protected Menu#submenu#pwdtest      ! Submenu item, calls PWDTEST
+  item    = Get some inputs#submenu#inptest     ! Submenu item, calls INPTEST
+  item    = Counter menu#submenu#cnttest        ! Submenu item, calls CNTTEST
 
 [MENU_PWDTEST]
   password = êÀèºé çÀåàãâää’
