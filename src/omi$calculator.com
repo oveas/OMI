@@ -498,6 +498,8 @@ $	if f$type (_a1) .nes. "INTEGER" .or. f$type(_b1) .nes. "INTEGER" .or. -
 $!
 $	_full_a = "''_a1'''_a2'"
 $	_full_b = "''_b1'''_b2'"
+$ 	gosub calc$_remove_zeros
+$!
 $! Should be a string overlay here......
 $!	if f$fao("!10<!AS!>",_full_a) .gts. "2147483647"
 $! .... but this is fine as a workaround.....
@@ -528,6 +530,20 @@ $		_addz = f$length(_b2) - f$length(_a2)
 $		_a2 = f$fao("!UL!''_addz'*0", _a2)
 $	endif
 $!
+$	return
+$!
+$ calc$_remove_zeros:
+$!
+$! Remove trailing zeros behind the decimal point
+$!
+$	if f$extract(f$length(_full_a)-1, 1, _full_a) .eqs. "0" .and -
+	   f$extract(f$length(_full_b)-1, 1, _full_b) .eqs. "0"
+$	   then
+$		_full_a = f$extract(0, f$length(_full_a)-1, _full_a)
+$		_full_b = f$extract(0, f$length(_full_b)-1, _full_b)
+$		_total_decs = _total_decs - 2
+$		goto calc$_remove_zeros
+$	endif
 $	return
 $!
 $!******************************************************************************
