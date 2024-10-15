@@ -5,6 +5,7 @@ BADOPT         E bad option - check the menu file
 BGERR          E VMS error ~S occured while starting background process
 BGSTART        S module ~S started
 BUG            ? you must provide some input... that's a bug...
+CALCPRES       I calculator precision is ~S, steps ~S
 CALCRES        I the result of your calculation is ~S
 CHECKTOOLBOX   I check the toolbox command file
 CMDNOTAV       W command or option not available in on-the-fly menus
@@ -27,7 +28,7 @@ GLKEYNF        W global key ~S not found
 HIVAL          W value can't be more than ~S
 IMPKEY         S successfully imported key ~S
 INCLFNF        E cannot find file ~S for including
-INFO           I Oscar's Menu Interpreter, (c)1997-2021, O. van Eijk - OVEAS
+INFO           I Oscar's Menu Interpreter, (c)1997-2024, O. van Eijk - OVEAS
 INIT           I initializing...
 INPREQ         I input is required here - and that's no bug
 INSARG         E invalid call of ~S - insufficient arguments
@@ -50,8 +51,8 @@ IVOPT          W invalid ~S option
 IVORDER        W invalid order -  select option(s) ~S first
 IVPASSW        W invalid password
 IVPWD          W invalid password - access denied
-IVSEL          W selection is out of range
 IVSCHEME       E invalid colorscheme \~S\ in OMI$POPUP
+IVSEL          W selection is out of range
 IVSWVAL        W invalid value for SET WIDTH - specify 80 or 132
 IVVALFIL       W option is no select list or has no value file
 JUMPHERE       I jumping in the current menu - whiieeeuw
@@ -110,6 +111,7 @@ NOWILDCARD     W wildcards are not allowed in this option
 NO_OTF         E no on-the-fly menu specified
 NO_OTFINP      E missing on-the-fly menu inputs
 NO_OTFITM      E missing on-the-fly menu items
+OPTIGN         W invalid option ~S - ignored
 ORPHANOPT      E ~S requires ~S
 OTFSUB         E submenus not allowed in on-the-fly menus
 OUTOFRA        E intermediate value ~S is out of range
@@ -131,8 +133,8 @@ SETKEY         S succesfully set the personal key
 SETNAME        S succesfully changed the menu name
 SETPWD         S succesfully changed the password
 SHORTPWD       W password can not be shorter than 5 characters
-SUSPINTR       F suspected intruder - access denied
 STRDELIM       W string delimiter \~S\ too long in OMI$SORT
+SUSPINTR       F suspected intruder - access denied
 TAEMPTY        I text area is currently empty
 TAFNF          W text area file not found
 TALOCK         W temporary file is in use - cannot create text area

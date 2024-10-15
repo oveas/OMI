@@ -13,7 +13,7 @@ $!*     Omi$Menu.Com       Oscar's Menu Interpreter                            *
 $!*                                                                            *
 $!* ************************************************************************** *
 $!* *                                                                        * *
-$!* * (c) 1997 - 2021, Oscar van Eijk - Oveas Funtionality Provider          * *
+$!* * (c) 1997 - 2024, Oscar van Eijk - Oveas Funtionality Provider          * *
 $!* *   This tool is delivered as is, and has no warranties whatsoever.      * *
 $!* *   It may be freely distributed as long as the distribution set is      * *
 $!* *   complete. It is not allowed to change any of the files, without      * *
@@ -130,6 +130,7 @@ $!*     2.5       17-03-2019  Oscar van Eijk, OVEAS                            *
 $!*     2.6       16-05-2019  Oscar van Eijk, OVEAS                            *
 $!*     2.7       21-02-2020  Oscar van Eijk, OVEAS                            *
 $!*     2.8       04-02-2021  Oscar van Eijk, OVEAS                            *
+$!*     2.9       xx-xx-20xx  Oscar van Eijk, OVEAS                            *
 $!*                                                                            *
 $!******************************************************************************
 
@@ -2919,6 +2920,51 @@ $		omi$cmdline_clear
 $		return omi$_ok
 $	endif
 $!
+$	if f$length(omi$_p1) .ge. 3 .and. omi$_p1 .eqs. f$extract(0, f$length(omi$_p1), "PRECISION")
+$	   then
+$		if omi$_p2 .eqs. ""
+$		   then
+$			read /end_of_file=setcommand$_cancelled sys$command omi$_p2 -
+			   /prompt="''screen$prompt_position'_Value: "
+$			omi$log_session "''omi$_p2'"
+$			omi$_p2 = f$edit(omi$_p2,"uncomment,trim,compress")
+$			omi$cmdline_clear
+$			goto main$execcmd_set
+$		endif
+$!
+$		if omi$_p2 .lt. 0
+$		   then
+$			omi$signal omi lowval,1
+$			return $status
+$		endif
+$		if omi$_p2 .gt. 9
+$		   then
+$			omi$signal omi hival,9
+$			return $status
+$		endif
+$		calc$precision == omi$_p2
+$		if omi$_p3 .nes. ""
+$		   then
+$			_opt = f$edit(omi$_p3, "upcase")
+$			_negated = omi$_false
+$			if f$extract(0, 2, _opt) .eqs. "NO"
+$			   then
+$				_negated = omi$_true
+$				_opt = f$extract(2, f$length(_opt)-2, _opt)
+$			endif
+$			if f$length(_opt) .ge. 3 .and. _opt .eqs. -
+			   f$extract(0, f$length(_opt), "INTERMEDIATE_STEPS")
+$			   then
+$				if _negated
+$				   then $ calc$round_steps == omi$_false
+$				   else $ calc$round_steps == omi$_true
+$				endif
+$			   else $ omi$signal omi optign,omi$_p3
+$			endif
+$		endif
+$		return omi$_ok
+$	endif
+$!
 $	omi$signal omi ivopt,set
 $!
 $ setcommand$_cancelled:
@@ -3072,6 +3118,14 @@ $		   then $ omi$signal omi reqselected
 $		   else $ omi$signal omi curorder,_msg_string
 $		endif
 $		return $status
+$	endif
+$!
+$	if f$length(omi$_p1) .ge. 3 .and. omi$_p1 .eqs. f$extract(0, f$length(omi$_p1), "PRECISION")
+$	   then
+$		_steps = "DISABLED"
+$		if calc$round_steps then $ _steps = "ENABLED"
+$		omi$signal omi calcpres,calc$precision,_steps
+$		return omi$_ok
 $	endif
 $!
 $	omi$signal omi ivopt,show

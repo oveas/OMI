@@ -262,6 +262,7 @@ $		_r2 = "''f$extract(f$length(_r)-f$length(_a2),f$length(_a2),_r)'"
 $		if _r1 .eqs. "" then $ _r1 = "0"
 $		if _r1 .eqs. "-" then $ _r1 = "-0"
 $		_result = "''_r1'''float$_char'''_r2'"
+$		if calc$round_steps then $ gosub calc$_round_result
 $	   else
 $		if _a_min then $ _a = "-''_a'"
 $		if _b_min then $ _b = "-''_b'"
@@ -287,6 +288,7 @@ $		_r2 = "''f$extract(f$length(_r)-f$length(_a2),f$length(_a2),_r)'"
 $		if _r1 .eqs. "" then $ _r1 = "0"
 $		if _r1 .eqs. "-" then $ _r1 = "-0"
 $		_result = "''_r1'''float$_char'''_r2'"
+$		if calc$round_steps then $ gosub calc$_round_result
 $	   else
 $		if _a_min then $ _a = "-''_a'"
 $		if _b_min then $ _b = "-''_b'"
@@ -328,6 +330,7 @@ $			_r1 = "''f$extract(0,f$length(_r)-_total_decs,_r)'"
 $			_r2 = "''f$extract(f$length(_r)-_total_decs,_total_decs,_r)'"
 $		endif
 $		_result = "''_sign'''_r1'''float$_char'''_r2'"
+$		if calc$round_steps then $ gosub calc$_round_result
 $	   else
 $		if (2147483647 / f$integer(_a)) .lt. f$integer(_b)
 $		   then
@@ -373,6 +376,7 @@ $	if _r1 .eqs. "-" then $ _r1 = "-0"
 $	_result = "''_r1'''float$_char'''_r2'"
 $	if (_a_min .and. .not. _b_min) .or. (.not. _a_min .and. _b_min) then -
 	   _result = "-''_result'"
+$	if calc$round_steps then $ gosub calc$_round_result
 $	return
 $!
 $!******************************************************************************
@@ -409,7 +413,6 @@ $!******************************************************************************
 $!******************************************************************************
 $!
 $!==> Round the result if desired
-$! TODO Invent some way to let the user set the desired nr of digits or disable tis.
 $!
 $ calc$_round_result:
 $!
@@ -417,14 +420,30 @@ $	if f$integer(f$element(1, ".", _result)) .eq. 0
 $	   then $ _result = f$element(0, ".", _result)
 $	   else
 $		_dec = f$element(1, ".", _result)
-$		_result = "''f$element(0, ".", _result)'" + "."
+$		_result = "''f$element(0, ".", _result)'"
 $	 calc_round$remove_zeros:
 $		if f$extract(f$length(_dec)-1, 1, _dec) .eqs. "0"
 $		   then
 $			_dec = _dec / 10
 $			goto calc_round$remove_zeros
 $		endif
-$		_result = _result + "''_dec'"
+$		calc$precision = f$integer(calc$precision)
+$		if f$length(_dec) .gt. calc$precision
+$		   then
+$			_d = f$integer(f$extract(calc$precision, 1, _dec))
+$			_dec = f$extract(0, calc$precision, _dec)
+$			if _d .ge. 5
+$			   then
+$				_dec = f$integer(_dec) + 1
+$				if f$length(_dec) .eq. calc$precision+1 .and. -
+				   f$extract(1, calc$precision, _dec) .eqs. "000"
+$				   then
+$					_result = f$integer(_result) + 1
+$					return
+$				endif
+$			endif
+$		endif
+$		_result = _result + ".''_dec'"
 $	endif
 $	return
 $!
@@ -546,4 +565,5 @@ $		goto calc$_remove_zeros
 $	endif
 $	return
 $!
+
 $!******************************************************************************

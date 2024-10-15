@@ -817,6 +817,9 @@ $	call config$_set_defaults screen$tab			"15"
 $	call config$_set_defaults screen$center_select_lists	omi$_false
 $	call config$_set_defaults screen$replay_mode		"(replay mode) "
 $!
+$	call config$_set_defaults calc$precision		"9"
+$	call config$_set_defaults calc$round_steps		omi$_false
+$!
 $	call config$_set_defaults questions$all_inputs		"All Inputs"
 $	call config$_set_defaults questions$option		"OMI>"
 $	call config$_set_defaults questions$reverse_tags	"Reverse selection"

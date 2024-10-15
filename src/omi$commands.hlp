@@ -364,7 +364,7 @@ their default values as specified in the menu file.
 
 1 SET
 
-Change the value of an internet OMI variable.
+Change the value of an internal OMI variable.
 
 2 AUTO_REFRESH
  Format: SET AUTO_INCREASE value
@@ -379,11 +379,6 @@ between 0 and 255. When set to 0, the automatic refresh is disabled.
 
 Use this command to set the counter for the current menu to another value.
 If the current menu has no counter, a message will be displayed.
-
-2 WIDTH
- Format: SET WIDTH value
-
-Use this command to modify the screen width. The value can be 80 or 132.
 
 2 KEY
  Format: SET KEY value
@@ -433,6 +428,26 @@ The password must be at least five character long.
 
 *** NOTE: The password can not have the value 'RESET'
 
+2 PRECISION
+ Format: SET PRECISION value [[NO]INTERMEDIATE_STEPS]
+
+Set the precision used by the calculator. By default, all floating point
+values will be rounded at 9 digits behind the decimal point. That value
+can be set with this command.
+The precision must be between (and including) 1 and 9.
+
+An optional parameter [NO]INTERMEDIATE_STEPS can be used to round all
+intermediate steps of a calculation.
+Enabling this will reduce the chance for out of range errors and warnings,
+but will make the end result less accurate.
+By default this is disabled.
+
+
+2 WIDTH
+ Format: SET WIDTH value
+
+Use this command to modify the screen width. The value can be 80 or 132.
+
 1 SHOW
  Format: SHOW keyword
 
@@ -454,6 +469,12 @@ DCL command line when OMI is started.
 If the current menu has a required order, this command can be used to
 display the list which is maintained in the background, to see which
 input elements still have to be selected, and in which order.
+
+
+2 PRECISION
+
+Show the current precision  used by the calculator for rounding. This
+command also shows if intermediate steps will be rounded.
 
 2 TEXTAREA
  Format: SHOW TEXTAREA sequence-number
