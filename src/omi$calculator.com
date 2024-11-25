@@ -124,7 +124,9 @@ $	if _pointer .eq. 0
 $	   then
 $		_tmp = f$element(1, "-", formula$_work)
 $		_pointer = f$locate("-", _tmp)
-$		if _pointer .eq. f$length(_tmp) then $ return
+$		if _pointer .eq. f$length(_tmp) .and. -
+		   f$length(_tmp) .eq. f$length(formula$_work) - 1 -
+		   then $ return
 $	endif
 $	gosub formula$extract_current
 $	gosub calc$_less
@@ -534,6 +536,11 @@ $		omi$signal omi outofra,_full_b
 $		calc$_status = $status
 $		goto calc$_fault
 $	endif
+$!
+$!	FIXME: The f$int()s below  will fail when then second part (_a2 and/or _b2) contain leading zeros,
+$!	       so 2.04 will be 2.4 after this!
+$!	       Fixing that here will probably just replace the problem, so somehow we should keep track of
+$!	       a division factor.
 $	_a1 = f$integer(_a1)
 $	_a2 = f$integer(_a2)
 $	_b1 = f$integer(_b1)
