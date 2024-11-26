@@ -537,24 +537,20 @@ $		calc$_status = $status
 $		goto calc$_fault
 $	endif
 $!
-$!	FIXME: The f$int()s below  will fail when then second part (_a2 and/or _b2) contain leading zeros,
-$!	       so 2.04 will be 2.4 after this!
-$!	       Fixing that here will probably just replace the problem, so somehow we should keep track of
-$!	       a division factor.
-$	_a1 = f$integer(_a1)
-$	_a2 = f$integer(_a2)
-$	_b1 = f$integer(_b1)
-$	_b2 = f$integer(_b2)
 $	if f$length(_a2) .gt. f$length(_b2)
 $	   then
 $		_addz = f$length(_a2) - f$length(_b2)
-$		_b2 = f$fao("!UL!''_addz'*0", _b2)
+$		_b2 = f$fao("!AZ!''_addz'*0", _b2)
 $	endif
 $	if f$length(_b2) .gt. f$length(_a2)
 $	   then
 $		_addz = f$length(_b2) - f$length(_a2)
-$		_a2 = f$fao("!UL!''_addz'*0", _a2)
+$		_a2 = f$fao("!AZ!''_addz'*0", _a2)
 $	endif
+$	_a1 = f$integer(_a1)
+$	_a2 = f$integer(_a2)
+$	_b1 = f$integer(_b1)
+$	_b2 = f$integer(_b2)
 $!
 $	return
 $!
