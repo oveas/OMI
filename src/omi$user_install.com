@@ -60,7 +60,7 @@ $	write omi_setup "$! This ommand procedure sets up the process environment for 
 $	write omi_setup "$! OMI, Oscar's Menu Interpreter"
 $	write omi_setup "$! It was generated nu OMI$USER_INSTALL at ''F$Time()'"
 $	write omi_setup "$!"
-$	write omi_setup "$	omi :== @''omi_dir'OMI$MENU.COM"
+$	write omi_setup "$	omi :== @''omi_dir'OMI$WRAPPER.COM"
 $	write omi_setup "$	_menu_dir  = ""''mnudir'"" - ""]"""
 $	write omi_setup "$	_omi_menus = ""'","'_menu_dir']"""
 $	write omi_setup "$!"
