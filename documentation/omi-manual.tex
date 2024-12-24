@@ -1994,8 +1994,8 @@ type.
 
 The \textsl{CALL} item type\index{menu actions!call a module} specifies that an OMI 
 module should be executed. The third argument of the item value should be 
-the full path and name of a DCL procedure, without the at-sign (\textsl{@}). The 
-default file type for OMI modules is OMI.
+the full path and name of a DCL procedure.\\
+The default file type for OMI modules is OMI.
 
 \vs
 
@@ -4322,7 +4322,7 @@ By default, if an \textsl{ON{\_}EXIT} module is specified, it will always be exe
 if the current (sub)menu exits.
 
 \section{CALC}
-\index{OMI commands!CALC}
+\index{OMI commands!CALC}\index{calculator}
 \label{subsec:mylabel11}
 
 \indent Format: \textbf{CALC \textit{calculation}}\\*[3mm]
@@ -4353,6 +4353,10 @@ calculated by OMI, simply put a question mark (?) somewhere in the formula
 (e.g.: ``(2+5)*((8-3)*4/2)/2?''). This will cause OMI to show all 
 separate calculations as they are performed and substituted. \\
 The question mark itself will be removed before calculation starts.
+
+\vs
+
+If the result contains a floating point, the result can be rounded. By default this will be 9 digits after the decimal point, this can be changed using the \textsl{SET PRECISION} command (see section \ref{subsubsec:setprecision}).
 
 \vs
 
@@ -4815,6 +4819,26 @@ This command requires \textsl{WRITE} privilege to the current menu.
 
 \hspace{-8mm}\textbf{NOTE:} The password can not have the value \textsl{RESET}!
 
+
+\subsection{SET PRECISION}
+\index{OMI commands!SET PRECISION}\index{calculator!precision}
+\label{subsubsec:setprecision}
+
+\indent Format: \textbf{SET PRECISION \textit{value} [[NO]INTERMEDIATE\_STEPS]}\\*[3mm]
+Set the precision used by the calculator. By default, all floating point
+values will be rounded at 9 digits behind the decimal point. That value
+can be set with this command.\\
+The precision must be between (and including) 1 and 9.
+
+\vs
+
+An optional parameter \textsl{[NO]INTERMEDIATE\_STEPS} can be used to round all
+intermediate steps of a calculation.\\
+Enabling this will reduce the chance for \textit{out of range} errors and warnings,
+but will make the end result less accurate.\\
+By default this is disabled.
+
+
 \subsection{SET WIDTH}
 \index{OMI commands!SET WIDTH}
 \label{subsubsec:mylabel79}
@@ -4853,14 +4877,22 @@ line when OMI is started.
 \index{enter input!required order}
 \label{subsubsec:mylabel82}
 
-\indent Format: \textbf{SHOW ORDER}
+\indent Format: \textbf{SHOW ORDER}\\*[3mm]
 
-\vs
 
 If the current menu has a required order (see section 
 \ref{subsubsec:mylabel29}), this command can be used to display the 
 list which is maintained in the background, to see which input elements 
 still have to be selected, and in which order.
+
+\subsection{SHOW PRECISION}
+\index{OMI commands!SHOW PRECISION}\index{calculator!precision}
+\label{subsubsec:showprecision}
+
+\indent Format: \textbf{SHOW PRECISION}\\*[3mm]
+
+Show the current precision  used by the calculator for rounding. This command
+also shows if intermediate steps will be rounded.
 
 \subsection{SHOW TEXTAREA}
 \index{OMI commands!SHOW TEXTAREA}
@@ -5266,8 +5298,14 @@ $	return $status
 \section*{Version 2.9, Released: xx-xx-202x}
 
 \begin{itemize}
-\item: Fix: Crash when making a selection from a taglists with sessionlog enabled.
-\item: Fix: Make resizing the screen work when using Telnet/SSH clients.
+\item Fix: Crash when making a selection from a taglists with sessionlog enabled.
+\item Fix: Make resizing the screen work when using Telnet/SSH clients.
+\item Fix: Invalid calculator results when the decimal start with zeros.
+\item Fix: Number not recognized when the first character of a calculation (step) is a '-' sign.
+\item Minimize the \textsl{\%OMI-W-PROOUTRA} warnings in the calculator.
+\item Implemented rounding options for the calculator and set \textsl{SET PRECISION} and \textsl{SHOW PRECISION} commands.
+\item Added an example for context specific help to the \textsl{OMI{\$}EXAMPLE} menu.
+\item Added \textsl{OMI{\$}WRAPPER.COM}, a wrapper for OMI that acts a very simplified try-catch for debugging\footnote{ This wrapper is now always enabled since it can also be useful for troubleshooting.}.
 \end{itemize}
 
 \section*{Version 2.8, Released: 04-02-2021}
@@ -5275,7 +5313,7 @@ $	return $status
 \begin{itemize}
 \item Fix: In the sessionlog, don't write just option numbers but screen text as well.
 \item Fix: Errors in checking dynamic submenus with \textsf{/VALIDATE}.
-\item Fix: Option \textsf{0} signalled \textsl{TOPLEVEL} messages at all levels
+\item Fix: Option \textsf{0} signalled \textsl{TOPLEVEL} messages at all levels.
 \item Fix: When \textsf{/JUMPS} ended in the main menu, \lt Ctrl/Z\gt{} didn't cause an exit the first time and an abort at the second attempt.
 \item Fix: Added \textsf{/JUMPS} and \textsf{/SUBMENU} input to the session log.
 \item Fix: Bug in jumping through OTF menus
@@ -5338,7 +5376,7 @@ $	return $status
 \item Added the \textsl{\{HIDDEN\}} option for free input types
 \item Keep the current screen width and height when the value for \textsl{width}, \textsl{height} and/or \textsl{exit{\_}width} is set to \textsl{0} in the \textsl{[screen]} section.
 \item Introduced \textsl{exit{\_}height} in the configuration file's \textsl{[screen]} section.
-\item Search order for modules that are called without explicit path is now reversed: first check is in \textsl{OMI{\$}MENU{\_}DIRECTORY}, if not found look for the module in \textsl{OMI{\$}}.
+\item Search order for modules that are called without explicit path is now reversed: first check in \textsl{OMI{\$}MENU{\_}DIRECTORY}, if not found look for the module in \textsl{OMI{\$}}.
 \item Bugfix in the \textsf{INFO} command: clear textbuffers after display.
 \item Bugfix in \textsl{TAG} inputs: entering negative values caused OMI to crash.
 \end{itemize}
