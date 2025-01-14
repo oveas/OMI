@@ -33,17 +33,28 @@ $		open /write calc$_subresults sys$scratch:calc$_subresults._tmp$
 $	   else $ calc$show_subresults = 0
 $	endif
 $!
+$	_parentheses = 0
+$	_formula_pointer = 0
+$!
+$ calc$match_parentheses:
+$!
+$	if f$extract(_formula_pointer, 1, formula$_master) .eqs. "(" then -
+	   $ _parentheses = _parentheses + 1
+$	if f$extract(_formula_pointer, 1, formula$_master) .eqs. ")" then -
+	   $ _parentheses = _parentheses - 1
+$	_formula_pointer = _formula_pointer + 1
+$	if _formula_pointer .lt. f$length(formula$_master) then -
+	   $ goto calc$match_parentheses
+$	if _parentheses .ne. 0 then $  goto calc$parenth_error
+$!
 $ calc$find_parentheses:
 $!
+$	
 $	formula$_work = formula$_master
 $	if f$locate("(", formula$_master) .eq. f$length(formula$_master)
 $	   then
-$		if f$locate(")", formula$_master) .lt. f$length(formula$_master)
-$		   then $ goto calc$parenth_error
-$		   else
-$			gosub calc$_next
-$			goto calc$_end
-$		endif
+$		gosub calc$_next
+$		goto calc$_end
 $	endif
 $!
 $ parenth$_extract:
@@ -404,7 +415,8 @@ $!
 $	if f$type(_result) .eqs. ""
 $	   then
 $		omi$signal omi nocalc,formula$_master
-$		exit $status
+$		calc$_status = $status
+$		goto calc$_fault
 $	endif
 $	gosub calc$_round_result
 $	omi$calculated == _result
