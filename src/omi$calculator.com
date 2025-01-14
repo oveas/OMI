@@ -66,6 +66,7 @@ $	endif
 $	if calc$show_subresults then -
 	   $ write calc$_subresults "-> ''formula$_master' = ''omi$substituted'"
 $	formula$_master = omi$substituted
+
 $!
 $	goto calc$find_parentheses
 $!
@@ -400,6 +401,11 @@ $	exit calc$_status
 $!
 $ calc$_end:
 $!
+$	if f$type(_result) .eqs. ""
+$	   then
+$		omi$signal omi nocalc,formula$_master
+$		exit $status
+$	endif
 $	gosub calc$_round_result
 $	omi$calculated == _result
 $	if calc$show_subresults

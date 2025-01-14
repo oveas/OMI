@@ -66,6 +66,7 @@ MODNOTFOUND    E module ~S not found
 MUTEX          E ~S and ~S are mutually exclusive
 NAME           I the name of this menu is \~S\
 NESTINCL       W nested includes are not allowed
+NOCALC         W no valid calculation given: ~S
 NOCFG          E no personal configuration file found - key not set
 NOCNTINC       W this menu has no counter to increase
 NOCOUNT        W no counter available for this menu
