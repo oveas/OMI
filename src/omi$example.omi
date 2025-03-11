@@ -55,7 +55,7 @@ $	omi$record5 = " You called the Counter menu ''counter$another_counter' times"
 $!
 $!	Make sure the list with months won't be redisplayed, starting with rec. 5
 $	if f$type(omi$record6) .nes. "" then -
-	   deletee/symbol/local omi$record5
+	   delete\/symbol/local omi$record5
 $!
 $!	... and display them
 $	omi$display_info

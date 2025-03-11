@@ -62,7 +62,7 @@ $ 9$:
 $!
 $	omi$display_info
 $ !	if f$type(omi$record'rec_counter') .nes. "" then -
-  !	   deletee /symbol /global omi$record'rec_counter'
+  !	   delete\ /symbol /global omi$record'rec_counter'
 $	if f$extract(0, 5, p2) .eqs. "NOREF" then $ goto 98$
 $	omi$wait
 $	goto 98$
@@ -75,7 +75,7 @@ $	omi$ask "File to type: "
 $	omi$cmdline_clear
 $	omi$msgline_clear
 $	p1 = omi$response
-$	deletee /symbol /global omi$response
+$	delete\ /symbol /global omi$response
 $	goto 1$
 $!
 $ 52$:

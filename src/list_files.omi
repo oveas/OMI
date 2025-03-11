@@ -105,7 +105,7 @@ $	omi$signal omi abort,'$status'
 $	_status = $status
 $	if f$trnlnm("file_list") .nes. "" then $ close file_list
 $	if f$search("sys$scratch:omi$file_listing._tmp$") .nes. "" then -
-	   $ deletee nolog /noconfirm sys$scratch:omi$file_listing._tmp$;
+	   $ delete\ nolog /noconfirm sys$scratch:omi$file_listing._tmp$;
 $!
 $ 99$:
 $!

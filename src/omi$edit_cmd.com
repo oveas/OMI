@@ -25,7 +25,7 @@ $	   then
 $		omi$ask "Edit what: "
 $		if $status .eq. omi$_cancelled then $ exit omi$_cancelled
 $		omi$_p1 = omi$response
-$		deletee/symbol/global omi$response
+$		delete\/symbol/global omi$response
 $		goto start$
 $	endif
 $!
@@ -171,7 +171,7 @@ $	   then
 $		omi$ask "Element #: "
 $		if $status .eq. omi$_cancelled then $ exit omi$_cancelled
 $		omi$_p2 = omi$response
-$		deletee/symbol/global omi$response
+$		delete\/symbol/global omi$response
 $		goto get$_element
 $	endif
 $	return

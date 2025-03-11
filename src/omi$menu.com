@@ -1395,7 +1395,7 @@ $		endif
 $		assign /user TT: sys$input
 $		'main$editor' '_ta_file
 $		if .not. _ta_keep_history then -
-		   $ purgee /nolog /keep=1 /noconfirm 'f$element(0, ";", _ta_file)
+		   $ purge\ /nolog /keep=1 /noconfirm 'f$element(0, ";", _ta_file)
 $		omi$refresh inside_only
 $		gosub textarea$_readfile
 $	endif
@@ -2470,17 +2470,17 @@ $	if .not. omi$_debug then -
 $	search sys$scratch:omi$jump_submenu._tmp$ """''omi$_p1'""" -
 	   /output=sys$scratch:omi$jump_submenu_found._tmp$
 $	_status = $status
-$	delete /nolog /noconfirm sys$scratch:omi$jump_submenu._tmp$;
+$	delete\ /nolog /noconfirm sys$scratch:omi$jump_submenu._tmp$;
 $	if _status .eq. omi$_nomatch
 $	   then
-$		delete /nolog /noconfirm sys$scratch:omi$jump_submenu_found._tmp$;
+$		delete\ /nolog /noconfirm sys$scratch:omi$jump_submenu_found._tmp$;
 $		omi$signal omi nosuchname,'f$edit(omi$_p1,"upcase")
 $		return omi$_warning
 $	endif
 $	open /read jump sys$scratch:omi$jump_submenu_found._tmp$
 $	read jump _mnu_name
 $	close jump
-$	delete /nolog /noconfirm sys$scratch:omi$jump_submenu_found._tmp$;
+$	delete\ /nolog /noconfirm sys$scratch:omi$jump_submenu_found._tmp$;
 $!
 $	if f$type (omi$current_menu) .eqs. "" then $ omi$current_menu = ""
 $	'f$edit(f$element(0, "$", _mnu_name), "collapse")'$previous = omi$current_menu

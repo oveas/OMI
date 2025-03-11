@@ -29,7 +29,7 @@ $!
 $ start$:
 $!
 $	if f$search("''constants$facil_list'", 0) .nes. "" then -
-	   $ deletee /nolog /noconfirm 'constants$facil_list';*
+	   $ delete\ /nolog /noconfirm 'constants$facil_list';*
 $	if p1 .eqs. "REM_FILE" then $ exit omi$_ok
 $	_counter = 0
 $!

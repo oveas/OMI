@@ -347,9 +347,9 @@ $	   then
 $		close omi_config
 $		_ren_to = f$element (0, ";", f$search (_config_file))
 $		copy /nolog sys$scratch:omi$mnufile_update._tmp$ '_ren_to';0
-$		delete /nolog /noconfirm sys$scratch:omi$mnufile_update._tmp$;*
+$		delete\ /nolog /noconfirm sys$scratch:omi$mnufile_update._tmp$;*
 $		if p5 .eqs. "RESET" then -
-		   delete\/symbol/global 'omi$current_menu'$'p4'
+		   delete\ /symbol/global 'omi$current_menu'$'p4'
 $		omi$msgline_clear
 $	endif
 $!
