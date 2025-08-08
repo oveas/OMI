@@ -4,8 +4,10 @@ $!
 $	env_msg = f$environment("message")
 $	env_prc = f$environment("procedure")
 $	env_prc = f$parse(env_prc,,,"device") + f$parse(env_prc,,,"directory")
+$	set noon
 $	@'env_prc'omi$menu.com 'p1' 'p2' 'p3' 'p4' 'p5' 'p6' 'p7' 'p8' 
 $	_status = $status
+$	set on
 $	if .not. _status
 $	   then
 $		set message 'env_msg'
