@@ -3479,6 +3479,7 @@ $	if f$locate("ignore=dcle", omi$steering) .lt. f$length(omi$steering) -
 $	if f$locate("ignore=dclf", omi$steering) .lt. f$length(omi$steering) -
 	   then $ on severe_error then $ continue
 $	'omi$_p1' 'omi$_p2' 'omi$_p3' 'omi$_p4' 'omi$_p5'
+$	_status = $status
 $	set on
 $	if f$locate("ignore=dcle", omi$steering) .lt. f$length(omi$steering) -
 	   then $ on error then $ goto main$_fatal
@@ -3486,11 +3487,11 @@ $	if f$locate("ignore=dclf", omi$steering) .lt. f$length(omi$steering) -
 	   then $ on severe_error then $ goto main$_fatal
 $	if _silent
 $	   then
-$		_silent_status = $status
+$		_silent_status = _status
 $		deassign sys$output
 $		deassign sys$error
 $		delete\ /symbol /local _silent
-$		omi$display_message f$message(_silent_status)
+$		omi$display_message 'f$message(_silent_status)'
 $		goto dclcommand$_cancelled
 $	endif
 $!
@@ -4406,6 +4407,14 @@ $!	omi$_nomatch   = %X08d78053
 $	keyring$p$_key = " W"
 $	keyring$p$_key[0,8] = %X1
 $	perf$init_exit = 1
+$!
+$	omi$decnet_enabled = omi$_true
+$	assign sys$scratch:_decnet_status._tmp$ sys$output
+$	show network decnet /full
+$	deassign sys$output
+$	search sys$scratch:_decnet_status._tmp$ Executor /output=nla0:
+$	if $status .eq. omi$_nomatch then $ omi$decnet_enabled = omi$_false
+$	delete\ /nolog /noconfirm sys$scratch:_decnet_status._tmp$;*
 $!
 $	@Omi$:Omi$Config Setup
 $	if $status .eq. omi$_error then $ exit %X2c

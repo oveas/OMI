@@ -28,7 +28,7 @@ GLKEYNF        W global key ~S not found
 HIVAL          W value can't be more than ~S
 IMPKEY         S successfully imported key ~S
 INCLFNF        E cannot find file ~S for including
-INFO           I Oscar's Menu Interpreter, (c)1997-2024, O. van Eijk - OVEAS
+INFO           I Oscar's Menu Interpreter, (c)1997-2025, O. van Eijk - OVEAS
 INIT           I initializing...
 INPREQ         I input is required here - and that's no bug
 INSARG         E invalid call of ~S - insufficient arguments
@@ -46,6 +46,7 @@ IVKEY          E key ~S not found at the keyring
 IVKEYTYP       W invalid key - specify an integer value
 IVKEYVAL       W invalid key value - value should be between 1 and 1,000,000
 IVMODCALL      E module ~S called with insufficient arguments
+IVMODPAR       E Module ~S called with invalid parameter at position ~S \~S\
 IVOPRAT        W invalid operator found in the calculation
 IVOPT          W invalid ~S option
 IVORDER        W invalid order -  select option(s) ~S first
@@ -72,6 +73,7 @@ NOCNTINC       W this menu has no counter to increase
 NOCOUNT        W no counter available for this menu
 NOCOUNTER      I no counter available for this menu
 NODCLPRV       W you are not authorized for interactive DCL
+NODECNET       W DECnet is not enabled on this node
 NODEF          W input is required here - there's no default answer
 NODELIM        E error in menu file - no delimiter for this taglist
 NOEXPRV        W you don't have export privilege

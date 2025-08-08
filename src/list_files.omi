@@ -45,6 +45,13 @@ $	   else
 $		_full_list = 0
 $		p2 = "," + f$edit(p2,"upcase")
 $	endif
+$	if f$locate(",NOD", p2) .lt. f$length(p2) .and. .not. omi$decnet_enabled
+$	   then
+$		omi$signal omi nodecnet
+$		_status = $status
+$		goto 99$
+$	endif
+$!
 $	open /write file_list sys$scratch:omi$file_listing._tmp$
 $	_spec_counter = 0
 $!
@@ -59,8 +66,9 @@ $!
 $ 10$:
 $!
 $	close file_list
+$	sort /noduplicates sys$scratch:omi$file_listing._tmp$ sys$scratch:omi$file_listing._tmp$
 $	omi$call type_file sys$scratch:omi$file_listing._tmp$ norefresh
-$	delete /nolog /noconfirm sys$scratch:omi$file_listing._tmp$;
+$	delete /nolog /noconfirm sys$scratch:omi$file_listing._tmp$;*
 $	goto 99$
 $!
 $!******************************************************************************
@@ -69,7 +77,8 @@ $ 50$:
 $!
 $	_filename = f$search(_filespec)
 $	if _filename .eqs. "" then $ return
-$	_filename = f$edit( f$getsyi("scsnode"), "collapse") + "::" + _filename
+$	if omi$decnet_enabled then -
+	   $ _filename = f$edit( f$getsyi("scsnode"), "collapse") + "::" + _filename
 $	if _full_list
 $	   then
 $		write file_list _filename
@@ -90,6 +99,15 @@ $	if f$locate(",TYP", p2) .lt. f$length(p2) then -
 $	if f$locate(",VER", p2) .lt. f$length(p2) then -
 	   $ _file_name = _file_name + f$parse(_filename,,,"version")
 $!
+$	if _file_name .eqs. ""
+$	   then
+$		p_2 = f$extract(1, f$length(p2)-1, p2)
+$		omi$signal omi ivmodpar,list_files,2,p_2
+$		_status = $status
+$		close file_list
+$		deletee /nolog /noconfirm sys$scratch:omi$file_listing._tmp$;
+$		goto 99$
+$	endif
 $	write file_list _file_name
 $	goto 50$
 $!
@@ -105,7 +123,7 @@ $	omi$signal omi abort,'$status'
 $	_status = $status
 $	if f$trnlnm("file_list") .nes. "" then $ close file_list
 $	if f$search("sys$scratch:omi$file_listing._tmp$") .nes. "" then -
-	   $ delete\ nolog /noconfirm sys$scratch:omi$file_listing._tmp$;
+	   $ delete\ /nolog /noconfirm sys$scratch:omi$file_listing._tmp$;
 $!
 $ 99$:
 $!
