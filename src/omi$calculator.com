@@ -517,6 +517,16 @@ $	_a1 = f$element (0, "''float$_char'", _a)
 $	_a2 = f$element (1, "''float$_char'", _a)
 $	_b1 = f$element (0, "''float$_char'", _b)
 $	_b2 = f$element (1, "''float$_char'", _b)
+$	if f$length(_b2) .gt. f$length(_a2)
+$	   then
+$		_zfill = f$length(_b2) - f$length(_a2)
+$		_a2 = f$fao("!AS!''_zfill'*0", _a2)
+$	endif
+$	if f$length(_a2) .gt. f$length(_b2)
+$	   then
+$		_zfill = f$length(_a2) - f$length(_b2)
+$		_b2 = f$fao("!AS!''_zfill'*0", _b2)
+$	endif
 $	_total_decs = f$length(_a2) + f$length(_b2)
 $	if _a1 .eqs. "" then $ _a1 = "0"
 $	if _b1 .eqs. "" then $ _b1 = "0"
@@ -566,9 +576,7 @@ $		_addz = f$length(_b2) - f$length(_a2)
 $		_a2 = f$fao("!AZ!''_addz'*0", _a2)
 $	endif
 $	_a1 = f$integer(_a1)
-$	_a2 = f$integer(_a2)
 $	_b1 = f$integer(_b1)
-$	_b2 = f$integer(_b2)
 $!
 $	return
 $!
