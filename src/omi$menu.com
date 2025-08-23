@@ -1954,6 +1954,7 @@ $	omi$_p3 = f$edit(f$element(3, " ", omi$_command),"trim")
 $	omi$_p4 = f$edit(f$element(4, " ", omi$_command),"trim")
 $	omi$_p5 = f$edit(f$element(5, " ", omi$_command),"trim")
 $	omi$_command = f$element(0, " ", omi$_command)
+$	if omi$_command .eqs. "?" then $ omi$_command = "INFO"
 $	_cmd_match = 0
 $	_cmd_cnt = 0
 $!

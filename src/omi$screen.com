@@ -88,6 +88,27 @@ $		ws f$fao("''ESC$'[''screen$line_header';''screen$width_margin'H''ESC$'[7m!''s
 $		ws "''ESC$'[''screen$line_header';''_menu_title_loc'H''ESC$'[7m''_menu_title'''ESC$'[0m"
 $	endif
 $!
+$	_info_available = omi$_false
+$	_hlp_file = f$parse(omi$menu_file,,,"name")
+$	_hlp_file = f$search("omi$menu_directory:''_hlp_file'.omh")
+$	if _hlp_file .nes. ""
+$	   then
+$		_info_key = f$edit(omi$current_menu,"upcase")
+$		if _info_key .eqs. "OTF_MENU"
+$		   then
+$			if f$type(otf_menu$info_key) .nes. "" then -
+			   $ _info_key = f$edit(otf_menu$info_key, "upcase")
+$		endif
+$		search '_hlp_file "[''_info_key']" /output=nla0:
+$		if $status .ne. omi$_nomatch then $ _info_available = omi$_true
+$	endif
+$!
+$	_info_icon_loc = screen$width_margin + 2
+$	if _info_available
+$	   then $ ws "''ESC$'[''screen$line_header';''_info_icon_loc'H''ESC$'[1;7m<?>''ESC$'[0m"
+$	   else $ ws "''ESC$'[''screen$line_header';''_info_icon_loc'H''ESC$'[7m   ''ESC$'[0m"
+$	endif
+$!
 $	if f$type('_menu'$comment) .nes. ""
 $	   then $ gosub screen$comment_line
 $	   else $ _comment_counter = 0
