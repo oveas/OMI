@@ -1393,10 +1393,10 @@ $			write ta_default '_variable'
 $			close ta_default
 $		endif
 $		assign /user TT: sys$input
-$		'main$editor' '_ta_file
+$		'main$editor' '_ta_file'
 $		if .not. _ta_keep_history then -
 		   $ purge\ /nolog /keep=1 /noconfirm 'f$element(0, ";", _ta_file)
-$		omi$refresh inside_only
+$		omi$refresh
 $		gosub textarea$_readfile
 $	endif
 $	goto input$end_format
@@ -3024,8 +3024,8 @@ $			omi$signal omi nosuchta
 $			return $status
 $		endif
 $!
-$		_textarea = 'omi$current_menu'$ta_list'omi$_p2'_name
-$		if f$type('_textarea) .eqs. ""
+$		_ta_file = 'omi$current_menu'$ta_list'omi$_p2'_file
+$		if f$search(_ta_file) .eqs. ""
 $		   then
 $			omi$signal omi taempty
 $			return $status
@@ -3036,7 +3036,7 @@ $		if _window
 $		   then $ omi$screen setup_scroll_region
 $		   else $ cls
 $		endif
-$		ws '_textarea
+$		type '_ta_file'
 $		ws ""
 $		omi$wait
 $		if _window

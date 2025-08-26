@@ -653,12 +653,10 @@ $!
 $ displ_info$records:
 $!
 $	if f$type(omi$record'_record_cnt') .eqs. "" then $ return
-$	if omi$record'_record_cnt' .eqs. "" then $ return
 $!
 $	_line = screen$line_header + _record_cnt + screen$window_topmargin
 $	_record = omi$record'_record_cnt'
 $	ws "''ESC$'[''_line';''screen$default_position'H",_record
-$	omi$record'_record_cnt' = ""
 $	_record_cnt = _record_cnt + 1
 $	goto displ_info$records
 $!

@@ -50,12 +50,13 @@ $	omi$record1 = " The date you entered was     : ''inp_date'"
 $	omi$record2 = " The filename you entered was : ''inp_file'"
 $	omi$reverse "''inp_file'" "''inp_date'"
 $	omi$record3 = " Reversing this results in    : ''omi$reversed'"
-$	omi$record4 = " The integer you entered was  : ''inp_int'"
-$	omi$record5 = " You called the Counter menu ''counter$another_counter' times"
+$	omi$record4 = ""
+$	omi$record5 = " The integer you entered was  : ''inp_int'"
+$	omi$record6 = " You called the Counter menu ''counter$another_counter' times"
 $!
 $!	Make sure the list with months won't be redisplayed, starting with rec. 5
-$	if f$type(omi$record6) .nes. "" then -
-	   delete\/symbol/local omi$record5
+$	if f$type(omi$record7) .nes. "" then -
+	   delete\/symbol/local omi$record7
 $!
 $!	... and display them
 $	omi$display_info

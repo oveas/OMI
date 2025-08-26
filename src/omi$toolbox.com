@@ -264,7 +264,6 @@ $!
 $ dinf$_loop:
 $!
 $	if f$type(omi$record'records') .eqs. "" then $ goto dinf$end_loop
-$	if omi$record'records' .eqs. "" then $ goto dinf$end_loop
 $	write dumpfile omi$record'records'
 $	records = records + 1
 $	goto dinf$_loop

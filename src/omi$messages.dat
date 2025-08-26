@@ -13,6 +13,7 @@ COUNTER        I counter for this menu is now ~S
 CREMBX         I please wait - creating mailbox
 CREMBXERR      F error in OMI$CREATE_MBX - cannot create mailbox
 CURORDER       I options ~S still have to be selected
+DBG            I ~S
 DECERR         E cannot decrypt - no OMI encryption or invalid key
 DELAYINT       E invalid parameter for OMI$DELAY: \~S\ - specify integers only
 DIVZERO        E cannot devide by zero
