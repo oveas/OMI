@@ -2578,6 +2578,7 @@ $		   then $ omi$signal omi nocount
 $		   else
 $			_menu_counter = 'omi$current_menu'$counter
 $			counter$'_menu_counter' == 0
+$			omi$refresh inside_only
 $		endif
 $		return omi$_ok
 $	endif
