@@ -49,7 +49,6 @@ $	if _parentheses .ne. 0 then $  goto calc$parenth_error
 $!
 $ calc$find_parentheses:
 $!
-$	
 $	formula$_work = formula$_master
 $	if f$locate("(", formula$_master) .eq. f$length(formula$_master)
 $	   then
@@ -124,7 +123,6 @@ $	gosub formula$extract_current
 $	gosub calc$_plus
 $	gosub calc$update_formula
 $	goto do$_add
-$	
 $!
 $ do$_less:
 $!
@@ -584,7 +582,7 @@ $ calc$_remove_zeros:
 $!
 $! Remove trailing zeros behind the decimal point
 $!
-$	if f$extract(f$length(_full_a)-1, 1, _full_a) .eqs. "0" .and -
+$	if f$extract(f$length(_full_a)-1, 1, _full_a) .eqs. "0" .and. -
 	   f$extract(f$length(_full_b)-1, 1, _full_b) .eqs. "0"
 $	   then
 $		_full_a = f$extract(0, f$length(_full_a)-1, _full_a)

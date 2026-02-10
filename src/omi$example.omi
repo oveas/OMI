@@ -27,15 +27,15 @@ $!
 $	_month = f$element(_counter, months$delimiter, inp_months)
 $	if _month .eqs. "" .or. _month .eqs. months$delimiter then -
 	   $ goto month$end_loop
-$	_record = '_counter + 5
-$	omi$record'_record = "  ''_month'"
+$	_record = '_counter' + 5
+$	omi$record'_record' = "  ''_month'"
 $	_counter = _counter + 1
 $	goto month$_loop
 $!
 $ month$end_loop:
 $!
 $	_counter = _counter + 4
-$	omi$record'_counter = "Your free input was: ''inp_free'"
+$	omi$record'_counter' = "Your free input was: ''inp_free'"
 $!
 $!	We got all output records, now display them
 $	omi$display_info

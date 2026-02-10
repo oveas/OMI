@@ -10,7 +10,7 @@ $	omi$check msection -
 	   "%OMIMGT-W-SPECSECTION, no section name specified"
 $	if $status .ge. omi$_warning
 $	   then
-$		omi$confirm "Do you want to cancel this menu ? " 'questions$answer_no
+$		omi$confirm "Do you want to cancel this menu ? " 'questions$answer_no'
 $		if omi$confirmed then $ exit omi$_ok
 $		exit omi$_warning
 $	endif
@@ -26,7 +26,7 @@ $	if $status .eq. omi$_error then $ mcounter = ""
 $!
 $	if mowner .eqs. "NONE" then $ mowner = ""
 $!
-$	open /append new_menu 'mnu_file
+$	open /append new_menu 'mnu_file'
 $	write new_menu "[MENU_''msection']"
 $	if mtitle   .nes. "" then $ write new_menu "   title	= ''mtitle'"
 $	if mname    .nes. "" then $ write new_menu "   name	= ''mname'"
@@ -92,12 +92,12 @@ $ inp_str:
 $!
 $	_string = _string + "#" + varname'i' + "#"
 $	omi$check defvalue'i'
-$	if $status .eq omi$_ok
+$	if $status .eq. omi$_ok
 $	   then
 $		_string = _string + defvalue'i'
 $	endif
 $	omi$check frm_type'i'
-$	if $status .eq omi$_ok
+$	if $status .eq. omi$_ok
 $	   then
 $		_string = _string + "#" + frm_sname'i'
 $	endif

@@ -37,7 +37,7 @@ $!
 $ msg$error_key:
 $!
 $	close omi$msg
-$	omi$signal omi duplident,'f$edit(msg_ident,"collapse")
+$	omi$signal omi duplident,'f$edit(msg_ident,"collapse")'
 $	return omi$_warning
 $!
 $!
@@ -78,12 +78,6 @@ $	gosub msg$_fdl
 $	purge /nolog /noconfirm /keep=1 Omi$:'msg_facil'$messages.dat
 $	omi$signal omi cremsgfil,msg_facil
 $	return
-
-
-
-
-
-
 
 $ msg$_fdl:
 $!

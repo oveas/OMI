@@ -36,7 +36,7 @@ $		if omi$option_type .eqs. "SUBMENU" -
 $		exit omi$_warning
 $	endif
 $!
-$	open /read /write /share=read omi$msg /error=msg$flock -
+$	open /read /share=read omi$msg /error=msg$flock -
 	   Omi$Menu_Directory:'msg_facil'$messages.dat
 $	read /error=msg$notfound /key="''msg_ident'" omi$msg _message
 $	close omi$msg

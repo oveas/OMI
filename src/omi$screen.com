@@ -38,8 +38,6 @@ $	if p1 .eqs. "DYNAMIC_MENU"    then $ gosub screen$setup_dynamic_menu
 $	if p1 .eqs. "MENU"            then $ gosub screen$setup_window
 $	if p1 .eqs. "SELECT_LIST"     then $ gosub screen$setup_select_list
 $	if p1 .eqs. "TAGLIST"         then $ gosub screen$setup_tag_list
-$	if p1 .eqs. "KEYSELECT_DOWN"  then $ gosub screen$keyselect_down
-$	if p1 .eqs. "KEYSELECT_UP"    then $ gosub screen$keyselect_up
 $	if p1 .eqs. "DISPLAY_MESSAGE" then $ gosub screen$display_message
 $	if p1 .eqs. "MSGLINE_CLEAR"   then $ gosub screen$msgline_clear
 $!
@@ -79,7 +77,7 @@ $ screen$setup_window:
 $!
 $	gosub screen$erase_window
 $	_menu = "''omi$current_menu'"
-$	if f$type('_menu'$title') .nes. ""
+$	if f$type('_menu'$title) .nes. ""
 $	   then
 $		_menu_title = '_menu'$title
 $		_menu_title_loc = (screen$menu_width / 2) - -
@@ -99,7 +97,7 @@ $		   then
 $			if f$type(otf_menu$info_key) .nes. "" then -
 			   $ _info_key = f$edit(otf_menu$info_key, "upcase")
 $		endif
-$		search '_hlp_file "[''_info_key']" /output=nla0:
+$		search '_hlp_file' "[''_info_key']" /output=nla0:
 $		if $status .ne. omi$_nomatch then $ _info_available = omi$_true
 $	endif
 $!
@@ -158,10 +156,10 @@ $	_comment_var = f$extract(0, f$locate("}",_comment) + 1, _comment)
 $	_comment = _comment - _comment_var
 $	_comment_var = _comment_var - "{" - "}"
 $!
-$	if f$type('_comment_var) .eqs. ""
+$	if f$type('_comment_var') .eqs. ""
 $	   then $ _comment = "''_comment1'***''_comment'"
 $	   else
-$		_comment_val = '_comment_var
+$		_comment_val = '_comment_var'
 $		_comment = "''_comment1'''_comment_val'''_comment'"
 $	endif
 $	goto comment$substitute
@@ -189,9 +187,7 @@ $		endif
 $	   else $ omi$inputs == 1
 $	endif
 $	_line = _line + 1
-$!	if (_line + 1) .eq. screen$line_command then $ goto setup$_overflow
 $	if _line .eq. screen$line_command then $ goto setup$_overflow
-$!	_size_separator = screen$width - (2 * screen$width_margin) - 3
 $	_size_separator = screen$line_length - 2
 $!
 $	_position = ((screen$width / 2) - 3)
@@ -203,11 +199,9 @@ $		if (screen$separate_inputs)
 $		   then
 $			ws f$fao("''ESC$'[''_line';''screen$default_position'H''ESC$'(0!''_size_separator'*q''ESC$'(B")
 $			_line = _line + 1
-$!			if (_line + 1) .eq. screen$line_command then $ goto setup$_overflow
 $			if _line .eq. screen$line_command then $ goto setup$_overflow
 $			ws "''ESC$'[''_line';''_position'H''ESC$'[1;4mInputs''ESC$'[0m"
 $			_line = _line + 1
-$!			if (_line + 1) .eq. screen$line_command then $ goto setup$_overflow
 $			if _line .eq. screen$line_command then $ goto setup$_overflow
 $			inputs$first_line == _line
 $		   else $ inputs$first_line == _line
@@ -227,7 +221,6 @@ $	if f$length(_input) .gt. _longest_record then -
 $	_input_cnt = _input_cnt + 1
 $	if f$type('_menu'$input'_input_cnt') .eqs. "" then $ goto screen$end_inputs
 $	_line = _line + 1
-$!	if (_line + 1) .eq. screen$line_command then $ goto setup$_overflow
 $	if _line .eq. screen$line_command then $ goto setup$_overflow
 $	goto screen$_inputs
 $!
@@ -239,7 +232,6 @@ $	inputs$value_location == -
 $      	inputs$max_size == -
 	   (screen$width - screen$width_margin) - inputs$value_location - 1
 $	_line = _line + 1
-$!	if (_line + 1) .eq. screen$line_command then $ goto setup$_overflow
 $	if _line .eq. screen$line_command then $ goto setup$_overflow
 $	_choice = _choice + 1
 $	_item_cnt = _choice
@@ -413,7 +405,6 @@ $!		on the last page the rightmost columns is displayed.
 $		_max_columns = _sel_size / (_longest + screen$tab + 6)
 $	endif
 $	_line = screen$line_header + screen$window_topmargin + 1 + _center_lines
-$!	_first_line = _line
 $	ws f$fao("''ESC$'[''_line';''_subwin_pos'H''ESC$'(0l!''_sel_size'*qk''ESC$'(B")
 $	_cur_col = 1
 $!
@@ -490,7 +481,7 @@ $		if f$type (scroll$next_page) .eqs. ""
 $		   then $ _show_next = ""
 $		   else
 $			_line_size = _line_size - 6
-$			_show_next = "''ESC$'(B''ESC$[1mN''ESC$'[0mext>''ESC$'(0q"
+$			_show_next = "''ESC$'(B''ESC$'[1mN''ESC$'[0mext>''ESC$'(0q"
 $		endif
 $		if f$type (scroll$previous_page) .eqs. ""
 $		   then $ _show_prev = ""
@@ -573,7 +564,6 @@ $	   then
 $		gosub screen$erase_window
 $		_tag_cnt = 1
 $	   else $ _tag_cnt = 1
-$!	   else $ _tag_cnt = f$integer(p2)
 $	endif
 $	if f$type('_tagblock'$message) .nes. ""
 $	   then
@@ -781,11 +771,6 @@ $!
 $ screen$_initialize:
 $!
 $	screen$terminal_app_mode == f$getdvi("tt:", "tt_app_keypad")
-$!	if .not. screen$terminal_app_mode then $ set terminal /application_keypad
-$!
-$!	define\/key/echo/nolog/terminate kp2 "omikey_down"
-$!	define\/key/echo/nolog/terminate kp8 "omikey_up"
-$!
 $	_cmdline = screen$line_command - 1
 $	_msgline = screen$line_message - 1
 $!
@@ -853,29 +838,6 @@ $!******************************************************************************
 
 $!******************************************************************************
 $!
-$!==>	Handle the (keypad) Arrow Down key
-$!
-$ screen$keyselect_down:
-$!
-$	omi$signal omi not_yet
-$	return
-$!
-$!******************************************************************************
-
-$!******************************************************************************
-$!
-$!==>	Handle the (keypad) Arrow Up key
-$!
-$ screen$keyselect_up:
-$!
-$	omi$signal omi not_yet
-$	return
-$!
-$!******************************************************************************
-
-$
-$!******************************************************************************
-$!
 $!==>	Display a message on the messageline
 $!
 $ screen$display_message:
@@ -907,13 +869,8 @@ $!==>
 $!
 $ screen$_erase:
 $!
-$	if .not. omi$batch_mode
-$	   then
-$!		if .not. screen$terminal_app_mode then $ set terminal /numeric_keypad
-$		delete\/symbol/global screen$terminal_app_mode
-$!		delete\/key/nolog kp2
-$!		delete\/key/nolog kp8
-$	endif
+$	if .not. omi$batch_mode then -
+	   $ delete\/symbol/global screen$terminal_app_mode
 $!
 $	delete\/symbol/global screen$menu_width
 $	delete\/symbol/global screen$line_command

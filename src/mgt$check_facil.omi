@@ -38,7 +38,7 @@ $	endif
 $!
 $	if f$search("Omi$Menu_Directory:''msg_facil'$messages.dat") .eqs. ""
 $	   then
-$		omi$signal omimgt nomsgfile,'msg_facil
+$		omi$signal omimgt nomsgfile,'msg_facil'
 $		if omi$option_type .eqs. "SUBMENU" -
 		   then $ omi$wait  ! Give the user the change to read the msg
 $		exit omi$_warning

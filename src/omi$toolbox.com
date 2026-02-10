@@ -234,7 +234,6 @@ $	   then
 $		rpos$ = ilen$ - ipos$
 $		tmp$ = f$extract(ipos$, 1, inputs$)
 $		reversed$[rpos$,1] := "''tmp$'"
-$!		reversed$[rpos$,1] := f$extract(ipos$, 1, inputs$)
 $		ipos$ = ipos$ + 1
 $		goto string$_reverse
 $	endif
@@ -257,8 +256,8 @@ $	endif
 $!
 $	records = 1
 $	if f$search(p2) .eqs. ""
-$	   then $ open /write /error=dinf$_fopenerr dumpfile 'p2
-$	   else $ open /append /error=dinf$_fopenerr dumpfile 'p2
+$	   then $ open /write /error=dinf$_fopenerr dumpfile 'p2'
+$	   else $ open /append /error=dinf$_fopenerr dumpfile 'p2'
 $	endif
 $!
 $ dinf$_loop:
@@ -275,7 +274,7 @@ $	return omi$_ok
 $!
 $ dinf$_fopenerr:
 $!
-$	omi$signal omi dmp_openerr,'p2
+$	omi$signal omi dmp_openerr,'p2'
 $	return omi$_error
 $!
 $!******************************************************************************
@@ -797,7 +796,7 @@ $then
 $goto -
 29$
 $endif
-$_key=keyring$'p3
+$_key=keyring$'p3'
 $p3=""
 $endif
 $vac$=-
@@ -842,13 +841,13 @@ $		omi$signal omi insarg,"OMI$CHECK"
 $		return $status
 $	endif
 $!
-$	if f$type('p2) .eqs. ""
+$	if f$type('p2') .eqs. ""
 $	   then
 $		gosub chkreq$_message
 $		return omi$_error
 $	endif
 $!
-$	if 'p2 .eqs. ""
+$	if 'p2' .eqs. ""
 $	   then
 $		if f$length(p4) .lt. 3 .or. f$edit(p4,"upcase") .nes. -
 		   f$extract(0,f$length(p4), "EMPTY_ALLOWED") then -
@@ -927,7 +926,7 @@ $		if f$edit(f$extract(0,f$length(questions$answer_no),_answer), -
 		   $ omi$confirmed == omi$_false
 $		return omi$confirmed
 $	endif
-$	
+$!
 $ confirm$_cancelled:
 $!
 $	omi$signal omi inpreq
@@ -996,12 +995,12 @@ $	on warning then $ goto string$valid_failed
 $	_status = omi$_ok
 $	if f$type('_string') .eqs. "" then $ _status = _stat_on_fail
 $	on warning then $ continue
-$	return '_status
+$	return '_status'
 $!
 $ string$valid_failed:
 $!
 $	on warning then $ continue
-$	return '_stat_on_fail
+$	return '_stat_on_fail'
 $!
 $!******************************************************************************
 
@@ -1174,20 +1173,11 @@ $	search sys$scratch:omi$check_otf_menu._tmp$ "$item"
 $	if $status .eq. omi$_nomatch .and. _status .eqs. "omi$_ok" -
 	   then $ _status = "NO_OTFITM"
 $!
-$  !	search sys$scratch:omi$check_otf_menu._tmp$ "$input"
-$  !	if $status .eq. omi$_nomatch .and. _status .eqs. "omi$_ok" -
-   !!	   .and. f$type(otf_menu$no_inputs) .eqs. "" -
-   !	   then $ _status = "NO_OTFINP"
-$!
-$  !	search sys$scratch:omi$check_otf_menu._tmp$ "#submenu#"
-$  !	if $status .ne. omi$_nomatch .and. _status .eqs. "omi$_ok" -
-   !	   then $ _status = "OTFSUB"
-$!
 $	deassign sys$output
 $!
 $	if _status .nes. "omi$_ok"
 $	   then
-$		omi$signal omi '_status
+$		omi$signal omi '_status'
 $		return $status
 $	endif
 $!
@@ -1259,7 +1249,7 @@ $	if _msg_file .eqs. "" then $ return omi$_warning
 $!
 $	if f$parse(_msg_file,,,"name") .eqs. "DDIF$VIEWMSG" then -
 	   $ goto vmsmsg$scan_files 
-$	set message '_msg_file
+$	set message '_msg_file'
 $	_message = f$message('p2')
 $	if f$locate("-NOMSG",_message) .eq. f$length(_message)
 $	   then
@@ -1311,7 +1301,7 @@ $		endif
 $!
 $	 sgn$_nosymbol:
 $!
-$		set message 'omi$_message
+$		set message 'omi$_message'
 $		on warning then $ continue
 $		omi$substitute "~S" "''_subst'" "''_text'"
 $		_text = omi$substituted

@@ -40,7 +40,7 @@ $!-----
 $! Error and exit routines
 $ nozip:
 $!
-$	set message 'omi$_message
+$	set message 'omi$_message'
 $	write sys$error "%OMI-E-NOZIP, unzip command not found - exiting"
 $	exit_status = %x2c
 $	goto bye
@@ -96,7 +96,7 @@ $	if f$parse(omi_dest) .eqs. ""
 $	   then
 $		read /end=user_abort sys$command create_dest -
 		   /prompt="_Do you want to create this directory ? (Y/[N]): "
-$		if f$edit(f$extract(0,1,create_dest),"upcase") .nes. "Y" then $ goto get_dest
+$		if f$edit(f$extract(0,1,create_dest),"upcase") .nes. "Y" then $ goto get_destination
 $		set noon
 $		create /directory 'omi_dest' /protection=(s:rwe,o:rwed,g:rwe,w:re)
 $		_status = $status
@@ -226,7 +226,7 @@ $		   then $ in_omi_tb = 1
 $		   else $ in_omi_tb = 0
 $		endif
 $	endif
-$	if in_omi_tb .eqs. 0 then $ write p_tb line
+$	if in_omi_tb .eq. 0 then $ write p_tb line
 $	goto read_old_tb
 $!
 $ close_tb:

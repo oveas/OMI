@@ -86,7 +86,7 @@ $	   then
 $		if validate$log_file .eqs. ""
 $		   then $ wval := write sys$error
 $		   else
-$			open /write /error=validate$fopenerr val_log 'validate$log_file
+$			open /write /error=validate$fopenerr val_log 'validate$log_file'
 $			wval := write val_log
 $		endif
 $		val$_warnings = 0
@@ -113,15 +113,15 @@ $!
 $	if p3 .eqs. "SETCMD" .or. p3 .eqs. "UPDATE"
 $	   then
 $		open /write omi_config sys$scratch:omi$mnufile_update._tmp$
-$		omi$signal omi writing,'_config_file
+$		omi$signal omi writing,'_config_file'
 $	endif
 $	if p4 .eqs. "OMI$INCLUDE"
 $	   then $ cfg$including = 1
 $	   else $ cfg$including = 0
 $	endif
 $	if cfg$including
-$	   then $ open /read /share=write omi$confinclu '_config_file
-$	   else $ open /read /share=write omi$configure '_config_file
+$	   then $ open /read /share=write omi$confinclu '_config_file'
+$	   else $ open /read /share=write omi$configure '_config_file'
 $	endif
 $	_section = "main"
 $	_update_written = 0
@@ -143,7 +143,6 @@ $		if main$show_progress
 $		   then
 $			_number_of_lines_read = _number_of_lines_read + 100
 $			_percent = _number_of_lines_read / mnu$lines
-$!			omi$signal omi readmnu,_percent
 $			omi$display_message -
 			 "%OMI-I-READMNU, reading menu file - ''_percent'% done"
 $		endif
@@ -175,7 +174,7 @@ $			   then
 $				omi$signal omi inclfnf,"''_include_file'.OML"
 $				if main$show_progress then $ omi$wait
 $			endif
-$		   else $ @'f$environment("procedure") "''p1'" "''_include_file'" -
+$		   else $ @'f$environment("procedure")' "''p1'" "''_include_file'" -
 			   "''p3'" omi$include 
 $		endif
 $		goto readcfg$_loop
@@ -364,7 +363,7 @@ $	if p3 .eqs. "CLEANUP" .and. f$type(omi$menu_location) .nes. "" -
 $!
 $	if p3 .eqs. "VALIDATE"
 $	   then
-$		if val$_errors .eq 0 .and. val$_warnings .eq. 0
+$		if val$_errors .eq. 0 .and. val$_warnings .eq. 0
 $		   then $ omi$signal omi valok
 $		   else $ omi$signal omi valresult,'val$_errors,'val$_warnings
 $		endif
@@ -372,16 +371,15 @@ $!
 $		if validate$log_file .nes. ""
 $		   then
 $			close val_log
-$			if val$_errors .eq 0 .and. val$_warnings .eq. 0 then -
-			   $ delete\ /nolog /noconfirm f$search('validate$log_file)
+$			if val$_errors .eq. 0 .and. val$_warnings .eq. 0 then -
+			   $ delete\ /nolog /noconfirm f$search('validate$log_file')
 $		endif
-$		
 $	endif
 $	exit omi$_ok
 $!
 $ validate$fopenerr:
 $!
-$	omi$signal omi vallogerr,'validate$log_file
+$	omi$signal omi vallogerr,'validate$log_file'
 $	exit $status
 $!
 $!******************************************************************************
@@ -718,18 +716,7 @@ $		write omi_config _config
 $		return
 $	endif
 $!
-$!	if f$edit(f$element(0,"=",_config),"upcase,collapse") .eqs. -
- !	   f$edit(p5,"upcase") then $ return
-$!	if .not. _update_written ! .and. p5 .nes. "RESET"
-$!	   then
-$!		write omi_config "  ''f$edit(p5,"lowercase")' = ''p6'"
-$!!		if f$edit(f$extract(0, 5, p4), "upcase") .eqs. "MENU_" then -
- !		   $ p4 = p4 - f$extract(0, 5, p4)
-$!!		'p4'$'p5' == "''p6'"
-$!		_update_written = 1
-$!	endif
 $	if f$edit(f$element(0,"=",_config),"upcase,collapse") .eqs. f$edit(p5,"upcase")
-$!	if .not. _update_written
 $	   then
 $		write omi_config "''f$element(0,"=",_config)'= ''p6'"
 $		if f$edit(f$extract(0, 5, p4), "upcase") .eqs. "MENU_" then -
@@ -759,7 +746,7 @@ $		omi$display_message -
 $		return
 $	endif
 $!
-$	open /read /share=write omi$configure '_config_file
+$	open /read /share=write omi$configure '_config_file'
 $	mnu$lines = 0
 $!
 $ setupmnu$_read:
@@ -823,7 +810,6 @@ $!
 $	call config$_set_defaults questions$all_inputs		"All Inputs"
 $	call config$_set_defaults questions$option		"OMI>"
 $	call config$_set_defaults questions$reverse_tags	"Reverse selection"
-$!	call config$_set_defaults questions$input		"Enter Value"
 $	call config$_set_defaults questions$taglist_input	"Select, press <Ctrl/Z> when done"
 $	call config$_set_defaults questions$dcl_command		"DCL Command"
 $	call config$_set_defaults questions$default_confirm	"Continue?"

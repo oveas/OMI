@@ -216,7 +216,7 @@ $!
 $ main$_startmenu:
 $!
 $	omi$signal omi init
-$	omi$config 'omi$menu_file
+$	omi$config 'omi$menu_file'
 $	omi$status = $status
 $	omi$cmdline_clear
 $	if omi$status .eq. omi$_warning
@@ -269,7 +269,7 @@ $	if omi$validate_mode
 $	   then
 $		if 'omi$current_menu'$security_level .lt. 3
 $		   then $ omi$signal omi nopriv
-$		   else $ omi$config 'omi$menu_file validate
+$		   else $ omi$config 'omi$menu_file' validate
 $		endif
 $		goto main$_exit
 $	endif
@@ -288,7 +288,6 @@ $	endif
 $	options$_jumpcounter == 0 ! Global to let it survive OTF menus!
 $	if omi$_replay then $ gosub main$get_replay_jumps
 $	if $status .ge. omi$_error then $ goto main$_fatal
-$			
 $	goto main$do_menu
 $!
 $!******************************************************************************
@@ -356,19 +355,16 @@ $	if f$type('omi$current_menu'$on_init) .nes. "" .and. perf$init_exit
 $	   then
 $		omi$init_job = f$element(0, " ", 'omi$current_menu'$on_init)
 $		_params = 'omi$current_menu'$on_init - omi$init_job
-$  !!!		omi$init_job  = f$parse(omi$init_job,".OMI", -
-   !!!		   "OMI$Menu_Directory:",,"syntax_only")
 $  		if .not. omi$_debug then -
 		   $ set message /nofacility /noseverity /noidentification /notext
-$  !!!		@'omi$init_job '_params'
-$  		omi$call 'omi$init_job '_params'
+$  		omi$call 'omi$init_job' '_params'
 $		if $status .eq. omi$_warning
 $		   then
 $			perf$init_exit = 0
-$			set message 'omi$_message
+$			set message 'omi$_message'
 $			goto option$cancel_input
 $		endif
-$		set message 'omi$_message
+$		set message 'omi$_message'
 $	endif
 $	omi$screen menu
 $!
@@ -390,7 +386,7 @@ $	omi$prompt_timeout = "/notime_out"
 $	if f$type('omi$current_menu'$auto_refresh) .nes. ""
 $	   then
 $		_timeout = 'omi$current_menu'$auto_refresh
-$		if _timeout .gt. 0 .and _timeout .le. 255
+$		if _timeout .gt. 0 .and. _timeout .le. 255
 $		   then
 $			omi$prompt_timeout = "/time_out=''_timeout'"
 $			omi$prompt_timeout = omi$prompt_timeout + -
@@ -550,16 +546,11 @@ $			goto main$perfd_onexit
 $		endif
 $		omi$exit_job = f$element(0, " ", 'omi$current_menu'$on_exit)
 $		_params = 'omi$current_menu'$on_exit - omi$exit_job
-$ !!! 		omi$exit_job  = f$parse(omi$exit_job,".OMI", -
-  !!! 		   "OMI$Menu_Directory:",,"syntax_only")
-$ !!!		if f$locate(".",omi$exit_job) .eq. f$length(omi$exit_job) -
-  !!!		   then $ omi$exit_job = omi$exit_job + ".OMI"
 $		if .not. omi$_debug then -
 		   $ set message /nofacility /noseverity /noidentification /notext
-$ !!!		@'omi$exit_job '_params'
-$		omi$call 'omi$exit_job '_params'
+$		omi$call 'omi$exit_job' '_params'
 $		_status = $status
-$		set message 'omi$_message
+$		set message 'omi$_message'
 $	endif
 $!
 $  main$perfd_onexit:
@@ -752,7 +743,7 @@ $		 sellist$get_free_input:
 $!
 $			omi$cmdline_clear
 $			read /end_of_file=input$cancel_input /prompt="''screen$prompt_position'''_prompt': " sys$command '_variable'
-$			omi$log_session "''_variable''"
+$			omi$log_session "''_variable'"
 $			omi$variable = "''_variable'"
 $			omi$input_validate
 $			if $status .ge. omi$_warning
@@ -901,7 +892,7 @@ $		omi$signal omi novalfile,'_blockname'$filename
 $		return $status
 $	endif
 $!
-$	open /read /share=write /error=valfile$_openerr valfile '_values_file
+$	open /read /share=write /error=valfile$_openerr valfile '_values_file'
 $	_value_cnt = 1
 $!
 $ valfile$_get_values:
@@ -928,7 +919,7 @@ $ valfile$_openerr:
 $!
 $	if f$search(_values_file) .eqs. ""
 $	   then
-$		omi$signal omi valopenerr,'_values_file
+$		omi$signal omi valopenerr,'_values_file'
 $		return $status
 $	endif
 $!
@@ -1395,7 +1386,7 @@ $		endif
 $		assign /user TT: sys$input
 $		'main$editor' '_ta_file'
 $		if .not. _ta_keep_history then -
-		   $ purge\ /nolog /keep=1 /noconfirm 'f$element(0, ";", _ta_file)
+		   $ purge\ /nolog /keep=1 /noconfirm 'f$element(0, ";", _ta_file)'
 $		omi$refresh
 $		gosub textarea$_readfile
 $	endif
@@ -1629,28 +1620,13 @@ $	if omi$option_type .eqs. "CALL"
 $	   then
 $		omi$call_info = f$edit(f$element(2,"#",_selected_item), -
 		   "trim,compress")
-$ !!		if f$extract(0,1,omi$call_info) .eqs. "@" then -
-  !!		   $ omi$call_info = omi$call_info - "@"
 $		omi$job_call  = f$element(0," ",omi$call_info)
 $		omi$call_parm = f$edit((omi$call_info - omi$job_call),"trim")
-$ !!! 		omi$job_call  = f$parse(omi$job_call,".OMI", -
-  !!! 		   "OMI$Menu_Directory:",,"syntax_only")
-$! The above line is outcommented; it doesn't work when there's a variable
-$! in the filename (eg. 'DIRECTORIES$OMI_JOBS'MY_MODULE)
-$! Below is the wordaround.
-$!!!! Left in for a while.....
-$  !!!		if f$locate(".",omi$job_call) .eq. f$length(omi$job_call) -
-   !!!		   then $ omi$job_call = omi$job_call + ".OMI"
 $		if .not. omi$_debug then -
 		   $ set message /nofacility /noseverity /noidentification /notext
-$  !!!		if f$search("''omi$job_call'") .eqs. ""
-$  !!!		   then $ omi$signal omi modnotfound,omi$job_call
-$  !!!		   else
-$  !!!			@'omi$job_call' 'omi$call_parm'
-$			omi$call 'omi$job_call' 'omi$call_parm'
-$  			_status = $status
-$  !!!		endif
-$		set message 'omi$_message
+$		omi$call 'omi$job_call' 'omi$call_parm'
+$  		_status = $status
+$		set message 'omi$_message'
 $		goto main$get_option
 $	endif
 $!
@@ -2025,11 +2001,11 @@ $ main$execcmd_calc:
 $!
 $!==>	The OMI command CALC
 $!
-$	@Omi$:Omi$Calculator 'omi$_p1 'omi$_p2 'omi$_p3 'omi$_p4 'omi$_p5
+$	@Omi$:Omi$Calculator 'omi$_p1' 'omi$_p2' 'omi$_p3' 'omi$_p4' 'omi$_p5'
 $	_status = $status
 $	if _status .eq. omi$_ok
 $	   then
-$		omi$signal omi calcres,'omi$calculated
+$		omi$signal omi calcres,'omi$calculated'
 $		delete\ /symbol /global omi$calculated
 $	endif
 $	return _status
@@ -2185,7 +2161,6 @@ $		close omi$_keyring
 $		omi$signal omi expkey,omi$_p2
 $		return omi$_ok
 $	endif
-$
 $	omi$signal omi ivopt,export
 $!
 $ export_command$_cancelled:
@@ -2301,7 +2276,6 @@ $		keyring$'omi$_p2' == _key
 $		omi$signal omi impkey,omi$_p2
 $		return omi$_ok
 $	endif
-$
 $	omi$signal omi ivopt,import
 $!
 $ import_command$_cancelled:
@@ -2322,7 +2296,7 @@ $!
 $!==>	The OMI command HELP
 $!
 $	assign /user /nolog TT: sys$input
-$	help /library=Omi$:Omi$Menu 'omi$_p1 'omi$_p2 'omi$_p3 'omi$_p4
+$	help /library=Omi$:Omi$Menu 'omi$_p1' 'omi$_p2' 'omi$_p3' 'omi$_p4'
 $	omi$refresh
 $	return omi$_ok
 $!
@@ -2354,9 +2328,6 @@ $ main$execcmd_info:
 $!
 $!==>	The OMI command INFO
 $!
-$ !	omi$signal omi not_yet
-$ !	return omi$_warning
-$!
 $	_hlp_file = f$parse(omi$menu_file,,,"name")
 $	_hlp_file = f$search("omi$menu_directory:''_hlp_file'.omh")
 $	if _hlp_file .eqs. ""
@@ -2370,14 +2341,14 @@ $	   then
 $		if f$type(otf_menu$info_key) .nes. "" then -
 		   $ _info_key = f$edit(otf_menu$info_key, "upcase")
 $	endif
-$	search '_hlp_file "[''_info_key']" /output=nla0:
+$	search '_hlp_file' "[''_info_key']" /output=nla0:
 $	if $status .eq. omi$_nomatch
 $	   then
-$		omi$signal omi nohlp,'omi$current_menu
+$		omi$signal omi nohlp,'omi$current_menu'
 $		return $status
 $	endif
 $!
-$	open /read omi$hlp '_hlp_file
+$	open /read omi$hlp '_hlp_file'
 $!
 $ info$_find:
 $!
@@ -2416,7 +2387,7 @@ $!
 $ info$_notfound:
 $!
 $	close omi$hlp
-$	omi$signal omi nohlp,'omi$current_menu
+$	omi$signal omi nohlp,'omi$current_menu'
 $	return $status
 $!
 $ info$end_read:
@@ -2424,7 +2395,7 @@ $!
 $	omi$record'rec_counter' = ""
 $	omi$display_info
 $ !	if f$type(omi$record'rec_counter') .nes. "" then -
-  !	   delete\ /symbol /global omi$record'rec_counter'
+  $ !	   delete\ /symbol /global omi$record'rec_counter'
 $!
 $	omi$wait
 $!
@@ -2455,7 +2426,7 @@ $		omi$cmdline_clear
 $		omi$msgline_clear
 $		goto main$execcmd_jump
 $	endif
-$	if f$type(omi$current_menu'$name) .nes. ""
+$	if f$type('omi$current_menu'$name) .nes. ""
 $	   then
 $		if f$edit(omi$_p1, "upcase") .eqs. f$edit('omi$current_menu'$name, "upcase")
 $		   then
@@ -2475,7 +2446,7 @@ $	delete\ /nolog /noconfirm sys$scratch:omi$jump_submenu._tmp$;
 $	if _status .eq. omi$_nomatch
 $	   then
 $		delete\ /nolog /noconfirm sys$scratch:omi$jump_submenu_found._tmp$;
-$		omi$signal omi nosuchname,'f$edit(omi$_p1,"upcase")
+$		omi$signal omi nosuchname,'f$edit(omi$_p1,"upcase")'
 $		return omi$_warning
 $	endif
 $	open /read jump sys$scratch:omi$jump_submenu_found._tmp$
@@ -2515,12 +2486,7 @@ $			goto main$perfd_oninit
 $		endif
 $		omi$init_job = f$element(0, " ", 'omi$current_menu'$on_init)
 $		_params = 'omi$current_menu'$on_init - omi$init_job
-$ !!! 		omi$init_job  = f$parse(omi$init_job,".OMI", -
-  !!! 		   "OMI$Menu_Directory:",,"syntax_only")
-$ !!!		if f$locate(".",omi$init_job) .eq. f$length(omi$init_job) -
-  !!!		   then $ omi$init_job = omi$init_job + ".OMI"
-$ !!!		@'omi$init_job '_params'
-$		omi$call 'omi$init_job '_params'
+$		omi$call 'omi$init_job' '_params'
 $		_status = $status
 $!
 $ main$perfd_oninit:
@@ -2777,7 +2743,7 @@ $		endif
 $!
 $	 main$execcmd_setkey_getname:
 $!
-$		if omi$_p2 .eqs ""
+$		if omi$_p2 .eqs. ""
 $		   then
 $			omi$ask "_Key name: "
 $			omi$_p2 = omi$response
@@ -2787,7 +2753,7 @@ $		endif
 $!
 $		if f$type(keyring$'omi$_p2') .nes. ""
 $		   then
-$			omi$signal omi exkey,'omi$_p2
+$			omi$signal omi exkey,'omi$_p2'
 $			omi$_p2 = ""
 $			goto main$execcmd_setkey_getname
 $		endif
@@ -2872,7 +2838,7 @@ $	  setpwd$_prompt:
 $!
 $		read /end_of_file=setpasswrd$_cancelled sys$command _pwd_1 -
 		   /prompt="''screen$prompt_position'_New password: "
-$		_p = f$fao("!''f$length(_pwd_1*")
+$		_p = f$fao("!''f$length(_pwd_1)'**")
 $		omi$log_session "''_p'"
 $		omi$cmdline_clear
 $		if f$length(_pwd_1) .lt. 5
@@ -2882,7 +2848,7 @@ $			goto setpwd$_prompt
 $		endif
 $		read /end_of_file=setpasswrd$_cancelled sys$command _pwd_2 -
 		   /prompt="''screen$prompt_position'_Verification: "
-$		_p = f$fao("!''f$length(_pwd_2**")
+$		_p = f$fao("!''f$length(_pwd_2)'**")
 $		omi$log_session "''_p'"
 $		if _pwd_1 .nes. _pwd_2
 $		   then
@@ -3080,9 +3046,9 @@ $			omi$msgline_clear
 $			omi$cmdline_clear
 $			goto main$execcmd_show_vmsmsg
 $		endif
-$		omi$get_vmsmessage 'omi$_p2
+$		omi$get_vmsmessage 'omi$_p2'
 $		_status = $status
-$		if _status .eq. omi$_warning then $ omi$signal omi novmsmsg,'omi$_p2
+$		if _status .eq. omi$_warning then $ omi$signal omi novmsmsg,'omi$_p2'
 $		if _status .ne. omi$_ok then $ return _status
 $		omi$display_message "''omi$vms_message'"
 $		delete\ /symbol /global omi$vms_message
@@ -3571,15 +3537,15 @@ $!
 $		if questions$confirm
 $		   then
 $			_cq = "Delete " + _textarea_file + "* ? "
-$			omi$confirm "''_cq'" 'questions$answer_no
+$			omi$confirm "''_cq'" 'questions$answer_no'
 $			if .not. omi$confirmed then $ return omi$_ok
 $		endif
 $		delete\ /nolog /noconfirm '_textarea_file'*
 $!
 $		_textarea = 'omi$current_menu'$ta_list'omi$_p2'_name
-$		if f$type('_textarea) .nes. ""
+$		if f$type('_textarea') .nes. ""
 $		   then
-$			delete\ /symbol /local '_textarea
+$			delete\ /symbol /local '_textarea'
 $		endif
 $!
 $		return omi$_ok
@@ -3660,7 +3626,7 @@ $	omi$signal omi erasmnu
 $	omi$config "''omi$previous_menu_file'" Cleanup
 $	omi$msgline_clear
 $	omi$signal omi init
-$	omi$config 'omi$menu_file
+$	omi$config 'omi$menu_file'
 $	if $status .ge. omi$_warning
 $	   then
 $		omi$signal omi restmnu
@@ -3668,7 +3634,7 @@ $		omi$config "''omi$menu_file'" Cleanup
 $		omi$msgline_clear
 $		omi$menu_file = "''omi$previous_menu_file'"
 $		omi$signal omi init
-$		omi$config 'omi$menu_file
+$		omi$config 'omi$menu_file'
 $	endif
 $	omi$refresh
 $	return omi$_ok
@@ -3707,24 +3673,6 @@ $	omi$signal omi nodclprv
 $	return $status
 $!
 $!******************************************************************************
-
-
-$!******************************************************************************
-$!
-$!==>	Handle the OMI function keys
-$!
-$ main$execcmd_omikey_down:
-$!
-$	omi$keyselect_down
-$	return omi$_ok
-$!
-$ main$execcmd_omikey_up:
-$!
-$	omi$keyselect_up
-$	return omi$_ok
-$!
-$!******************************************************************************
-
 
 $!******************************************************************************
 $!
@@ -4074,22 +4022,22 @@ $!
 $ params$_loop:
 $!
 $	param$_counter = param$_counter + 1
-$	if p'param$_counter .eqs. "" then $ goto params$end_loop
-$	if f$extract(0,1,p'param$_counter) .eqs. "/" then $ goto params$_qualeval
-$	if f$locate("/", p'param$_counter) .lt. f$length(p'param$_counter)
+$	if p'param$_counter' .eqs. "" then $ goto params$end_loop
+$	if f$extract(0,1,p'param$_counter') .eqs. "/" then $ goto params$_qualeval
+$	if f$locate("/", p'param$_counter') .lt. f$length(p'param$_counter')
 $	   then
-$		_this_parameter = f$element(0, "/", p'param$_counter)
+$		_this_parameter = f$element(0, "/", p'param$_counter')
 $		_this_qualifier = p'param$_counter - _this_parameter
 $		p'param$_counter = _this_parameter
 $		delete\ /symbol /local _this_parameter
 $	endif
-$	if param$_regular .eq. 1 then $ options$_startmenu = p'param$_counter
-$	if param$_regular .eq. 2 then $ options$_menuname  = p'param$_counter
-$	if param$_regular .eq. 3 then $ options$_jumps     = p'param$_counter
+$	if param$_regular .eq. 1 then $ options$_startmenu = p'param$_counter'
+$	if param$_regular .eq. 2 then $ options$_menuname  = p'param$_counter'
+$	if param$_regular .eq. 3 then $ options$_jumps     = p'param$_counter'
 $	param$_regular = param$_regular + 1
 $	if f$type(_this_qualifier) .nes. ""
 $	   then
-$		p'param$_counter = _this_qualifier
+$		p'param$_counter' = _this_qualifier
 $		delete\ /symbol /local _this_qualifier
 $		goto params$_qualeval
 $	endif
@@ -4101,7 +4049,7 @@ $	qual$_counter = 1
 $!
 $ quals$_loop:
 $!
-$	_qualifier = f$element(qual$_counter, "/", p'param$_counter)
+$	_qualifier = f$element(qual$_counter, "/", p'param$_counter')
 $	if _qualifier .eqs. "/" then $ goto params$_loop
 $	qual$_name  = f$edit(f$element(0, "=", _qualifier),"upcase")
 $	qual$_value = f$edit(f$element(1, "=", _qualifier),"upcase")
@@ -4293,11 +4241,6 @@ $		endif
 $		goto quals$_loop
 $	endif
 $!
-$ !     if qual$_name .eqs. f$extract(0, f$length(qual$_name), "")
-$ !	then
-$ !	     goto quals$_loop
-$ !     endif
-$!
 $	goto qual$ivqual_error
 $!
 $ params$end_loop:
@@ -4335,13 +4278,13 @@ $	goto qual$_error
 $!
 $ qual$ivkeyw_error:
 $!
-$	_message = "IVKEYW, unrecognized keyword - check validity and spelling
+$	_message = "IVKEYW, unrecognized keyword - check validity and spelling"
 $	qual$_name = qual$_value ! Dirty....
 $	goto qual$_error
 $!
 $ qual$notneg_error:
 $!
-$	_message = "NOTNEG, qualifier or keyword not negatable - remove 'NO' or omit value
+$	_message = "NOTNEG, qualifier or keyword not negatable - remove 'NO' or omit value"
 $	qual$_name = "NO''qual$_name'"
 $	goto qual$_error
 $!
@@ -4404,8 +4347,7 @@ $	if .not. omi$_debug then -
 	   $ set message /nofacility /noseverity /noidentification /notext
 $	search Nla0: DummyStringToSetOmi$_NoMatch /output=Nla0:
 $	omi$_nomatch   = $status
-$	set message 'omi$_message
-$!	omi$_nomatch   = %X08d78053
+$	set message 'omi$_message'
 $	keyring$p$_key = " W"
 $	keyring$p$_key[0,8] = %X1
 $	perf$init_exit = 1
@@ -4468,7 +4410,7 @@ $	if .not. omi$_debug then -
 $	search 'toolbox' "''_tool'$:" /output=nla0:
 $	if $status .eq. omi$_nomatch
 $	   then
-$		set message 'omi$_message
+$		set message 'omi$_message'
 $		omi$signal omi noroutine,_tool
 $		read /end_of_file=mit$_no_routine sys$command _dummy -
 		   /prompt="''screen$prompt_position'''questions$wait_prompt' "
@@ -4480,7 +4422,7 @@ $		read /end_of_file=mit$_no_routine sys$command _dummy -
 $		goto mit$_no_routine
 $	endif
 $!
-$	set message 'omi$_message
+$	set message 'omi$_message'
 $	omi$'_tool' := "@''toolbox' ''_tool'"
 $	goto main$_init_toolbox
 $!
@@ -4506,6 +4448,11 @@ $	omi$valid_commands = -
 	   "REMOVE,0#RESET,1#SET,1#SILENT_DCL,1#SHOW,1#SPAWN,1#SUBMIT,1#"
 $!
 $	return omi$_ok
+$!
+$ main$notoolbox_ini:
+$!
+$	omi$signal omi notoolbox,OMI$:OMI$TOOLBOX.INI
+$	return $status
 $!
 $!******************************************************************************
 
@@ -4534,7 +4481,7 @@ $	assign sys$scratch:omi$setup_defaults._tmp1$ sys$output
 $	assign /user nla0: sys$error
 $	show symbol /global *$'symbol_name'*
 $	deassign sys$output
-$	search sys$scratch:omi$setup_defaults._tmp1$ 'init_def$search_string -
+$	search sys$scratch:omi$setup_defaults._tmp1$ 'init_def$search_string' -
 	   /output=sys$scratch:omi$setup_defaults._tmp$ /nowarnings
 $	if $status .eq. omi$_nomatch
 $	   then
@@ -4565,7 +4512,7 @@ $			varreset$ = varreset$ + 1
 $			set message /nofacility /noseverity /noidentification /notext
 $			if f$type ('_varname') .nes. "" then -
 			   $ delete\ /symbol /local '_varname'
-$			set message 'omi$_message
+$			set message 'omi$_message'
 $		endif
 $		goto init$_defaults
 $	endif
@@ -4595,7 +4542,7 @@ $			varreset$ = varreset$ + 1
 $			set message /nofacility /noseverity /noidentification /notext
 $			if f$type('_varname') .nes. "" then -
 			   $ delete\ /symbol /local '_varname'  ! RESET VARIABLES
-$			set message 'omi$_message
+$			set message 'omi$_message'
 $		endif
 $!
 $		if _translate_from_block .eq. 1
@@ -4641,7 +4588,7 @@ $			varreset$ = varreset$ + 1
 $			set message /nofacility /noseverity /noidentification /notext
 $			if f$type('_varname') .nes. "" then -
 			   $ delete\ /symbol /local '_varname'  ! RESET VARIABLES
-$			set message 'omi$_message
+$			set message 'omi$_message'
 $		endif
 $!
 $		if _format .nes. "" .and. _format .nes. "#" .and. '_variable' .nes. ""
@@ -4733,7 +4680,7 @@ $!
 $	read /end_of_file=cleanup$end_symbols omi$symbol_cleanup omi$symbol
 $	if f$locate("command#all", f$edit(omi$symbol,"lowercase")) .lt. -
 	   f$length(omi$symbol) then $ delete\/symbol/global -
-	   'f$element(0, "=", f$edit(omi$symbol,"collapse"))
+	   'f$element(0, "=", f$edit(omi$symbol,"collapse")')
 $	goto cleanup$_symbols
 $!
 $ cleanup$end_symbols:

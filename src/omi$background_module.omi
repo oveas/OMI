@@ -33,7 +33,7 @@ $	omi$background_module = f$search -
 $!
 $	if omi$background_module .eqs. ""
 $	   then
-$		omi$signal omi modnotfound,'omi$saved_module_name
+$		omi$signal omi modnotfound,'omi$saved_module_name'
 $		exit $status
 $	endif
 $!
@@ -71,8 +71,8 @@ $ proc$omi_batch:
 $!
 $	if .not. omi$batch_mode then -
 	   bgrprocess$options_bat = bgrprocess$options_bat + "/noidentification"
-$	submit /queue='bgrprocess$batch_queue /noprint /name='Omi$_proc_name' -
-	   /log='Omi$_logfile 'Omi$_inputfile 'bgrprocess$options_bat
+$	submit /queue='bgrprocess$batch_queue' /noprint /name='Omi$_proc_name' -
+	   /log='Omi$_logfile' 'Omi$_inputfile' 'bgrprocess$options_bat'
 $	_status = $status
 $	if .not. _status
 $	   then
@@ -83,8 +83,8 @@ $	goto background$_done
 $!
 $ proc$omi_detach:
 $!
-$	run /detached /process_name='Omi$_proc_name /output='Omi$_logfile -
-	   /input='Omi$_inputfile sys$system:loginout.exe 'bgrprocess$options_det
+$	run /detached /process_name='Omi$_proc_name' /output='Omi$_logfile' -
+	   /input='Omi$_inputfile' sys$system:loginout.exe 'bgrprocess$options_det'
 $	_status = $status
 $	if .not. _status
 $	   then
@@ -95,7 +95,7 @@ $	goto background$_done
 $!
 $ background$_done:
 $!
-$	omi$signal omi bgstart,'omi$saved_module_name
+$	omi$signal omi bgstart,'omi$saved_module_name'
 $	exit $status
 $!
 $!******************************************************************************
@@ -130,7 +130,7 @@ $!	or submitted
 $!
 $ background$_command_file:
 $!
-$	open /write omi_bfile 'Omi$_inputfile
+$	open /write omi_bfile 'Omi$_inputfile'
 $	write omi_bfile "$! This menu file is created by OMI"
 $	write omi_bfile "$! It is currently running in the background, and will be deleted when"
 $	write omi_bfile "$! processing is done"

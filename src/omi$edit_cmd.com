@@ -76,7 +76,7 @@ $	   else $ edit$_type = "item"
 $	endif
 $!
 $	edit$_element_name  == "''edit$_type'''omi$_p2'"
-$	edit$_element_value == 'omi$current_menu'$'edit$_element_name
+$	edit$_element_value == 'omi$current_menu'$'edit$_element_name'
 $!
 $	otf_menu$on_exit == "edit_element"
 $	otf_menu$all_inputs == 0
@@ -112,11 +112,11 @@ $	omi$signal omi erasemnu
 $	omi$config "''omi$menu_file'" Cleanup
 $!
 $	assign /user TT: sys$input
-$	'main$editor' '_file
+$	'main$editor' '_file'
 $	deassign sys$input
 $!
 $	omi$signal omi init
-$	omi$config 'omi$menu_file
+$	omi$config 'omi$menu_file'
 $	omi$refresh
 $!
 $	goto end$
@@ -144,7 +144,7 @@ $	endif
 $	_file = f$parse('_block'$filename,"Omi$Menu_Directory:",".dat")
 $!
 $	assign /user TT: sys$input
-$	'main$editor' '_file
+$	'main$editor' '_file'
 $	deassign sys$input
 $	omi$refresh
 $!
@@ -273,8 +273,3 @@ $!
 $	return
 $!
 $!******************************************************************************
-
-edit$_element_name
-edit$_element_value
-
-

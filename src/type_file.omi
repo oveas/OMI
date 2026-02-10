@@ -80,13 +80,13 @@ $	goto 1$
 $!
 $ 52$:
 $!
-$	omi$signal omi fnf,'p1
+$	omi$signal omi fnf,'p1'
 $	p1 = ""
 $	goto 1$
 $!
 $ 53$:
 $!
-$	omi$signal omi readerr,'p1
+$	omi$signal omi readerr,'p1'
 $	goto 97$
 $!
 $!******************************************************************************
