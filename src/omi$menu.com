@@ -1607,7 +1607,9 @@ $!
 $	if omi$option_type .eqs. "COMMAND"
 $	   then
 $		omi$_command = f$edit(f$element(2,"#",_selected_item),"upcase")
+$		_executing_menu_command = 1
 $		gosub main$omi_command
+$		delete\ /symbol /local _executing_menu_command
 $		if f$type(omi$previous_menu_file) .nes. ""
 $		   then
 $			delete\/symbol/local omi$previous_menu_file
@@ -2016,6 +2018,11 @@ $ main$execcmd_edit:
 $!
 $!==>	The OMI command EDIT
 $!
+$	if omi$_is_captive .or. (omi$_is_restricted .and. .not. restricted_accounts$dcl_allowed)
+$	   then
+$		omi$signal omi noauth,"EDIT"
+$		return omi$_warning
+$	endif
 $	if 'omi$current_menu'$security_level .lt. 3
 $	   then
 $		omi$signal omi nopriv
@@ -3140,6 +3147,18 @@ $ main$execcmd_spawn:
 $!
 $!==>	The OMI command SPAWN
 $!
+$	if f$type(_executing_menu_command) .eqs. ""
+$	   then
+$		if omi$_is_captive .or. (omi$_is_restricted .and. .not. restricted_accounts$spawn_allowed)
+$		   then
+$			omi$signal omi noauth,"SPAWN"
+$			return omi$_warning
+$		endif
+$!	   else
+$!		When given from a menu and the user has a captive account, the OS will block the SPAWN command.
+$!		This will result in an error from VMS. Just let it happen.
+$	endif
+$!
 $	if (f$type(interactive_auth$'omi$current_user') .nes. "" .or. -
 	   f$type(interactive_auth$all_users) .nes. "") .and. -
 	   f$type(omi$option) .nes. "INTEGER"
@@ -3402,6 +3421,14 @@ $	goto dclcommand$
 $!
 $ dclcommand$:
 $!
+$	if f$type(_executing_menu_command) .eqs. ""
+$	   then
+$		if omi$_is_captive .or. (omi$_is_restricted .and. .not. restricted_accounts$dcl_allowed)
+$		   then
+$			omi$signal omi noauth,"DCL"
+$			return omi$_warning
+$		endif
+$	endif
 $	if (f$type(interactive_auth$'omi$current_user') .nes. "" .or. -
 	   f$type(interactive_auth$all_users) .nes. "") .and. -
 	   f$type(omi$option) .nes. "INTEGER"
@@ -3925,6 +3952,7 @@ $	set message 'omi$_message'      ! Just in case...
 $	if .not. omi$_debug
 $	   then $ if omi$_verify then $ set verify
 $	endif
+$	if omi$_force_logout then $ logout
 $	exit %X28
 $!
 $ main$_fatal:
@@ -3944,6 +3972,7 @@ $	set message 'omi$_message'      ! Just in case...
 $	if .not. omi$_debug
 $ 	   then $ if omi$_verify then $ set verify
 $	endif
+$	if omi$_force_logout then $ logout
 $	exit %X2c
 $!
 $ main$_exit:
@@ -3961,6 +3990,7 @@ $	if f$trnlnm("omi$menu_directory") .eqs. "OMI$" then -
 $!
 $ main$_final_bye:
 $!
+$	if omi$_force_logout then $ logout
 $	exit 1
 $!
 $ main$otf_exit:
@@ -4332,8 +4362,11 @@ $	omi$_cancelled = %X1fff30ad
 $	omi$_warning   = %X1fff30af
 $	omi$_error     = %X1fff30b5
 $!
-$	omi$_true      = %X1fff3007
-$	omi$_false     = %X1fff3008
+$	omi$_true      = (1 .eq. 1)
+$	omi$_false     = (1 .eq. 0)
+$!
+$	omi$_is_restricted = f$environmennt("restricted")
+$	omi$_is_captive    = f$environmennt("captive")
 $!
 $	if omi$batch_mode
 $	   then $ ESC$      = ""
@@ -4343,25 +4376,27 @@ $	BELL$[0,8] = %X7
 $	LF$[0,8]   = %Xa
 $	CR$[0,8]   = %Xd
 $	FF$[0,8]   = %Xc
-$	if .not. omi$_debug then -
-	   $ set message /nofacility /noseverity /noidentification /notext
-$	search Nla0: DummyStringToSetOmi$_NoMatch /output=Nla0:
+$	assign/user nla0: sys$output
+$	assign/user nla0: sys$error
+$	search Nla0: DummyStringToSetOmi$_NoMatch
 $	omi$_nomatch   = $status
-$	set message 'omi$_message'
 $	keyring$p$_key = " W"
 $	keyring$p$_key[0,8] = %X1
 $	perf$init_exit = 1
 $!
 $	omi$decnet_enabled = omi$_true
-$	assign sys$scratch:_decnet_status._tmp$ sys$output
-$	show network decnet /full
-$	deassign sys$output
-$	search sys$scratch:_decnet_status._tmp$ Executor /output=nla0:
-$	if $status .eq. omi$_nomatch then $ omi$decnet_enabled = omi$_false
-$	delete\ /nolog /noconfirm sys$scratch:_decnet_status._tmp$;*
+$	assign/user nla0: sys$output
+$	assign/user nla0: sys$error
+$	mc ncp show executor
+$	if .not. $status then omi$decnet_enabled = omi$_false
 $!
 $	@Omi$:Omi$Config Setup
-$	if $status .eq. omi$_error then $ exit %X2c
+$	omi$_force_logout = (omi$_is_restricted .and. restricted_accounts$force_logout)
+$	if $status .eq. omi$_error
+$	   then
+$		if omi$_force_logout then $ logout
+$		exit %X2c
+$	endif
 $!
 $	@Omi$:Omi$Screen Setup
 $!

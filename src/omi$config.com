@@ -779,32 +779,32 @@ $	_cleanup == p3
 $	call config$_set_defaults main$empty_value		"....."
 $	call config$_set_defaults main$silent_output		"NLA0:"
 $	call config$_set_defaults main$editor			"edit"
-$	call config$_set_defaults main$version_id		"0"
+$	call config$_set_defaults main$version_id		0
 $	call config$_set_defaults main$printer			"SYS$PRINT"
-$	call config$_set_defaults main$protect_prompt		"0"
-$	call config$_set_defaults main$show_progress 		"1"
-$	call config$_set_defaults main$time_format   		"12"
+$	call config$_set_defaults main$protect_prompt		0
+$	call config$_set_defaults main$show_progress 		1
+$	call config$_set_defaults main$time_format   		12
 $	call config$_set_defaults main$float_point   		"."
 $	call config$_set_defaults main$session_log_location	"OMI$MENU_DIRECTORY:"
 $	call config$_set_defaults main$sessionlog_textsep	"#"
 $!
-$	call config$_set_defaults screen$width_margin		"4"
-$	call config$_set_defaults screen$height_margin		"1"
+$	call config$_set_defaults screen$width_margin		4
+$	call config$_set_defaults screen$height_margin		1
 $	call config$_set_defaults screen$device_type            ""
-$	call config$_set_defaults screen$width			"80"
-$	call config$_set_defaults screen$height			"24"
-$	call config$_set_defaults screen$exit_width		"0"
-$	call config$_set_defaults screen$exit_height		"0"
-$	call config$_set_defaults screen$window_topmargin	"1"
+$	call config$_set_defaults screen$width			80
+$	call config$_set_defaults screen$height			24
+$	call config$_set_defaults screen$exit_width		0
+$	call config$_set_defaults screen$exit_height		0
+$	call config$_set_defaults screen$window_topmargin	1
 $	call config$_set_defaults screen$scroll_region		"enabled"
 $	call config$_set_defaults screen$scrollregion_autodisable	"y"
 $	call config$_set_defaults screen$separate_inputs	omi$_true
 $	call config$_set_defaults screen$display_names		omi$_false
-$	call config$_set_defaults screen$tab			"15"
+$	call config$_set_defaults screen$tab			15
 $	call config$_set_defaults screen$center_select_lists	omi$_false
 $	call config$_set_defaults screen$replay_mode		"(replay mode) "
 $!
-$	call config$_set_defaults calc$precision		"9"
+$	call config$_set_defaults calc$precision		9
 $	call config$_set_defaults calc$round_steps		omi$_false
 $!
 $	call config$_set_defaults questions$all_inputs		"All Inputs"
@@ -815,7 +815,7 @@ $	call config$_set_defaults questions$dcl_command		"DCL Command"
 $	call config$_set_defaults questions$default_confirm	"Continue?"
 $	call config$_set_defaults questions$default_input	"Input"
 $	call config$_set_defaults questions$wait_prompt		"Press <Return> to continue"
-$	call config$_set_defaults questions$confirm		"1"
+$	call config$_set_defaults questions$confirm		1
 $	call config$_set_defaults questions$answer_yes		"Y"
 $	call config$_set_defaults questions$answer_no		"N"
 $	call config$_set_defaults questions$delay_timeout	10
@@ -826,6 +826,10 @@ $	call config$_set_defaults bgrprocess$logfile		""
 $	call config$_set_defaults bgrprocess$options_bat	""
 $	call config$_set_defaults bgrprocess$options_det	""
 $!
+$	call config$_set_defaults restricted_accounts$dcl_allowed	omi$_true
+$	call config$_set_defaults restricted_accounts$spawn_allowed	omi$_false
+$	call config$_set_defaults restricted_accounts$force_logout	omi$_true
+$!
 $	delete\ /symbol /global _cleanup
 $	return
 $!
@@ -833,7 +837,14 @@ $ config$_set_defaults: subroutine
 $!
 $	if _cleanup .eqs. "CLEANUP"
 $	   then $ if f$type('p1') .nes. "" then $ delete\ /symbol /global 'p1'
-$	   else $ if f$type('p1') .eqs. "" then $ 'p1' == "''p2'"
+$	   else
+$		if f$type('p1') .eqs. ""
+$		   then
+$			if f$type(p2) .eqs. "STRING"
+$			   then $ 'p1' == "''p2'"
+$			   else $ 'p1' == 'p2'
+$			endif
+$		endif
 $	endif
 $	exit
 $ endsubroutine
