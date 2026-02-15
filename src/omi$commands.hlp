@@ -88,6 +88,30 @@ When the command DCL is used in a MENU file, OMI can prompt for
 additional input for the command, if the string '~?' is used in
 the parameter.
 
+1 DECRYPT
+ Format: DECRYPT section-name item-name key-name
+
+Decrypt the specified item in the menu file. The decrypted value
+is written to the menu file. Therefore, write privilege to the
+current menu is required.
+
+The key used for decrypting must be the same that was used to
+encrypt the element.
+
+2 Parameters
+
+section-name
+        The section which holds the element that should be encrypted.
+        Square brackets can be omitted.
+
+element-name
+        The element name.
+
+key-name
+        The name of the key with which the string was encrypted.
+        It has to exist at the keyring of the user's configuration file. If
+        it's not there, it can be imported with the OMI command IMPORT KEY.
+
 1 DELETE
 
 This command deletes values from the current menu environment.
@@ -166,22 +190,23 @@ module in which the value is requires, calls OMI$DECRYPT (refer
 to the subtopic 'Calling_Modules OMI_Commands OMI$DECRYPT' for
 more information).
 
-2 Parameters
-
-This command requires three parameters. If they are omitted, OMI will
-prompt for them.
-
-The first parameter specifies the section which holds the item
-that should be encrypted. Square brackets can be omitted.
-The second parameter is the item name.
-
-The third parameter should be the name of the key with which the
-string has to be encrypted. It has to exist at the keyring of the
-users configuration file. If it s not there, it can be imported
-with the OMI command IMPORT KEY, or created with the SET KEY command.
-
 Please not that encrypting an item that was already encrypted can
 cause unpredictable behaviour!
+
+2 Parameters
+
+section-name
+        The section which holds the element that should be encrypted.
+        Square brackets can be omitted.
+
+element-name
+        The element name.
+
+key-name
+        The name of the key with which the string has to be encrypted.
+        It has to exist at the keyring of the user's configuration file. If
+        it's not there, it can be imported with the OMI command IMPORT KEY,
+        or created with the SET KEY command.
 
 1 EXIT
  Format: EXIT
@@ -213,7 +238,7 @@ For menu specific help, type INFO.
 For support, please use the OMI forum at
     https://github.com/oveas/OMI/issues
 
-This is version 2.8, Released: Februari 4, 2021
+This is version 2.9, Released: Xxxx xx, 202x
 The latest version can always be obtained from
     https://github.com/oveas/OMI/releases
 
@@ -254,7 +279,12 @@ counter value have to be cleared.
 If the current menu has an info section in the menu specific help- file
 (OMI$MENU_DIRECTORY:<menu-file-name>.OMH), the INFO command can be used
 to display the information.
+As a synonym, a question mark (?) can be entered.
+
 This way it is possible to add (sub)menu specific help.
+
+Whether the current submenu has specific help info can be seen in the menu's
+title bar where the `<?>' icon will be shown at the left if help is available.
 
 For information on creating OMH files. refer to the printed documentation.
 
@@ -381,7 +411,7 @@ Use this command to set the counter for the current menu to another value.
 If the current menu has no counter, a message will be displayed.
 
 2 KEY
- Format: SET KEY value
+ Format: SET KEY name value
 
 This command defines a personal key. This key will be used for the
 ENCRYPT command in OMI, and for the OMI$ENCRYPT and OMI$DECRYPT 
@@ -391,12 +421,14 @@ When menu items are encrypted using any of these commands, they
 can only be decrypted by the same user, or by users who have the
 same key defined.
 
-Keys cannot be shared between users. Every user can define only
-one key.
+Keys cannot be shared between users.
 
-3 Parameter
+3 Parameters
+Name
+        The name of the key
 
-The parameter must be an integer value between 1 and 1,000,000
+Value
+        The value, which must be an integer value between 1 and 1,000,000.
 
 2 NAME
  Format: SET NAME menu-name
@@ -484,9 +516,6 @@ menu has more than 1 text area, a sequence number is required, indicating
 which text area should be displayed. This sequence number is not the same
 as the option number; if internal variable INPUT2 is a textarea, and INPUT1
 is not, INPUT2 has sequence number 1
-
-If the option LARGE in the format section of the variable is set to TRUE,
-it is possible that this command does not display anything without warning.
 
 2 VERSION
 

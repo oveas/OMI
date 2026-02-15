@@ -2056,10 +2056,21 @@ $	goto main$_exit
 $!
 $!******************************************************************************
 $!
+$ main$execcmd_decrypt:
+$!
+$!==>	The OMI command DECRYPT
+$!
+$	_crypt = 0
+$	goto encrypt_decrypt
+$!
 $ main$execcmd_encrypt:
 $!
 $!==>	The OMI command ENCRYPT
 $!
+$	_crypt = 1
+$	goto encrypt_decrypt
+$!
+$ encrypt_decrypt:
 $	if 'omi$current_menu'$security_level .lt. 3
 $	   then
 $		omi$signal omi nopriv
@@ -2083,26 +2094,43 @@ $		omi$log_session "''_encr_item'"
 $		omi$cmdline_clear
 $	   else $ _encr_item = omi$_p2
 $	endif
+$	if omi$_p3 .eqs. ""
+$	   then
+$		read /end_of_file=encrypt_command$_cancelled sys$command _encr_key -
+		   /prompt="''screen$prompt_position'_Key: "
+$		omi$log_session "''_encr_key'"
+$		omi$cmdline_clear
+$	   else $ _encr_key = omi$_p3
+$	endif
 $!
-$	if f$type('_encr_sect'$'_encr_item') .eqs. ""
+$	_encr_sect_sym = _encr_sect
+$	if f$edit(f$extract(0, 5, _encr_sect), "upcase") .eqs. "MENU_" then -
+	   $ _encr_sect_sym = f$extract(5, f$length(_encr_sect)-5, _encr_sect)
+$	if f$type('_encr_sect_sym'$'_encr_item') .eqs. ""
 $	   then
 $		omi$signal omi nosuchitm,_encr_item,_encr_sect
 $		return omi$_warning
 $	endif
 $!
-$	if omi$_p3 .nes. ""
+$	if f$type(keyring$'_encr_key') .eqs. ""
 $	   then
-$		if f$type(keyring$'omi$_p3') .eqs. ""
-$		   then
-$			omi$signal omi ivkey,omi$_p3
-$			return omi$_warning
-$		endif
+$		omi$signal omi ivkey,_encr_key
+$		return omi$_warning
 $	endif
 $!
-$	_encr = '_encr_sect'$'_encr_item'
-$	omi$encrypt "''_encr'" 'omi$_p3'
-$	_encr = omi$encrypted
-$	delete\ /symbol /global omi$encrypted
+$	_encr = '_encr_sect_sym'$'_encr_item'
+$	if _crypt
+$	   then
+$		omi$encrypt "''_encr'" '_encr_key'
+$		if $status .eq. omi$_error then $ return omi$_warning
+$		_encr = omi$encrypted
+$		delete\ /symbol /global omi$encrypted
+$	else
+$		omi$decrypt "''_encr'" '_encr_key'
+$		if $status .eq. omi$_error then $ return omi$_warning
+$		_encr = omi$decrypted
+$		delete\ /symbol /global omi$decrypted
+$	endif
 $	omi$config 'omi$menu_file' update "''_encr_sect'" "''_encr_item'" "''_encr'"
 $	if $status .eq. omi$_ok then -
 	   $ omi$signal omi encrypt
@@ -4477,7 +4505,7 @@ $! The boolean following the command indicated wether or not this command
 $! is available in Otf- menus
 $!
 $	omi$valid_commands = -
-	   "#ADD,0#ALL,1#BACK,1#CALC,1#CLS,1#DCL,1#DELETE,1#EDIT,1#ENCRYPT,0#" + -
+	   "#ADD,0#ALL,1#BACK,1#CALC,1#CLS,1#DCL,1#DECRYPT,0#DELETE,1#EDIT,1#ENCRYPT,0#" + -
 	   "EXIT,0#EXPORT,1#HELP,1#IMPORT,1#INCREASE,1#INFO,1#JUMP,0#" + -
 	   "MAIN,0#MANAGE,0#MENU,0#MODIFY,0#QUIT,0#REFRESH,1#RENAME,0#" + -
 	   "REMOVE,0#RESET,1#SET,1#SILENT_DCL,1#SHOW,1#SPAWN,1#SUBMIT,1#"
@@ -4715,7 +4743,7 @@ $!
 $	read /end_of_file=cleanup$end_symbols omi$symbol_cleanup omi$symbol
 $	if f$locate("command#all", f$edit(omi$symbol,"lowercase")) .lt. -
 	   f$length(omi$symbol) then $ delete\/symbol/global -
-	   'f$element(0, "=", f$edit(omi$symbol,"collapse")')
+	   'f$element(0, "=", f$edit(omi$symbol,"collapse"))'
 $	goto cleanup$_symbols
 $!
 $ cleanup$end_symbols:
