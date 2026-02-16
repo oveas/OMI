@@ -15,6 +15,9 @@
 \setlength{\parindent}{5mm}
 \setcounter{secnumdepth}{4}
 \renewcommand{\indent}{\hspace*{5mm}}
+\newenvironment{stayonpage}
+  {\par\nobreak\vfil\penalty0\vfilneg\vtop\bgroup}
+  {\par\xdef\tpd{\the\prevdepth}\egroup\prevdepth=\tpd}
 \makeatletter
 \makeatother
 \begin{document}
@@ -66,18 +69,6 @@ commands.
 
 The following issues have not been solved yet: \\
 \begin{itemize}
-\item When \textsl{OMI{\$}DISPLAY{\_}INFO}\index{OMI commands in 
-modules!OMI{\$}DISPLAY{\_}INFO} needs to display a blank line between two 
-records, the \textsl{OMI{\$}RECORD}n needs to contain at least one blank. \newline
-E.g. when the next three lines need to be displayed:\newline
-\indent\textsf{OMI{\$}RECORD1 = "The first line"} \newline
-\indent\textsf{OMI{\$}RECORD2 = "" ! A blank line to separate} \newline
-\indent\textsf{OMI{\$}RECORD3 = "The last line"} \newline
-the command \textsl{OMI{\$}DISPLAY} will display only the first line. This can be 
-solved by specifying \textsl{OMI{\$}RECORD2} as \verb*|" "| (a blank).
-\item When a \textsl{TEXTAREA} input element is defined with the option \textsl{LARGE} set to \textsl{TRUE}, 
-the command \textsl{SHOW TEXTAREA} shows nothing in certain circumstances without 
-warning.
 \item When a library file is included with \textsl{{\#}INCLUDE}, and duplicate values are 
 encountered, a leading value can be specified with the \textsl{{\#}LEADING} attribute 
 as described in section \ref{subsubsec:handling}. However, when the 
@@ -85,10 +76,16 @@ menu file is validated with the \textsl{/VALIDATE} qualifier, a warning will be
 displayed if the first item of two duplicate item names was specified as 
 leading. During run-time this is handled properly.
 \item Switching menus using the \textsl{MENU} command causes \textsl{\%OMI-W-DUPL}
-messages. After this, OMI can crash at random moments without warning.
+messages. After this, OMI can crash at random moments without wa\newenvironment{absolutelynopagebreak}
+  {\par\nobreak\vfil\penalty0\vfilneg
+   \vtop\bgroup}
+  {\par\xdef\tpd{\the\prevdepth}\egroup
+   \prevdepth=\tpd}rning.
 \item When the last input item of a (sub)menu is a SELECT list and all inputs are entered
 using \textsl{ALL{\_}INPUTS}, the screen is refreshed twice after the last item.
 \item When the \textsl{JUMP} command is used to jump from a submenu to the toplevel, \lt Ctrl/Z\gt{}, \textsl{0} or the command \textsl{MAIN} will cause the mainmenu's \textsl{ON{\_}EXIT} module to be executed if it exists, returning to the previous submenu.
+\item When a \textsl{STRING} input is entered that contains an exclamation mark, e.q. ``\texttt{Hello! World!}'', De displayed string will differ (``\texttt{Hello! World!!75* \ensuremath{\backslash}}'' in this example) and the error \texttt{{\%}SYSTEM-F-BADPARAM, bad parameter value} will be given.
+This has no influence on the actual value given to the variable name, and after a \textsl{REFRESH} command the value will look ok again.
 \end{itemize}
 
 \section*{About this document}\addcontentsline{toc}{section}{About this document}
@@ -114,7 +111,7 @@ The software and all associated files remains the copyright of the author
 but may be freely used and distributed without charge to any other user, 
 provided that all copyright notices are retained intact.
 
-\noindent\textbf{{\copyright} 1997-2021\\
+\noindent\textbf{{\copyright} 1997-2026\\
 Oscar van Eijk - Oveas Funcionality Provider\\
 support@oveas.com}\\*[3mm]
 This tool is delivered ``as is''. No warranty, express or implied, is 
@@ -154,7 +151,11 @@ Also, download \textsl{OMI{\$}INSTALL.COM} in ASCII format.
 Next, set default to the directory where the installation
 script is located, and issue the command: \\
 \indent \textsf{{\$} @OMI{\$}INSTALL}
- 
+ \newenvironment{absolutelynopagebreak}
+  {\par\nobreak\vfil\penalty0\vfilneg
+   \vtop\bgroup}
+  {\par\xdef\tpd{\the\prevdepth}\egroup
+   \prevdepth=\tpd}
 
 \vs
 
@@ -212,6 +213,16 @@ the user, and creates a user specific directory to contain OMI menu files
 
 Figure \ref{fig:userinst} shows an example session of the \textsl{OMI{\$}USER{\_}INSTALL}
 procedure.
+
+\vs 
+
+\begin{stayonpage}
+\hspace{-8mm}\textbf{NOTE:} The file \textsl{OMI{\$}SETUP.COM} defines the foreign command \textsl{OMI} to start OMI. This command calls \textsl{OMI{\$}WRAPPER.COM} which in call the main program \textsl{OMI{\$}MENU.COM}, passing all parameters and qualifiers.\index{wrapper}\index{OMI{\$}WRAPPER}\\
+To call \textsl{OMI{\$}MENU.COM} directly, modify \textsl{OMI{\$}SETUP.COM} and change the line\\
+\indent\texttt{{\$}\hspace{8mm}omi :== @PROJECTS:[OMI]OMI{\$}WRAPPER.COM}\\
+to\\
+\indent\texttt{{\$}\hspace{8mm}omi :== @PROJECTS:[OMI]OMI{\$}MENU.COM}
+\end{stayonpage}
 
 \vs
 
@@ -1223,6 +1234,34 @@ Used to add extra qualifiers to the \textsf{RUN /DETACH} command, eg:\\
 \indent\textsf{OPTIONS{\_}DET = /JOB{\_}TABLE{\_}QUOTA=8192} \\
 For more information, refer to the OpenVMS documentation.
 
+\subsection{[RESTRICTED{\_}ACCOUNTS]}
+\index{security!restriced accounts}\index{restriced accounts}
+\index{security!captive accounts}\index{captive accounts}\label{subsubsec:restracc}
+
+In this section, certain rights can be given to or taken from useers that have been created with the \textsl{Restricted} flag and the defaults for user that have been created with the \textsl{Captive} flag.\\
+The settings for Captive accounts cannot be changed.
+
+\subsubsection{DCL{\_}ALLOWED}
+
+When set to \textsl{TRUE}, the user is allowed to use the \textsl{DCL},  \textsl{SILENT{\_}DCL} or \textsl{EDIT} command (see sections \ref{subsec:mylabel12}, \ref{subsec:silent} and \ref{subsec:mylabel13}) at the \textsl{OMI} prompt. Default is \textsl{TRUE}.\\
+Captive accounts are never allowed to execute these commands.
+
+If a \textsl{COMMAND} item inside a menu file (see section \ref{subsubsec:mylabel35}) contains a \textsl{(SILENT{\_})DCL} command, that will always be executed for both Captive and Restricted users, regardless the setting.
+
+\subsubsection{SPAWN{\_}ALLOWED}
+
+When set to \textsl{TRUE}, the user is allowed to use the \textsl{SPAWN} command (see section \ref{subsec:spawn}) at the \textsl{OMI} prompt. Default is \textsl{FALSE}. \\
+Captive accounts are never allowed to execute the \textsl{SPAWN} command.
+
+If a \textsl{COMMAND} item inside a menu file (see section \ref{subsubsec:mylabel35}) contains a \textsl{SPAWN} command, that will always be executed for Restricted users, regardless the setting. For Captive accounts, that will be blocked by VMS.
+
+\subsubsection{FORCE{\_}LOGOUT}
+
+When set to \textsl{FALSE}, the user will get the normal VMS prompt when exiting the menu and is allowed to continue working in DCL.\\
+Default is \textsl{TRUE}, which logs out the user when exiting the menu.
+
+Captive accounts are logged out by the OS on exit.
+
 \subsection{[KEYRING]}
 \index{keyring}
 \index{security!encryption key}
@@ -1259,6 +1298,7 @@ If a file needs to be printed on the user specific printer queue, use the comman
 \textsf{[KEYRING]} \newline
 \textsf{[COUNTER]} \newline
 \textsf{[INTERACTIVE{\_}AUTH]} \newline
+\textsf{[RESTRICTED{\_}ACCOUNTS]} \newline
 \textsf{[MENU{\_}\textit{*}]} (all sections starting with \textsl{MENU{\_}}) \newline
 \caption{Reserved section names}\label{tab:ressect}
 \end{minipage}
@@ -2149,7 +2189,7 @@ on the user input.\caption{Using the SUBMENU element}\label{fig:submenu}
 \label{subsec:mylabel5}
 
 Inputs can be used to collect information from the user, which can be passed 
-to OMI modules. Up til OMI V2.5, the khe keyword \textsf{INPUT} had to be followed by an integer, starting with `1', and without gaps in the counting, so if a menu had three input 
+to OMI modules. Up til OMI V2.5, the keyword \textsf{INPUT} had to be followed by an integer, starting with `1', and without gaps in the counting, so if a menu had three input 
 options, the elements have to be specified as \textsf{INPUT1}, \textsf{INPUT2} and \textsf{INPUT3}.\\
 This syntax is still supported, but if \textsf{INPUT}s are given without number, they will be numbered automatically based on their order in the menufile.
 
@@ -2393,15 +2433,14 @@ If this field is not specified, the name \textsl{TA\_\textit{menu}\$INPUT\textit
 be used, where \textit{menu} is the current menu name, and \textsl{INPUT\textit{n}} the 
 OMI internal element name\footnote{ \textit{n} can either be the explicit element number, or the automatic generated number}. \\
 \textsl{KEEP} & [\textsl{TRUE} or \textsl{FALSE}] & If set to \textsl{TRUE}, the temporary file will not be removed when 
-OMI exists, and so will be available for a future session.\\
+OMI exits, and so will be available for a future session.\\
 \textsl{HISTORY} & [\textsl{TRUE} or \textsl{FALSE}] &  If set to \textsl{TRUE}, older version of the temporary file will also 
 be saved, limited by the VMS VERSION\_LIMIT. When \textsl{KEEP} is set 
 to \textsl{FALSE} or not specified, \textsl{HISTORY} is automatically set to \textsl{FALSE}. \linebreak
 By default, only the last version will be saved (if \textsl{KEEP} is \textsl{TRUE})\\
 \textsl{LARGE} & [\textsl{TRUE} or \textsl{FALSE}] &  The size of a textarea is limited to 255 characters by default. 
 With this option it is possible to store values up to 1024 characters 
-in the variable\footnote{ Setting this option to \textsl{TRUE}, can cause the command 
-\textsf{SHOW TEXTAREA} not to show anything without a warning!}. \linebreak
+in the variable. \linebreak
 The maximum size does not affect the value that is stored in 
 the temporary file. \\ \hline
 \end{tabular}
@@ -3085,6 +3124,11 @@ If a menu contains more on-the-menus that have to be documented in different sec
 
 \vs
 
+When a submenu has menu specific help, the `\textsl{\lt?\gt}' icon will be shown at the left
+in the menu's title bar.
+
+\vs
+
 Helpfiles are read with the \textsf{INFO}\index{OMI commands!INFO} command. For
 more information on this command, refer to section~\ref{subsec:cmdinfo}.
 
@@ -3396,9 +3440,7 @@ are erased or overwritten. \\
 E.g. If the first call writes 5 records to the screen, and the second call 
 should write 4 records, it'll also write the last record of the first call. 
 The older fifth record should be removed using:\\
-\indent\texttt{{\$} DELETE /SYMBOL /LOCAL OMI{\$}RECORD5} \\
-or by specifying it as empty: \\
-\indent\texttt{{\$} OMI{\$}RECORD5 = ""}\\[3mm]
+\indent\texttt{{\$} DELETE /SYMBOL /LOCAL OMI{\$}RECORD5}\\[3mm]
 \textbf{Parameter}\\*[3mm]The optional keyword \textsl{OVERWRITE} prevents a screen refresh before the output is written. This can be used if consecutive calls to \textsl{OMI{\$}DISPLAY{\_}INFO} are made, each  with additional records, without refreshing records that already have been written to the screen.\\[3mm]
 \textbf{Example}\\*[3mm]
 \begin{texttt}
@@ -3811,32 +3853,36 @@ A list of these symbols is provided in table \ref{tab:locsymbols}.
 \begin{table}[h!tb]
 \begin{minipage}[h!tb]{\textwidth}
 \begin{tabular}{lp{9cm}} \hline
-\textsl{OMI{\$}{\_}OK}\index{return values}\index{OMI{\$}{\_}OK}\index{OMI symbols!local symbols!OMI{\$}{\_}OK} & 
-This is an exit status that indicates a normal successful completion. \\
-\textsl{OMI{\$}{\_}WARNING}\index{return values}\index{OMI{\$}{\_}WARNING}\index{OMI symbols!local symbols!OMI{\$}{\_}WARNING} & 
-This is an exit status that can be used for warnings. If an 
-OMI module exits with a warning, OMI takes no action, but 
-it might be useful when OMI modules call other procedures. \\
-\textsl{OMI{\$}{\_}ERROR}\index{return values}\index{OMI{\$}{\_}ERROR}\index{OMI symbols!local symbols!OMI{\$}{\_}ERROR} & 
-This is an exit status that can be used for errors. If an OMI 
-module exits with an error, OMI takes no action, but it 
-might be useful when OMI modules call other procedures. \\
-\textsl{OMI{\$}{\_}CANCELLED}\index{return values}\index{OMI{\$}{\_}CANCELLED}\index{OMI symbols!local symbols!OMI{\$}{\_}CANCELLED} & 
-This is an exit status that can be used for special purposes. \\
-\textsl{OMI{\$}{\_}TRUE}\index{OMI{\$}{\_}TRUE}\index{OMI symbols!local symbols!OMI{\$}{\_}TRUE} & 
-This symbol can be used as return value, and as a value for boolean variables. \\
-\textsl{OMI{\$}{\_}FALSE}\index{OMI{\$}{\_}FALSE}\index{OMI symbols!local symbols!OMI{\$}{\_}FALSE} & 
-This symbol can be used as return value, and as a value for boolean variables. \\
 \textsl{OMI{\$}BATCH{\_}MODE}\index{OMI mode!batch}\index{batch mode}\index{OMI{\$}BATCH{\_}MODE} & 
 This symbol is TRUE when OMI is started in batchmode (see section \ref{subsubsec:mylabel3}), FALSE otherwise. \\
-\textsl{OMI{\$}NODENAME}\index{nodename}\index{OMI{\$}NODENAME} & 
-The nodename on which OMI is currently running. \\
 \textsl{OMI{\$}CURRENT{\_}USER}\index{username}\index{OMI{\$}CURRENT{\_}USER}\index{OMI symbols!local symbols!OMI{\$}CURRENT{\_}USER} & 
 The name of the user currently running the menu is stored in this symbol. \\
+\textsl{OMI{\$}DECNET{\_}ENABLED}\index{DECnet}\index{OMI{\$}DECNET{\_}ENABLED} & 
+\textsl{OMI{\$}{\_}TRUE} if DECnet has been started on the current node, {OMI{\$}{\_}FALSE} otherwise. \\
 \textsl{OMI{\$}MENU{\_}FILE}\index{menu!filename}\index{OMI{\$}MENU{\_}FILE}\index{OMI symbols!local symbols!OMI{\$}MENU{\_}FILE} & 
 The filename of the menu that's currently in use, without the directory specification. \\
 \textsl{OMI{\$}MENU{\_}LOCATION}\index{OMI{\$}MENU{\_}LOCATION}\index{OMI symbols!local symbols!OMI{\$}MENU{\_}LOCATION} & 
 The location of the menu file that is currently in use. \\
+\textsl{OMI{\$}NODENAME}\index{nodename}\index{OMI{\$}NODENAME} & 
+The nodename on which OMI is currently running. \\
+\textsl{OMI{\$}OPTION}\index{OMI{\$}OPTION}\index{OMI symbols!local symbols!OMI{\$}OPTION} & 
+This symbol contains the last numeric value that has been entered 
+by the user, or the command line. \\
+\textsl{OMI{\$}OPTION\_TYPE}\index{OMI{\$}OPTION\_TYPE}\index{OMI symbols!local symbols!OMI{\$}OPTION\_TYPE} & 
+This symbol contains the option type of the latest item that was selected by
+the user. This can be \textsl{SUBMENU}, \textsl{COMMAND} or \textsl{CALL}. \\
+\textsl{OMI{\$}VALIDATE{\_}MODE}\index{OMI mode!validate}\index{validate mode}\index{OMI{\$}VALIDATE{\_}MODE} & 
+This symbol is TRUE when OMI is started in validate hmode (see section \ref{subsubsec:mylabel8}), FALSE otherwise. \\
+\textsl{OMI{\$}{\_}CANCELLED}\index{return values}\index{OMI{\$}{\_}CANCELLED}\index{OMI symbols!local symbols!OMI{\$}{\_}CANCELLED} & 
+This is an exit status that can be used for special purposes. \\
+\textsl{OMI{\$}{\_}ERROR}\index{return values}\index{OMI{\$}{\_}ERROR}\index{OMI symbols!local symbols!OMI{\$}{\_}ERROR} & 
+This is an exit status that can be used for errors. If an OMI 
+module exits with an error, OMI takes no action, but it 
+might be useful when OMI modules call other procedures. \\
+\textsl{OMI{\$}{\_}FALSE}\index{OMI{\$}{\_}FALSE}\index{OMI symbols!local symbols!OMI{\$}{\_}FALSE} & 
+This symbol can be used as return value, and as a value for boolean variables. \\
+\textsl{OMI{\$}{\_}IS{\_}CAPTIVE}\index{OMI{\$}{\_}IS{\_}CAPTIVE}\index{OMI symbols!local symbols!OMI{\$}{\_}IS{\_}CAPTIVE}\index{security!captive accounts}\index{captive accounts} & 
+\textsl{TRUE} if the current user has a captive account. \\
 \textsl{OMI{\$}{\_}MESSAGE}\index{OMI commands in modules!debugging}\index{OMI{\$}{\_}MESSAGE}\index{OMI symbols!local symbols!OMI{\$}{\_}MESSAGE} & 
 This symbol is used to store the environmental value of `message' in. Before
 an OMI module is called, all messages are switched off with \newline
@@ -3853,12 +3899,16 @@ values in files, the return status can be compared with this
 symbol to check if the value was found, as in: \linebreak
 \indent\small{\textsf{{\$} IF {\$}STATUS .EQ. OMI{\$}{\_}NOMATCH THEN -}}\newline
 \indent\indent\small{\textsf{{\$} GOTO NOTFOUND}}\\
-\textsl{OMI{\$}OPTION}\index{OMI{\$}OPTION}\index{OMI symbols!local symbols!OMI{\$}OPTION} & 
-This symbol contains the last numeric value that has been entered 
-by the user, or the command line. \\
-\textsl{OMI{\$}OPTION\_TYPE}\index{OMI{\$}OPTION\_TYPE}\index{OMI symbols!local symbols!OMI{\$}OPTION\_TYPE} & 
-This symbol contains the option type of the latest item that was selected by
-the user. This can be \textsl{SUBMENU}, \textsl{COMMAND} or \textsl{CALL}. \\
+\textsl{OMI{\$}{\_}OK}\index{return values}\index{OMI{\$}{\_}OK}\index{OMI symbols!local symbols!OMI{\$}{\_}OK} & 
+This is an exit status that indicates a normal successful completion. \\
+\textsl{OMI{\$}{\_}IS{\_}RESTRICTED}\index{OMI{\$}{\_}IS{\_}RESTRICTED}\index{OMI symbols!local symbols!OMI{\$}{\_}IS{\_}RESTRICTED}\index{security!restriced accounts}\index{restriced accounts} & 
+\textsl{TRUE} if the current user has a restriced account. \\
+\textsl{OMI{\$}{\_}TRUE}\index{OMI{\$}{\_}TRUE}\index{OMI symbols!local symbols!OMI{\$}{\_}TRUE} & 
+This symbol can be used as return value, and as a value for boolean variables. \\
+\textsl{OMI{\$}{\_}WARNING}\index{return values}\index{OMI{\$}{\_}WARNING}\index{OMI symbols!local symbols!OMI{\$}{\_}WARNING} & 
+This is an exit status that can be used for warnings. If an 
+OMI module exits with a warning, OMI takes no action, but 
+it might be useful when OMI modules call other procedures. \\
 \hline
 \end{tabular}
 \caption{Local symbols in OMI}\index{OMI symbols!local symbols}\label{tab:locsymbols}
@@ -3876,9 +3926,11 @@ All symbols symbols can be specified in any combination as the following example
 \\
 \textsf{\scriptsize{{\$} OMI{\$}DISPLAY{\_}MESSAGE "''SCREEN{\$}BG{\_}RED'''SCREEN{\$}FG{\_}BLACK'This is an " + - \\ \hspace*{5mm}"''SCREEN{\$}TEXT{\_}BOLD'important''SCREEN{\$}RESET{\_}BOLD' message!''SCREEN{\$}RESET{\_}ALL'"}}
 
+\begin{tiny}
+
 \begin{table}[h!tb]
 \begin{minipage}[h!tb]{\textwidth}
-\begin{tabular}{lp{60mm}l} \hline
+\hspace{-15mm}\begin{tabular}{lp{60mm}l} \hline
 \textbf{Symbol}   & \textbf{Description}  & \textbf{Reset symbol} \\ \hline
 \multicolumn{3}{l}{\textit{Font selection}\footnote{ Not all font variants are supported by all terminals and emulators}} \\ \hline
 \scriptsize{\textsl{SCREEN{\$}TEXT{\_}BOLD}         }   & Select a bold font variant (increased density) & \scriptsize{\textsl{SCREEN{\$}RESET{\_}BOLD}         } \\
@@ -3927,10 +3979,11 @@ All symbols symbols can be specified in any combination as the following example
 \scriptsize{\textsl{SCREEN{\$}LINE{\_}MODE}}            & Switch to linemode where some characters represent symbols from the extended ascii table & \scriptsize{\textsl{SCREEN{\$}NORMAL{\_}MODE}} \\
 \scriptsize{\textsl{SCREEN{\$}RESET{\_}ALL}}            & Reset all foreground and background attributes---except linemode---to the terminal default & \textit{n/a} \\
 \end{tabular}
-\caption{Symbol for font- and color selection}\index{OMI symbols!fonts and colors}\label{tab:fontsymbols}
+\caption{Symbol for font- and color selection}\label{tab:fontsymbols}\index{OMI symbols!fonts and colors}
 \end{minipage}
 \end{table}
 
+\end{tiny}
 
 \subsection{Global symbols set by OMI commands}
 \index{OMI commands in modules!return values}
@@ -4400,6 +4453,37 @@ When the command DCL is used in a \textsl{.MNU} file, OMI can prompt for additio
 input for the command, if the string \textsl{\~{}?} is used in the parameter
 (see also section \ref{subsubsec:mylabel34} on page \pageref{para:dyninput}).
 
+
+
+
+
+
+
+
+
+
+
+
+\section{DECRYPT}
+\index{OMI commands!DECRYPT}
+\index{security!decrypting}
+\index{decrypting}
+\label{subsec:decrypt}
+
+\indent Format: \textbf{DECRYPT \textit{section-name element-name key-name}}\dag\\*[3mm]
+Decrypt the specified element in the menu file. The decrypted value is 
+written to the menu file. Therefore, \textsl{WRITE} privilege to the current menu is required.
+
+The key used for decrypting must be the same that was used to encrypt the element (see section \ref{subsec:encrypt}).
+
+\vs 
+ 
+\noindent\textbf{Parameters}\\[3mm]
+\textbf{\textit{section-name}}\\The section which holds the element that 
+should be decrypted. Square brackets can be omitted.\\[3mm]
+\textbf{\textit{element-name}}\\The element name.\\[3mm]
+\textbf{\textit{key-name}}\\The name of the key with which the element was encrypted. It has to exist at the keyring of the user's configuration file. If it's not there, it can be imported with the OMI command \textsf{IMPORT KEY}.
+
 \section{DELETE}
 \index{OMI commands!DELETE}
 \label{subsec:delete}
@@ -4496,27 +4580,20 @@ an own key using the \textsf{SET KEY}\index{OMI commands!SET KEY} command.
 This command also changes the value of the selected element in the current 
 OMI session, so the value can only be used again if the OMI module in which 
 the value is required, calls \textsl{OMI{\$}DECRYPT}\index{OMI commands in 
-modules!OMI{\$}DECRYPT} (see section \ref{subsubsec:mylabel50}).\\[3mm]
-\textbf{Parameters}\\*[3mm]
-This command requires three parameters. If they are omitted, OMI will prompt 
-for them.
+modules!OMI{\$}DECRYPT} (see section \ref{subsubsec:mylabel50}).
 
 \vs
 
-The first parameter specifies the section which holds the element that 
-should be encrypted. Square brackets can be omitted.
+Please note that encrypting an element that was already encrypted can cause unpredictable behavior!
 
-The second parameter is the element name.
+\vs 
 
-The third parameter should be the name of the key with which the string has 
-to be encrypted. It has to exist at the keyring of the user's configuration 
-file. If it's not there, it can be imported with the OMI command \textsf{IMPORT KEY}, 
-or created with the \textsf{SET KEY} command.
+\noindent\textbf{Parameters}\\[3mm]
+\textbf{\textit{section-name}}\\The section which holds the element that 
+should be encrypted. Square brackets can be omitted.\\[3mm]
+\textbf{\textit{element-name}}\\The element name.\\[3mm]
+\textbf{\textit{key-name}}\\The name of the key with which the string has to be encrypted. It has to exist at the keyring of the user's configuration file. If it's not there, it can be imported with the OMI command \textsf{IMPORT KEY}, or created with the \textsf{SET KEY} command.
 
-\vs
-
-Please note that encrypting an element that was already encrypted can cause 
-unpredictable behavior!
 
 \section{EXIT}
 \index{OMI commands!EXIT}
@@ -4587,10 +4664,12 @@ should be updated.
 \label{subsec:cmdinfo}
 
 \indent Format: \textbf{INFO}\\*[3mm]
-If the current menu has an info section in the menu specific help
+If the current menu has an info section in the menu specific help\footnote{ This can be seen in the
+menu's title bar where the `\textsl{\lt?\gt}' icon will be shown at the left when help is available for this submenu.}
 file\footnote{ \textsl{OMI\$MENU\_DIRECTORY:\textit{menu-file-name}.OMH}, 
 where \textit{menu-file-name} is the same as the filename of the current menu file}, the
-\textsf{INFO} command can be used to display the information. This way it is possible to add menu specific help.
+\textsf{INFO} command can be used to display the information. This way it is possible to add menu specific help.\\
+As a synonym, a question mark (\textbf{?}) can be entered.
 
 For more information on writing help files, please refer to rection~\ref{sec:mnhelp}
 
@@ -4762,23 +4841,24 @@ If the current menu has no counter, a message will be displayed.
 \index{encrypting!define key}
 \label{subsubsec:mylabel76}
 
-\indent Format: \textbf{SET KEY \textit{value}}\\*[3mm]
+\indent Format: \textbf{SET KEY \textit{name} \textit{value}}\\*[3mm]
 This command defines a personal key. This key will be used for the 
-\textsf{ENCRYPT}\index{OMI commands!ENCRYPT} command in OMI, and for the 
+\textsf{ENCRYPT} and \textsf{DECRYPT}\index{OMI commands!ENCRYPT}\index{OMI commands!DECRYPT} commands in OMI, and for the 
 \textsl{OMI{\$}ENCRYPT}\index{OMI commands in modules!OMI{\$}ENCRYPT} and 
-\textsl{OMI{\$}DECRYPT}\index{OMI commands in modules!OMI{\$}DECRYPT} command in OMI 
-modules.
+\textsl{OMI{\$}DECRYPT}\index{OMI commands in modules!OMI{\$}DECRYPT} command in OMI modules.
 
 \vs
 
-When menu items are encrypted using any of these commands, they can only be 
-decrypted by the same user, or by users who have the same key defined.
+When menu items are encrypted using any of these commands, they can only be decrypted by the same user, or by users who have the same key defined.
 
 Keys cannot be shared between users (except in shared installations, see 
-section \ref{subsubsec:shared}). Every user can define only one key.
+section \ref{subsubsec:shared}).
 
-\noindent\textbf{Parameter}\\[3mm]
-The parameter must be an integer value between 1 and 1,000,000.
+\vs
+
+\noindent\textbf{Parameters}\\[3mm]
+\textbf{\textit{name}}\\The name of the key\\[3mm]
+\textbf{\textit{value}}\\The value, which must be an integer value between 1 and 1,000,000.
 
 \subsection{SET NAME}
 \index{OMI commands!SET NAME}
@@ -5258,12 +5338,13 @@ $	omi$record1 = " The date you entered was     : ''inp_date'"
 $	omi$record2 = " The filename you entered was : ''inp_file'"
 $	omi$reverse "''inp_file'" "''inp_date'"
 $	omi$record3 = " Reversing this results in    : ''omi$reversed'"
-$	omi$record4 = " The integer you entered was  : ''inp_int'"
-$	omi$record5 = " You called the Counter menu ''counter$another_counter' times"
+$	omi$record4 = ""
+$	omi$record5 = " The integer you entered was  : ''inp_int'"
+$	omi$record6 = " You called the Counter menu ''counter$another_counter' times"
 $!
 $!	Make sure the list with months won't be redisplayed, starting with rec. 5
-$	if f$type(omi$record6) .nes. "" then -
-	   deletee/symbol/local omi$record5
+$	if f$type(omi$record7) .nes. "" then -
+	   deletee/symbol/local omi$record7
 $!
 $!	... and display them
 $	omi$display_info
@@ -5302,10 +5383,17 @@ $	return $status
 \item Fix: Make resizing the screen work when using Telnet/SSH clients.
 \item Fix: Invalid calculator results when the decimal start with zeros.
 \item Fix: Number not recognized when the first character of a calculation (step) is a '-' sign.
+\item Fix: Known issues with the \textsl{TEXTAREA} input type and \textsl{OMI{\$}DISPLAY{\_}INFO} fixed.
 \item Minimize the \textsl{\%OMI-W-PROOUTRA} warnings in the calculator.
-\item Implemented rounding options for the calculator and set \textsl{SET PRECISION} and \textsl{SHOW PRECISION} commands.
+\item Implemented rounding options for the calculator and added \textsl{SET PRECISION} and \textsl{SHOW PRECISION} commands.
 \item Added an example for context specific help to the \textsl{OMI{\$}EXAMPLE} menu.
-\item Added \textsl{OMI{\$}WRAPPER.COM}, a wrapper for OMI that acts a very simplified try-catch for debugging\footnote{ This wrapper is now always enabled since it can also be useful for troubleshooting.}.
+\item Added \textsl{OMI{\$}WRAPPER.COM}\index{wrapper}\index{OMI{\$}WRAPPER}, a wrapper for OMI that acts a very simplified try-catch for debugging\footnote{ This wrapper is now always enabled since it can also be useful for troubleshooting (see the note in section \ref{subsubsec:mylabel1}.}.
+\item Added the symbol \textsl{OMI{\$}DECNET{\_}ENABLED}.
+\item Display an icon in the title bar if menu specific help is available.
+\item Added `\textsl{?}' as a synonym for the \textsl{INFO} command.
+\item Always refresh the menu after a counter reset.
+\item Added security measures for Captive and Restricted accounts with configuration settings for Restricted accounts (see section \ref{subsubsec:restracc}).
+\item Implemented the \textsl{DECRYPT} command.
 \end{itemize}
 
 \section*{Version 2.8, Released: 04-02-2021}

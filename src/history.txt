@@ -1,3 +1,22 @@
+2.9   Released: xx-xx-202x
+
+* Fix: Crash when making a selection from a taglists with sessionlog enabled.
+* Fix: Make resizing the screen work when using Telnet/SSH clients.
+* Fix: Invalid calculator results when the decimal start with zeros.
+* Fix: Number not recognized when the first character of a calculation (step) is a '-' sign.
+* Fix: Known issues with the TEXTAREA input type and OMI$DISPLAY_INFO fixed.
+* Minimize the %OMI-W-PROOUTRA warnings in the calculator.
+* Implemented rounding options for the calculator and added SET PRECISION and SHOW PRECISION commands.
+* Added an example for context specific help to the OMI$EXAMPLE menu.
+* Added OMI$WRAPPER.COM, a wrapper for OMI that acts a very simplified try-catch for debugging.
+* Added the symbol OMI$DECNET_ENABLED.
+* Display an icon in the title bar if menu specific help is available.
+* Added '?' as a synonym for the INFO command.
+* Always refresh the menu after a counter reset.
+* Added security measures for Captive and Restricted accounts with configuration
+  settings for Restricted accounts.
+* Implemented the DECRYPT command
+
 2.8   Released: 04-02-2021
 
 * Fix: In the sessionlog, don't write just option numbers but screen text as well.

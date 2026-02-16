@@ -68,6 +68,7 @@ MODNOTFOUND    E module ~S not found
 MUTEX          E ~S and ~S are mutually exclusive
 NAME           I the name of this menu is \~S\
 NESTINCL       W nested includes are not allowed
+NOAUTH         W you are not authorized to use the ~S command
 NOCALC         W no valid calculation given: ~S
 NOCFG          E no personal configuration file found - key not set
 NOCNTINC       W this menu has no counter to increase
@@ -104,6 +105,7 @@ NOTAUTH        W not authorized - use <Ctrl/Z> to go back
 NOTEXTAREA     W no text areas found in this menu
 NOTINLIST      W default value \~S\ is not in the selectlist
 NOTMPFILE      W file name required for fixed areas
+NOTOOLBOX      E file ~S does not exist
 NOTYET         I format ~S not yet implemented
 NOT_YET        W this command is not yet implemented
 NOUNIQTA       W no unique text area found - specify an integer

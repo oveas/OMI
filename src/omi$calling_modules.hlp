@@ -635,42 +635,56 @@ For more information, refer to the command description.
 3 Local_Symbols
 
 The following symbols are availble by default for use in
-OMI modules.
+OMI modules. They are set at local level when OMI starts and will
+be automatically out of context when OMI ends.
 
-  OMI$_OK      		This is an exit status that indicates a
+  OMI$_TRUE             The TRUE value used for boolean symbols.
+
+  OMI$_FALSE            The FALSE value used for boolean symbols.
+
+  OMI$_OK               This is an exit status that indicates a
                         normal successful completion.        
 
-  OMI$_WARNING		This is an exit status that can be used
+  OMI$_WARNING          This is an exit status that can be used
                         for warnings. If a OMI module exits
                         with a warning, OMI$MENU takes no action,
                         but it might be useful when OMI modules
                         call other procedures.
 
-  OMI$_ERROR   		This is an exit status that can be used
+  OMI$_ERROR            This is an exit status that can be used
                         for errors. If a OMI module exits
                         with an error, OMI$MENU takes no action,
                         but it might be useful when OMI modules
                         call other procedures.
-
-  OMI$NODENAME     	The nodename on which OMI is currently running.
-
-  OMI$CURRENT_USER	The name of the user currently running the 
-                        menu is stored in this symbol.
-
-  OMI$MENU_FILE         The filename of the menu that's currently  
-                        in use, without the directory specification.
-
-  OMI$MENU_LOCATION     The location of the menu file that's currently  
-                        in use.
 
   OMI$_MESSAGE          This symbol is used to store the environmental
                         value of 'message' in. Before an OMI module is
                         called, all messages are switched off by
                         SET MESSAGE /NOFACI /NOSEVE /NOIDEN /NOTEXT
                         To switch it on, use the command
-			  $ SET MESSAGE 'OMI$_MESSAGE'
+                            $ SET MESSAGE 'OMI$_MESSAGE'
                         This is especially usefull when debugging
                         OMI modules.
+
+  OMI$BATCH_MODE        Boolean set to OMI$_TRUE of OMI was started with
+                        the /BATCH qualifier.
+
+  OMI$VALIDATE_MODE     Boolean set to OMI$_TRUE of OMI was started with
+                        the /VALIDATE qualifier.
+
+  OMI$NODENAME          The nodename on which OMI is currently running.
+
+  OMI$CURRENT_USER      The name of the user currently running the 
+                        menu is stored in this symbol.
+
+  OMI$DECNET_ENABLED    OMI$_TRUE if DECnet has been started on the
+                        current node, OMI$_FALSE otherwise.
+
+  OMI$MENU_FILE         The filename of the menu that's currently  
+                        in use, without the directory specification.
+
+  OMI$MENU_LOCATION     The location of the menu file that's currently  
+                        in use.
 
   OMI$OPTION            This symbol contains the last numeric that has  
                         been entered by the user.
@@ -681,7 +695,7 @@ OMI modules.
 
 3 Global_Symbols
 
-The following can be available for OMI modules. Therefore, the
+The following symbols can be available for OMI modules. To set them, the
 command that's listed in the table should be called first.
 For further information, refer to the OMI_Commands descriptions.
 
@@ -708,7 +722,7 @@ The symbols will automatically be removed when OMI exits.
 
   OMI$REVERSED          OMI$REVERSE
 
-  OMI$SUBSTITUTED	OMI$SUBSTITUTE
+  OMI$SUBSTITUTED       OMI$SUBSTITUTE
 
   OMI$VMS_MESSAGE       OMI$GET_VMSMESSAGE
 
